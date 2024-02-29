@@ -173,6 +173,8 @@ var getScriptPromisify = src => {
 
       console.log("Data");
       console.log(this.myDataBinding.length);
+      console.log("Hello");
+      console.log(this.myDataBinding.data.length);
       // for(var i = 0; i < this.myDataBinding.length; i++) {
       //   cities.push({
       //       title:this.myDataBinding["data"][i].id,
