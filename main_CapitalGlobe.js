@@ -45,9 +45,6 @@ var getScriptPromisify = src => {
         console.log(changedProperties);
       // }
     }
-
-    var latitude = [];
-    var longitude = [];
     
     addLocationDimension(Latitude, Longitude) {
       this.latitude = Latitude;
