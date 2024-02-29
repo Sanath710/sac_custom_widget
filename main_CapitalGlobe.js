@@ -40,10 +40,10 @@ var getScriptPromisify = src => {
     
     onCustomWidgetAfterUpdate(changedProperties) {
       // console.log(this.myDataBinding);
-      if("myDataBinding" in changedProperties) {
-        this.myDataBinding = changedProperties.myDataBinding;
+      // if("myDataBinding" in changedProperties) {
+        // this.myDataBinding = changedProperties.myDataBinding;
         console.log(changedProperties);
-      }
+      // }
     }
 
     addLocationDimension(Latitude, Longitude) {
