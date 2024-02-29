@@ -46,6 +46,9 @@ var getScriptPromisify = src => {
       // }
     }
 
+    var latitude = [];
+    var longitude = [];
+    
     addLocationDimension(Latitude, Longitude) {
       this.latitude = Latitude;
       this.longitude = Longitude;
@@ -175,11 +178,14 @@ var getScriptPromisify = src => {
      // console.log(this.myDataBinding.length);
       console.log("Hello");
       console.log(this.myDataBinding.data.length);
+      console.log("Latitude");
+      console.log(this.latitude);
+      
       for(var i = 0; i < this.myDataBinding.data.length; i++) {
         cities.push({
             title:this.myDataBinding.data[i].dimensions_0.id,
             latitude:this.latitude[i],
-            longitude:this.latitude[i]
+            longitude:this.longitude[i]
         })
       }
 
