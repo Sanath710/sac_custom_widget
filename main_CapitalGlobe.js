@@ -1,3 +1,4 @@
+
 var getScriptPromisify = src => {
   const __define = define
   define = undefined
