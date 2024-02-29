@@ -171,19 +171,20 @@ var getScriptPromisify = src => {
 
       var cities = [];
 
-      console.log("Data");
-      console.log(this.myDataBinding.length);
+      //console.log("Data");
+     // console.log(this.myDataBinding.length);
       console.log("Hello");
       console.log(this.myDataBinding.data.length);
-      // for(var i = 0; i < this.myDataBinding.length; i++) {
-      //   cities.push({
-      //       title:this.myDataBinding["data"][i].id,
-      //       latitude:this.latitude[i],
-      //       longitude:this.latitude[i]
-      //   })
-      // }
+      for(var i = 0; i < this.myDataBinding.data.length; i++) {
+        cities.push({
+            title:this.myDataBinding.data.[i].id,
+            latitude:this.latitude[i],
+            longitude:this.latitude[i]
+        })
+      }
 
       console.log(cities);
+      console.log("Cities");
 
       // var cities = [
       //   {
