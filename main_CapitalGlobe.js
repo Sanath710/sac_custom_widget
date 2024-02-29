@@ -177,7 +177,7 @@ var getScriptPromisify = src => {
       console.log(this.myDataBinding.data.length);
       for(var i = 0; i < this.myDataBinding.data.length; i++) {
         cities.push({
-            title:this.myDataBinding.data.[i].id,
+            title:this.myDataBinding.data[i].dimensions_0.id,
             latitude:this.latitude[i],
             longitude:this.latitude[i]
         })
