@@ -1,12 +1,6 @@
-
 var getScriptPromisify = src => {
-  const __define = define
-  define = undefined
   return new Promise(resolve => {
-    $.getScript(src, () => {
-      define = __define
-      resolve()
-    })
+    $.getScript(src, resolve)
   })
 }
 
@@ -18,50 +12,66 @@ var getScriptPromisify = src => {
           <div id="root" style="width: 100%; height: 100%;">
           </div>
         `
+
   class CustomCapitalGlobe extends HTMLElement {
     constructor () {
       super()
-
       this._shadowRoot = this.attachShadow({ mode: 'open' })
       this._shadowRoot.appendChild(prepared.content.cloneNode(true))
-
       this._root = this._shadowRoot.getElementById('root')
-
       this._props = {}
-
       this.render()
-
     }
 
+    onCustomWidgetBeforeUpdate (changedProperties) {
+      this._props = { ...this._props, ...changedProperties }
+    }
 
-    onCustomWidgetBeforeUpdate(changedProperties) {
-      this._props = {...this._props, ...changedProperties};
+    onCustomWidgetAfterUpdate (changedProperties) {
+      // this.render()
+
+      // if ('myDataBinding' in changedProperties) {
+      // console.log('hello1')
+      // console.log(this.myDataBinding)
+      // }
     }
-    
-    onCustomWidgetAfterUpdate(changedProperties) {
-      console.log(this.myDataBinding);
-      if("myDataBinding" in changedProperties) {
-        this.myDataBinding = changedProperties.myDataBinding;
-        console.log(changedProperties);
-      }
+
+    onCustomWidgetResize (width, height) {
+      this.render()
     }
-    
-    addLocationDimension(Latitude, Longitude) {
-      this.latitude = Latitude;
-      this.longitude = Longitude;
+
+    addLocationDimension (Latitude, Longitude) {
+      this.latitude = Latitude
+      this.longitude = Longitude
     }
 
     async render () {
+      await getScriptPromisify('https://cdn.amcharts.com/lib/5/index.js')
+      await getScriptPromisify('https://cdn.amcharts.com/lib/5/map.js')
+      await getScriptPromisify(
+        'https://cdn.amcharts.com/lib/5/geodata/worldLow.js'
+      )
+      await getScriptPromisify(
+        'https://cdn.amcharts.com/lib/5/themes/Animated.js'
+      )
 
-      await getScriptPromisify('https://cdn.amcharts.com/lib/5/index.js');
-      await getScriptPromisify('https://cdn.amcharts.com/lib/5/map.js');
-      await getScriptPromisify('https://cdn.amcharts.com/lib/5/geodata/worldLow.js');
-      await getScriptPromisify('https://cdn.amcharts.com/lib/5/themes/Animated.js');
+      // console.log("Before Data Binding State Check");
 
-      var root = am5.Root.new(this._root)
+      if (!this.myDataBinding || this.myDataBinding.state !== 'success') {
+        return;
+      }
 
+      console.log('Data Binding Success')
+      // console.log(this.myDataBinding)
+
+      var root = am5.Root.new(this._root);
+
+      // Set themes
+      // https://www.amcharts.com/docs/v5/concepts/themes/
       root.setThemes([am5themes_Animated.new(root)])
 
+      // Create the map chart
+      // https://www.amcharts.com/docs/v5/charts/map-chart/
       var chart = root.container.children.push(
         am5map.MapChart.new(root, {
           panX: 'rotateX',
@@ -169,25 +179,18 @@ var getScriptPromisify = src => {
         })
       })
 
-      var cities = [];
+      var cities = []
 
-      //console.log("Data");
-     // console.log(this.myDataBinding.length);
-      console.log("Hello");
-      console.log(this.myDataBinding.data.length);
-      console.log("Latitude");
-      console.log(this.latitude);
-      
       for(var i = 0; i < this.myDataBinding.data.length; i++) {
         cities.push({
-            title:this.myDataBinding.data[i].dimensions_0.id,
-            latitude:this.latitude[i],
-            longitude:this.longitude[i]
-        })
+          title: this.myDataBinding.data[i].dimensions_0.id,
+          latitude: this.myDataBinding.data[i].measures_0.raw,
+          longitude: this.myDataBinding.data[i].measures_1.raw
+        });
       }
 
-      console.log(cities);
       console.log("Cities");
+      console.log(cities);
 
       // var cities = [
       //   {
