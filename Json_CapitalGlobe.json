@@ -1,0 +1,65 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "CapitalGlobe_DigitalSweep",
+    "icon":"https://sanath710.github.io/sac_custom_widget/earth.png",
+    "version": "1.0.0",
+    "name": "CapitalGlobe",
+    "newInstancePrefix": "CapitalGlobe",
+    "description": "Custom CapitalGlobe widget using AmChart ",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "custom-capital-globe",
+            "url":"https://sanath710.github.io/sac_custom_widget/main_CapitalGlobe.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "dimensionFeed": {
+            "type": "string[]",
+            "default": []
+        },
+        "measureFeed": {
+            "type": "string[]",
+            "default": []
+        }
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+        "addLocationDimension":{
+            "parameters":[
+                {
+                    "name":"Latitude",
+                    "type":"string[]"
+                },
+                {
+                    "name":"Longitude",
+                    "type":"string[]"
+                }
+            ]
+        }
+    },
+    "events": {
+        "onClick": {
+            "description": "called when the result set of the widget changes"
+        }
+    }
+}
