@@ -30,7 +30,7 @@ var getScriptPromisify = src => {
     onCustomWidgetAfterUpdate (changedProperties) {
       if ('myDataBinding' in changedProperties) {
         this.myDataBinding = changedProperties["changedProperties"];
-        // this.render()
+        this.render()
       }
        // console.log('hello1')
       // console.log(this.myDataBinding)
@@ -64,16 +64,16 @@ var getScriptPromisify = src => {
       console.log('Data Binding Success')
       // console.log(this.myDataBinding)
 
-      var root = am5.Root.new(this._root);
+      this.root = am5.Root.new(this._root);
       
       // Set themes
       // https://www.amcharts.com/docs/v5/concepts/themes/
-      root.setThemes([am5themes_Animated.new(root)])
+      this.root.setThemes([am5themes_Animated.new(this.root)])
 
       // Create the map chart
       // https://www.amcharts.com/docs/v5/charts/map-chart/
-      var chart = root.container.children.push(
-        am5map.MapChart.new(root, {
+      var chart = this.root.container.children.push(
+        am5map.MapChart.new(this.root, {
           panX: 'rotateX',
           panY: 'none',
           projection: am5map.geoMercator()
@@ -81,8 +81,8 @@ var getScriptPromisify = src => {
       )
 
       var cont = chart.children.push(
-        am5.Container.new(root, {
-          layout: root.horizontalLayout,
+        am5.Container.new(this.root, {
+          layout: this.root.horizontalLayout,
           x: 20,
           y: 40
         })
@@ -90,17 +90,17 @@ var getScriptPromisify = src => {
 
       // Add labels and controls
       cont.children.push(
-        am5.Label.new(root, {
+        am5.Label.new(this.root, {
           centerY: am5.p50,
           text: 'Map'
         })
       )
 
       var switchButton = cont.children.push(
-        am5.Button.new(root, {
+        am5.Button.new(this.root, {
           themeTags: ['switch'],
           centerY: am5.p50,
-          icon: am5.Circle.new(root, {
+          icon: am5.Circle.new(this.root, {
             themeTags: ['icon']
           })
         })
@@ -121,7 +121,7 @@ var getScriptPromisify = src => {
       })
 
       cont.children.push(
-        am5.Label.new(root, {
+        am5.Label.new(this.root, {
           centerY: am5.p50,
           text: 'Globe'
         })
@@ -130,10 +130,10 @@ var getScriptPromisify = src => {
       // Create series for background fill
       // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/#Background_polygon
       var backgroundSeries = chart.series.push(
-        am5map.MapPolygonSeries.new(root, {})
+        am5map.MapPolygonSeries.new(this.root, {})
       )
       backgroundSeries.mapPolygons.template.setAll({
-        fill: root.interfaceColors.get('alternativeBackground'),
+        fill: this.root.interfaceColors.get('alternativeBackground'),
         fillOpacity: 0,
         strokeOpacity: 0
       })
@@ -147,25 +147,25 @@ var getScriptPromisify = src => {
       // Create main polygon series for countries
       // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
       var polygonSeries = chart.series.push(
-        am5map.MapPolygonSeries.new(root, {
+        am5map.MapPolygonSeries.new(this.root, {
           geoJSON: am5geodata_worldLow
         })
       )
 
       // Create line series for trajectory lines
       // https://www.amcharts.com/docs/v5/charts/map-chart/map-line-series/
-      var lineSeries = chart.series.push(am5map.MapLineSeries.new(root, {}))
+      var lineSeries = chart.series.push(am5map.MapLineSeries.new(this.root, {}))
       lineSeries.mapLines.template.setAll({
-        stroke: root.interfaceColors.get('alternativeBackground'),
+        stroke: this.root.interfaceColors.get('alternativeBackground'),
         strokeOpacity: 0.3
       })
 
       // Create point series for markers
       // https://www.amcharts.com/docs/v5/charts/map-chart/map-point-series/
-      var pointSeries = chart.series.push(am5map.MapPointSeries.new(root, {}))
+      var pointSeries = chart.series.push(am5map.MapPointSeries.new(this.root, {}))
 
       pointSeries.bullets.push(function () {
-        var circle = am5.Circle.new(root, {
+        var circle = am5.Circle.new(this.root, {
           radius: 4,
           tooltipY: 0,
           fill: am5.color(0xffba00),
@@ -174,7 +174,7 @@ var getScriptPromisify = src => {
           tooltipText: '{title}'
         })
 
-        return am5.Bullet.new(root, {
+        return am5.Bullet.new(this.root, {
           sprite: circle
         })
       })
