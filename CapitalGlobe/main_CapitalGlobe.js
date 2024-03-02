@@ -28,13 +28,11 @@ var getScriptPromisify = src => {
     }
 
     onCustomWidgetAfterUpdate (changedProperties) {
-
       if ('myDataBinding' in changedProperties) {
           this.myDataBinding = changedProperties["myDataBinding"];
-            this.render()
       }
-      console.log('hello1')
-      console.log(this.myDataBinding)
+      // console.log('hello1')
+      // console.log(this.myDataBinding)
     }
 
     onCustomWidgetResize (width, height) {
