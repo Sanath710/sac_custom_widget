@@ -28,12 +28,12 @@ var getScriptPromisify = src => {
     }
 
     onCustomWidgetAfterUpdate (changedProperties) {
-      // this.render()
-
-      // if ('myDataBinding' in changedProperties) {
-      // console.log('hello1')
+      if ('myDataBinding' in changedProperties) {
+        this.myDataBinding = changedProperties["changedProperties"];
+         this.render()
+      }
+       // console.log('hello1')
       // console.log(this.myDataBinding)
-      // }
     }
 
     onCustomWidgetResize (width, height) {
