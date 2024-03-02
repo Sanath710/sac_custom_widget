@@ -28,12 +28,13 @@ var getScriptPromisify = src => {
     }
 
     onCustomWidgetAfterUpdate (changedProperties) {
-      // this.render()
 
-      // if ('myDataBinding' in changedProperties) {
+      if ('myDataBinding' in changedProperties) {
+          this.myDataBinding = changedProperties["myDataBinding"];
+            this.render()
+      }
       console.log('hello1')
       console.log(this.myDataBinding)
-      // }
     }
 
     onCustomWidgetResize (width, height) {
@@ -62,7 +63,7 @@ var getScriptPromisify = src => {
       }
 
       console.log('Data Binding Success')
-      console.log(this.myDataBinding)
+      // console.log(this.myDataBinding)
 
       var root = am5.Root.new(this._root);
 
