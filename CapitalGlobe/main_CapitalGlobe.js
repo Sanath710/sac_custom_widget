@@ -19,7 +19,6 @@ var getScriptPromisify = src => {
       this._shadowRoot = this.attachShadow({ mode: 'open' })
       this._shadowRoot.appendChild(prepared.content.cloneNode(true))
       this._root = this._shadowRoot.getElementById('root')
-      var root = am5.Root.new(this._root);
       this._props = {}
       this.render()
     }
@@ -31,7 +30,7 @@ var getScriptPromisify = src => {
     onCustomWidgetAfterUpdate (changedProperties) {
       if ('myDataBinding' in changedProperties) {
         this.myDataBinding = changedProperties["changedProperties"];
-        this.render()
+        // this.render()
       }
        // console.log('hello1')
       // console.log(this.myDataBinding)
@@ -65,6 +64,8 @@ var getScriptPromisify = src => {
       console.log('Data Binding Success')
       // console.log(this.myDataBinding)
 
+      var root = am5.Root.new(this._root);
+      
       // Set themes
       // https://www.amcharts.com/docs/v5/concepts/themes/
       root.setThemes([am5themes_Animated.new(root)])
