@@ -1,0 +1,50 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "CustomTable_DigitalSweep",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomTable/table.png",
+    "version": "1.0.0",
+    "name": "CustomTable",
+    "newInstancePrefix": "CustomTable",
+    "description": "Custom Table widget",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "custom-table",
+            "url": "http://127.0.0.1:5500/CustomTable/table_main.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "dimensionFeed": {
+            "type": "string[]",
+            "default": []
+        },
+        "measureFeed": {
+            "type": "string[]",
+            "default": []
+        }
+    },
+    "dataBindings": {
+        "myDataBinding": {
+            "feeds": [
+                {
+                    "id": "dimensions",
+                    "description": "Dimensions",
+                    "type": "dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                }
+            ]
+        }
+    },
+    "methods": {
+       
+    },
+    "events": {}
+}
