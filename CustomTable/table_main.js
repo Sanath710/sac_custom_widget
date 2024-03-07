@@ -1,21 +1,22 @@
-var getScriptPromisify = (src) => {
-  return new Promise((resolve) => {
-    $.getScript(src, resolve);
-  });
-};
+var getScriptPromisify = src => {
+	return new Promise(resolve => {
+		$.getScript(src, resolve)
+	})
+}
 
-(function () {
-  const prepared = document.createElement("template");
-  prepared.innerHTML = `
+	; (function () {
+		const prepared = document.createElement('template')
+		prepared.innerHTML = `
           <style type="text/css">
             @import url("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css");
-            @import url("https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css");
+            // @import url("https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css");
+			@import url("https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css");
             @import url("https://cdn.datatables.net/buttons/3.0.0/css/buttons.bootstrap5.css");
             
-            input[type="search"]  {
-              border:1px solid #dee2e6;
+            #dt-search-0,  {
+              border:1px solid black!important;
             }
-
+			
             table.table.dataTable.table-striped > tbody > tr {
               border:0.1px solid #dee2e6;
               padding:1.2%;
@@ -25,9 +26,23 @@ var getScriptPromisify = (src) => {
 				padding-top:1%;
 			}
 
-            table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
-              background-color:#f2f2f2;
-            }
+			// table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+			// 	background-color:#fffff;
+			// }
+
+			table.table.dataTable.table-striped > tbody > tr.group {
+				background-color: rgb(187, 211, 247)!important;
+			}
+
+			table.table.dataTable.table-striped > tbody > tr.group:nth-of-type(2n+1) > * {
+				box-shadow: none!important;
+				background-color: rgb(187, 211, 247)!important;
+			}
+	
+			// table.table.dataTable.table-striped > tbody > :root.dark tr.group {
+			// 	background-color:white;
+			// 	background-color: rgb(187, 211, 247)!important;
+			// }
 
 			select {
 				background-color: #3498db; 
@@ -39,337 +54,396 @@ var getScriptPromisify = (src) => {
 
           </style>
           <script src= "https://code.jquery.com/jquery-3.7.1.js"></script>
-          <div id="root" style="width: 100%; height: 100%; padding:1.5%;display:grid;">
-          <table id="example" class="table table-striped" style="width:100%">
+          <div id="root" style="width: 100%; height: 100%; padding:1.5%;overflow:scroll;">
+		  	<table id="example" class="table table-striped" style="width:100%">
               <thead>
               </thead>
               <tbody></tbody>
             </table>
           </div>
-        `;
+        `
 
-  class CustomTable extends HTMLElement {
-    constructor() {
-      super();
-      this._shadowRoot = this.attachShadow({ mode: "open" });
-      this._shadowRoot.appendChild(prepared.content.cloneNode(true));
-      this._root = this._shadowRoot.getElementById("root");
-      this._table = this._shadowRoot.getElementById("example");
-      this._props = {};
-      this.render();
-    }
+		var total_cols = 0;
 
-    // onCustomWidgetBeforeUpdate(changedProperties) {
-    //   this._props = { ...this._props, ...changedProperties };
-    // }
-
-    // onCustomWidgetAfterUpdate(changedProperties) {
-    //   if ("myDataBinding" in changedProperties) {
-    //     this.myDataBinding = changedProperties["myDataBinding"];
-    //   }
-    // }
-
-    // onCustomWidgetResize (width, height) {
-    //   this.render()
-    // }
-
-	async setResultSet(cnt, rs) {
-
-		var rs = await rs;
-		// console.log(rs);
-		
-		this._resultSet = {};
-		this._selectionColumnsCount = cnt;
-		this._dimensions = new Set();
-		this._measures = new Set();
-
-		for(var i = 0; i < rs.length; i++) {
-
-			var k = "";
-			var rs_keys = Object.keys(rs[i]);
-
-			for(var j = 0; j < rs_keys.length; j++) {
-				if(rs_keys[j] != "@MeasureDimension") {
-					k += rs[i][rs_keys[j]].id+"_#_";
-				}
-
-				if(!(rs_keys[j] in this._dimensions) && rs_keys[j] != "@MeasureDimension") {
-					this._dimensions.add(rs_keys[j])
-				}
+		class CustomTable extends HTMLElement {
+			constructor() {
+				super()
+				this._shadowRoot = this.attachShadow({ mode: 'open' })
+				this._shadowRoot.appendChild(prepared.content.cloneNode(true))
+				this._root = this._shadowRoot.getElementById('root')
+				this._table = this._shadowRoot.getElementById('example')
+				this._props = {}
+				this.render()
 			}
 
-			if(!this._resultSet.hasOwnProperty(k)) {
-				this._resultSet[k] = []
-			} 
+			// onCustomWidgetBeforeUpdate(changedProperties) {
+			//   this._props = { ...this._props, ...changedProperties };
+			// }
 
-			var mObj = {}
-			mObj[rs[i]["@MeasureDimension"].id] = rs[i]["@MeasureDimension"].rawValue;
-			this._measures.add(rs[i]["@MeasureDimension"].id);
+			// onCustomWidgetAfterUpdate(changedProperties) {
+			//   if ("myDataBinding" in changedProperties) {
+			//     this.myDataBinding = changedProperties["myDataBinding"];
+			//   }
+			// }
 
-			this._resultSet[k].push(mObj)
-		}
+			// onCustomWidgetResize (width, height) {
+			//   this.render()
+			// }
 
-		this._dimensions = Array.from(this._dimensions);
-		this._measures = Array.from(this._measures);
+			async setResultSet(cnt, rs, col_to_row = -1) {
+				var rs = await rs
+				// console.log(rs);
+				this._resultSet = {}
+				this._selectionColumnsCount = cnt
+				this._col_to_row = col_to_row
+				this._dimensions = new Set()
+				this._measures = new Set()
 
-		console.log(this._resultSet);
-		// console.log(this._dimensions);
-		// console.log(this._measures);
-	}
+				for (var i = 0; i < rs.length; i++) {
+					var k = '';
+					var rs_keys = Object.keys(rs[i]);
 
-    async render() {
-      // await getScriptPromisify('https://code.jquery.com/jquery-3.7.1.js');
+					for (var j = 0; j < rs_keys.length; j++) {
+						if (rs_keys[j] != '@MeasureDimension') {
+							k += rs[i][rs_keys[j]].id + '_#_'
+						}
 
-      await getScriptPromisify(
-        "https://cdn.datatables.net/2.0.1/js/dataTables.js"
-      );
-      await getScriptPromisify(
-        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"
-      );
-      await getScriptPromisify(
-        "https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"
-      );
-      await getScriptPromisify(
-        "https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"
-      );
-      await getScriptPromisify(
-        "https://cdn.datatables.net/buttons/3.0.0/js/buttons.bootstrap5.js"
-      );
-      await getScriptPromisify(
-        "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
-      );
-      await getScriptPromisify(
-        "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"
-      );
-      await getScriptPromisify(
-        "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"
-      );
-      await getScriptPromisify(
-        "https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"
-      );
-      await getScriptPromisify(
-        "https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"
-      );
-      // await getScriptPromisify('https://cdn.datatables.net/buttons/3.0.0/js/buttons.colVis.min.js')
+						if (
+							!(rs_keys[j] in this._dimensions) &&
+							rs_keys[j] != '@MeasureDimension'
+						) {
+							this._dimensions.add(rs_keys[j])
+						}
+					}
 
-      if (!this._resultSet) {
-        return;
-      }
+					if (!this._resultSet.hasOwnProperty(k)) {
+						this._resultSet[k] = []
+					}
 
-      console.log("ResultSet Success");
+					var mObj = {}
+					mObj[rs[i]['@MeasureDimension'].description] =
+						rs[i]['@MeasureDimension'].rawValue
+					this._measures.add(rs[i]['@MeasureDimension'].description)
 
-      var table_cols = [];
+					this._resultSet[k].push(mObj)
+				}
 
-      var col_dimension = this._dimensions;
-      var col_measure = this._measures;
+				this._dimensions = Array.from(this._dimensions)
+				this._measures = Array.from(this._measures)
+				total_cols = this._dimensions.length + this._measures.length;
 
-      for (var i = 0; i < col_dimension.length; i++) {
-        table_cols.push({
-          title: col_dimension[i],
-        });
-      }
+				console.log(this._resultSet)
+				// console.log(this._dimensions);
+				// console.log(this._measures);
+				// console.log(total_cols);
+			}
 
-	  for (var i = 0; i < col_measure.length; i++) {
-        table_cols.push({
-          title: col_measure[i],
-        });
-      }
+			async render() {
 
-    //   console.log(table_cols);
+				await getScriptPromisify(
+					'https://cdn.datatables.net/2.0.1/js/dataTables.js'
+				)
+				await getScriptPromisify(
+					'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js'
+				)
+				await getScriptPromisify(
+					'https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js'
+				)
+				await getScriptPromisify(
+					'https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js'
+				)
+				await getScriptPromisify(
+					'https://cdn.datatables.net/buttons/3.0.0/js/buttons.bootstrap5.js'
+				)
+				await getScriptPromisify(
+					'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+				)
+				await getScriptPromisify(
+					'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js'
+				)
+				await getScriptPromisify(
+					'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js'
+				)
+				await getScriptPromisify(
+					'https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js'
+				)
+				await getScriptPromisify(
+					'https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js'
+				)
+				// await getScriptPromisify('https://cdn.datatables.net/buttons/3.0.0/js/buttons.colVis.min.js')
 
-      const tbl = new DataTable(this._table, {
-        // initComplete: function () {
-        //   this.api()
-        //     .columns()
-        //     .every(function () {
-        //       let column = this
+				if (!this._resultSet) {
+					return
+				}
 
-        //       // Create select element
-        //       let select = document.createElement('select')
-        //       select.add(new Option('Select'))
-        //       column.header().replaceChildren(select)
+				console.log('ResultSet Success')
 
-        //       // Apply listener for user change in value
-        //       select.addEventListener('change', function () {
-        //         column.search(select.value, { exact: true }).draw()
-        //       })
+				var table_cols = []
 
-        //       // Add list of options
-        //       column
-        //         .data()
-        //         .unique()
-        //         .sort()
-        //         .each(function (d, j) {
-        //           select.add(new Option(d))
-        //         })
-        //     })
-        // },
-        layout: {
-          topStart: {
-            buttons: ["copy", "excel", "pdf", "colvis"],
-          },
-        },
-        columns: table_cols,
-        columnDefs: [
-          {
-            defaultContent: "-",
-            targets: "_all",
-            // className: 'dt-body-left'
-          },
-        ],
-        bDestroy: true,
-      });
+				var col_dimension = this._dimensions
+				var col_measure = this._measures
 
-      tbl.on("click", "tbody tr", (e) => {
-        let classList = e.currentTarget.classList;
-        tbl
-          .rows(".selected")
-          .nodes()
-          .each((row) => row.classList.remove("selected"));
-        classList.add("selected");
-      });
+				for (var i = 0; i < col_dimension.length; i++) {
+					table_cols.push({
+						title: col_dimension[i]
+					})
+				}
 
-    //   var transformed_data = [];
+				for (var i = 0; i < col_measure.length; i++) {
+					table_cols.push({
+						title: col_measure[i]
+					})
+				}
 
-    //   var cnt_dimensions = this.myDataBinding.metadata.feeds.dimensions.values;
-    //   var cnt_measures = this.myDataBinding.metadata.feeds.measures.values;
+				//   console.log(table_cols);
 
-    //   for (var i = 0; i < this.myDataBinding.data.length; i++) {
-    //     // var tbl_row_data = []
+				var groupColumn = this._col_to_row;
 
-    //     // Dynamic 'N' keys
-    //     var key = "";
-
-    //     for (var j = 0; j < cnt_dimensions.length; j++) {
-    //       var dim_key = cnt_dimensions[j];
-    //       key += this.myDataBinding.data[i][dim_key].label + "_#_";
-    //     }
-
-    //     //  Dynamic 'N' values
-    //     var measure_objs = {};
-
-    //     for (var j = 0; j < cnt_measures.length; j++) {
-    //       var measure_key = cnt_measures[j];
-    //       measure_objs[measure_key] = this.myDataBinding.data[i][measure_key];
-    //     }
-
-    //     var temp_obj = {};
-    //     temp_obj[key] = measure_objs;
-
-    //     transformed_data.push(temp_obj);
-    //   }
-
-    //   console.log("Formatted Data");
-    //   console.log(transformed_data);
-
-      function updateData(val, state, cnt) {
-        var selectData = tbl.row(".selected").data();
-        var parsedData = JSON.parse(val);
-
-        var row_updated_arr = [];
-
-        for (
-          var i = 0;
-          i < selectData.length - Object.keys(parsedData).length;
-          i++
-        ) {
-          row_updated_arr.push(selectData[i]);
-        }
-
-        for (var s = 0; s < parsedData.length; s++) {
-			var k = Object.keys(parsedData[s])[0];
-         	row_updated_arr.push(parsedData[s][k]);
-        }
-
-        state
-          .getElementsByTagName("option")
-          [state.options.selectedIndex].setAttribute("selected", "selected");
-        row_updated_arr[selectData.length - Object.keys(parsedData).length - 1] = state;
-
-        tbl.row(".selected").data(row_updated_arr);
-      }
-
-      window.updateData = updateData;
-
-      var dim = Object.keys(this._resultSet)[0].split("_#_");
-	  dim.pop()
-
-      for (var i = 0, init_index = 0; i < Object.keys(this._resultSet).length; ) {
-
-		var dim_year =
-          "<select id='" +
-          Object.keys(this._resultSet)[i] +
-          "' onChange='updateData(this.value, this);'>";
-
-        var temp_dim = Object.keys(this._resultSet)[i].split("_#_");
-		temp_dim.pop()
-
-		var compare_a = dim.slice(), compare_b = temp_dim.slice()
-
-		for(var k = 0; k < this._selectionColumnsCount; k++) {
-			compare_a.pop()
-			compare_b.pop()
-		}
+				var tbl = undefined;
+				if(groupColumn != -1) {
+					 tbl = new DataTable(this._table, {
+						layout: {
+							topStart: {
+								buttons: ['copy', 'excel', 'pdf', 'colvis']
+							}
+						},
+						columns: table_cols,
+						columnDefs: [
+							{
+								defaultContent: '-',
+								targets: '_all',
+								visible: false, targets: groupColumn
+								// className: 'dt-body-left'
+							}
+						],
+						order: [[groupColumn, 'asc']],
+						displayLength: 25,
+						drawCallback: function (settings) {
+							var api = this.api();
+							var rows = api.rows({ page: 'current' }).nodes();
+							var last = null;
 	
-        while (JSON.stringify(compare_a) == JSON.stringify(compare_b)) {
+							api.column(groupColumn, { page: 'current' })
+								.data()
+								.each(function (group, i) {
+									if (last !== group) {
+										$(rows)
+											.eq(i)
+											.before(
+												'<tr class="group"><td colspan="'+(total_cols)+'">' +
+												group +
+												'</td></tr>'
+											);
+	
+										last = group;
+									}
+								});
+						},
+						bPaginate: false,
+						bDestroy: true
+					})
+				} else {
+					 tbl = new DataTable(this._table, {
+						layout: {
+							topStart: {
+								buttons: ['copy', 'excel', 'pdf', 'colvis']
+							}
+						},
+						columns: table_cols,
+						columnDefs: [
+							{
+								defaultContent: '-',
+								targets: '_all',
+								// className: 'dt-body-left'
+							}
+						],
+						bPaginate: false,
+						bDestroy: true
+					})
+				}
 
-			var opt_key = Object.keys(this._resultSet)[i];
+				// const tbl = new DataTable(this._table, {
+				// 	layout: {
+				// 		topStart: {
+				// 			buttons: ['copy', 'excel', 'pdf', 'colvis']
+				// 		}
+				// 	},
+				// 	columns: table_cols,
+				// 	columnDefs: [
+				// 		{
+				// 			defaultContent: '-',
+				// 			targets: '_all',
+				// 			visible: false, targets: groupColumn
+				// 			// className: 'dt-body-left'
+				// 		}
+				// 	],
+				// 	order: [[groupColumn, 'asc']],
+				// 	displayLength: 25,
+				// 	drawCallback: function (settings) {
+				// 		var api = this.api();
+				// 		var rows = api.rows({ page: 'current' }).nodes();
+				// 		var last = null;
 
-			dim_year +=
-				"<option id='" +
-				init_index +
-				"' value='" +
-				JSON.stringify(this._resultSet[opt_key]) +
-				"'>" +
-				temp_dim[temp_dim.length - 1] +
-				"</option>";
+				// 		api.column(groupColumn, { page: 'current' })
+				// 			.data()
+				// 			.each(function (group, i) {
+				// 				if (last !== group) {
+				// 					$(rows)
+				// 						.eq(i)
+				// 						.before(
+				// 							'<tr class="group"><td colspan="'+(total_cols)+'">' +
+				// 							group +
+				// 							'</td></tr>'
+				// 						);
 
-			i += 1;
-			init_index += 1;
+				// 					last = group;
+				// 				}
+				// 			});
+				// 	},
+				// 	bPaginate: false,
+				// 	bDestroy: true
+				// })
 
-			if (i >= Object.keys(this._resultSet).length) {
-				break;
+				tbl.on('click', 'tbody tr', e => {
+					let classList = e.currentTarget.classList
+					tbl
+						.rows('.selected')
+						.nodes()
+						.each(row => row.classList.remove('selected'))
+					classList.add('selected')
+
+					// console.log(tbl.row('.selected').data())
+				})
+
+				function updateRow(result_obj, state, no_of_dimensions, no_of_selections, no_of_measures) {
+
+					var selectData = tbl.row('.selected').data()
+					var search_key = state.value;
+					var final_search_id = state.value+"_#_";
+					var row_updated_arr = selectData.slice(0, no_of_dimensions - no_of_selections);
+					var sel_arr = selectData.slice(no_of_dimensions - no_of_selections, no_of_dimensions)
+
+					state.getElementsByTagName('option')[state.options.selectedIndex].setAttribute('selected', 'selected')
+
+					var select_elements = document.querySelector("custom-table").shadowRoot.querySelectorAll("select")
+					sel_arr[state.id.split("_!_")[0]] = state;
+					row_updated_arr = row_updated_arr.concat(sel_arr);
+					
+					const getSelectedText = (el) => {
+						if (el.selectedIndex === -1) {
+						  return null;
+						}
+						return el.options[el.selectedIndex].text;
+					  }
+
+					for(var i = 0; i < select_elements.length; i++) {
+						var k = select_elements[i].id.split("_#_").slice(0, no_of_dimensions - no_of_selections).join("_#_").split("_!_").slice(1);
+						if(k == search_key) {
+							var node_val = getSelectedText(select_elements[i])
+							final_search_id += node_val+"_#_";
+						}
+					}
+
+					if(result_obj[final_search_id] == undefined) {
+						for(var i = 0; i < no_of_measures; i++) {
+							row_updated_arr.push("-")
+						}
+						tbl.row('.selected').data(row_updated_arr)
+						return;
+					}
+
+					for(var i = 0; i < result_obj[final_search_id].length; i++) {
+						for(var s in result_obj[final_search_id][i]) {
+							row_updated_arr.push(result_obj[final_search_id][i][s]);
+						}
+					}
+					
+					tbl.row('.selected').data(row_updated_arr)
+				}
+
+				window.updateRow = updateRow;
+
+				var dim = Object.keys(this._resultSet)[0].split('_#_')
+				dim.pop()
+
+				var only_dims = dim.slice(0, -Math.abs(this._selectionColumnsCount))
+
+				for (var i = 0, init_index = 0; i < Object.keys(this._resultSet).length; ) {
+					
+					only_dims = dim.slice(0, -Math.abs(this._selectionColumnsCount));
+
+					var temp_dim = Object.keys(this._resultSet)[i].split('_#_')
+					temp_dim.pop()
+					var selections = temp_dim.slice(-Math.abs(this._selectionColumnsCount));
+					var c = selections.slice();
+
+					for (var j = 0; j < this._selectionColumnsCount; j++) {
+						temp_dim.pop()
+					}
+
+					for (var j = 0; j < selections.length; j++) {
+						selections[j] = `<select id="${j}_!_${temp_dim.slice(0, this._dimensions.length - this._selectionColumnsCount).join("_#_")}" onChange='updateRow(${JSON.stringify(this._resultSet)}, this, ${this._dimensions.length}, ${this._selectionColumnsCount}, ${this._measures.length})'>`;
+					}
+
+					for (var j = 0; j < c.length; j++) {
+						c[j] = new Set();
+					}
+
+					while (JSON.stringify(only_dims) == JSON.stringify(temp_dim)) {
+
+						var temp_dim = Object.keys(this._resultSet)[i].split('_#_')
+						temp_dim.pop()
+
+						var selections_arr = temp_dim.slice(
+							-Math.abs(this._selectionColumnsCount)
+						)
+
+						for (var j = 0; j < this._selectionColumnsCount; j++) {
+							temp_dim.pop()
+						}
+
+						if(JSON.stringify(only_dims) != JSON.stringify(temp_dim)) {
+							break;
+						}
+
+						for (var k = 0; k < selections.length; k++) {
+							var opt = '<option id="'+selections_arr[k]+'" value="' + temp_dim.join("_#_") + '">' + selections_arr[k] + '</option>';
+							c[k].add(opt);
+						}
+
+						i += 1;
+						init_index += 1;
+
+						if (i >= Object.keys(this._resultSet).length) {
+							break;
+						}
+					}
+					
+					for(var s = 0; s < c.length; s++) {
+						c[s].forEach(function(val){
+							selections[s] += val;
+						})
+						selections[s] += "</select>";
+					}
+
+					var final_row = only_dims.concat(selections);
+
+					for(var s in this._resultSet[dim.join("_#_")+"_#_"]) {
+						for(k in this._resultSet[dim.join("_#_")+"_#_"][s]) {
+							final_row.push(this._resultSet[dim.join("_#_")+"_#_"][s][k])
+						}
+					}
+
+					tbl.row.add(final_row).draw(false);
+					selections = []
+					
+					if (i >= Object.keys(this._resultSet).length) { break; }
+
+					dim = Object.keys(this._resultSet)[i].split('_#_')
+					dim.pop()
+					
+				}
 			}
-
-			temp_dim = Object.keys(this._resultSet)[i].split("_#_");
-			temp_dim.pop()
-			compare_b = temp_dim.slice()
-
-			for(var k = 0; k < this._selectionColumnsCount; k++) {
-				compare_b.pop()
-			}
-        }
-
-        dim_year += "</select>";
-
-		var row_arr = [];
-
-		for(var k = 0; k < dim.length - this._selectionColumnsCount; k++) {
-			row_arr.push(dim[k]);
 		}
-
-        row_arr.push(dim_year);
-
-        var k = Object.keys(this._resultSet)[i - init_index];
-
-        for (var s in this._resultSet[k]) {
-			var sk = Object.keys(this._resultSet[k][s]);
-			row_arr.push(this._resultSet[k][s][sk]);
-        }
-
-        init_index = 0;
-
-        tbl.row.add(row_arr).draw(false);
-
-        if (i >= Object.keys(this._resultSet).length) { break; }
-
-        dim = Object.keys(this._resultSet)[i].split("_#_");
-		dim.pop()
-
-        dim_year = "";
-      }
-    }
-  }
-
-  customElements.define("custom-table", CustomTable);
-})();
+		customElements.define('custom-table', CustomTable)
+	})()
