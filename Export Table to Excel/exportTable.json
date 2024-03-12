@@ -1,0 +1,83 @@
+{
+    "id": "Custom_Export",
+    "version": "1.0.0",
+    "name": "CW - Export",
+    "description": "Export Custom Widget using amcharts 4 library.",
+    "newInstancePrefix": "Export",
+    "icon": "https://sanath710.github.io/sac_custom_widget/Export%20Table%20to%20Excel/exportTableIcon.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "sample-export",
+            "url": "http://127.0.0.1:5500/Export%20Data%20-%20AmCharts4/exportTable.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+
+    },
+    "methods": {
+        "setResultSet": {
+            "description": "transform (format) ResultSet",
+            "parameters": [
+                {
+                    "name": "ResultSet",
+                    "type": "any",
+                    "description": "Resultset of DataSource"
+                },
+                {
+                    "name": "Columns",
+                    "type": "string[]",
+                    "description": "Columns in Order (Top - Bottom) - Excluding Measures."
+                },
+                {
+                    "name": "Order_of_Measures",
+                    "type": "any",
+                    "description": "[Array] Order of Measures to be preserved."
+                },
+                {
+                    "name": "Order_of_Dimensions",
+                    "type": "any",
+                    "description": "[Array] Order of Dimensions to be preserved."
+                }
+            ]
+        },
+        "setCustomHeader": {
+            "description": "Custom Header Values to be Exported.",
+            "parameters": [
+                {
+                    "name": "DimensionHeaders",
+                    "type": "any",
+                    "description": "[Object] Dimension Header"
+                },
+                {
+                    "name": "MeasureHeaders",
+                    "type": "any",
+                    "description": "[Object] Measure Header"
+                }
+            ]
+        },
+        "setAsNumericColumns":{
+            "description": "To convert data into numeric value before exporting it into sheet",
+            "parameters": [
+                {
+                    "name": "ColumnNames",
+                    "type": "string[]",
+                    "description": "[Array] Dimension Header"
+                }
+            ]
+        },
+        "exportToExcel":{
+            "description": "Final Export Call to be converted to Xls sheet",
+            "parameters": []
+        }
+    },
+    "events": {
+       
+    }
+}
