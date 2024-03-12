@@ -9,6 +9,8 @@ var getScriptPromisify = (src) => {
     let template = document.createElement("template");
     template.innerHTML = `<div id="chart_div" style="width: 100%; height: 100%"></div>`;
 
+    var isLibLoaded = false;
+
     class customWidgetExport extends HTMLElement {
 
         constructor() {
@@ -263,7 +265,11 @@ var getScriptPromisify = (src) => {
             for(var i = 0, j = 0; i < this._dataToExcel[this._dataToExcel.length - 1].length - this._dimensions.length; i++) {
                 if(i == 0) {
                     rowArr = [""];  
-                    rowArr.push(this._columnNames[this._columnNames.length - 1])
+                    if(this._columnNames[this._columnNames.length - 1] == "@MeasureDimension") {
+                        rowArr.push("")
+                    } else {
+                        rowArr.push(this._columnNames[this._columnNames.length - 1]);
+                    }
                 }
                 if(this._columnNames[this._columnNames.length - 1] == "@MeasureDimension") {
                     if(this._custom_MeasureHeaders_Flag) {
@@ -294,7 +300,11 @@ var getScriptPromisify = (src) => {
 
                 if(i == 0) {
                     rowArr = [""]; 
-                    rowArr.push(this._columnNames[0])
+                    if(this._columnNames[0] == "@MeasureDimension") {
+                        rowArr.push("");
+                    } else {
+                        rowArr.push(this._columnNames[0]);
+                    }
                 }
 
                 if(this._columnNames[0] == "@MeasureDimension") {
@@ -335,6 +345,11 @@ var getScriptPromisify = (src) => {
             console.log(this._numericColumnNames);
         }
 
+        setFileName(fileName) {
+            this._exportFileName = fileName;
+            console.log("Exporting sheet filename is "+this._exportFileName);
+        }
+
         async exportToExcel() {
 
             this.prepareDataToBeExported();
@@ -342,8 +357,11 @@ var getScriptPromisify = (src) => {
             console.log("Export to Excel Called...")
             console.log("-------------------------")
 
-            await getScriptPromisify("https://www.amcharts.com/lib/4/core.js");
-            await getScriptPromisify("https://www.amcharts.com/lib/4/charts.js");
+            if(!isLibLoaded) {
+                await getScriptPromisify("https://www.amcharts.com/lib/4/core.js");
+                await getScriptPromisify("https://www.amcharts.com/lib/4/charts.js");
+                isLibLoaded = true;
+            }
 
             var chart = am4core.create(this._root, am4charts.XYChart);
 
@@ -375,6 +393,10 @@ var getScriptPromisify = (src) => {
             //     "2":"",
             //     "3":""
             //   }
+
+            if(this._exportFileName) {
+                chart.exporting.filePrefix = this._exportFileName;
+            }
 
             chart.exporting.export("xlsx");
         }
