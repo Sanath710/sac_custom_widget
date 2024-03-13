@@ -20,387 +20,430 @@ var getScriptPromisify = (src) => {
             this._shadowRoot.appendChild(template.content.cloneNode(true));
             this._root = this._shadowRoot.getElementById("chart_div");
             this._props = {};
+            this._firstConnection = false;
         }
 
+        connectedCallback() {
+            this._firstConnection = true;
+        }
 
-        async setResultSet(rs, cols, order_of_measures, order_of_dimensions) {
+        onCustomWidgetBeforeUpdate(changedProperties) {
+            this._props = { ...this._props, ...changedProperties }
+        }
 
-            var rset = await rs;
-            this._resultSet = [];
-            this._orderOfMeasures = order_of_measures;
-            this._columnNames = cols;
-            this._measureDimensionAtIndex = this._columnNames.indexOf("@MeasureDimension");
-            this._columnValues = new Set();
-            this._columnValueOrder = [];
-            this._dimensions = new Set();
-            this._measures = new Set();
-            this._custom_DimensionHeader_Flag = false;
-            this._custom_MeasureHeaders_Flag = false;
-            var temp_key = [], cntr = 0;
+        onCustomWidgetAfterUpdate(changedProperties) {
+            var that = this;
+            //  if (lib_check) {
+            //     load_library();
+            //  }
+            if (this._firstConnection) {
+                if (this.method === "export_table") {
+                    export_1(that, this._root, changedProperties);
+                } 
+                else if(this.method === "exportToExcel") {
+                    exportResultSetToExcel(that)
+                } 
+                else {
+                    export_2(that, this._root, changedProperties);
+                }
+            }
+        }
+       
+    }
 
-            // Xls
-            this._colData_Xls = []
+    function exportResultSetToExcel(that) {
 
-        // ------------------ Check Points -----------------   
-            // console.log(rset)
-            // console.log("Column Names")
-            // console.log(this._columnNames)
+        var rset = that.resultset;
+        that._resultSet = [];
+        that._orderOfMeasures = Object.keys(that.measures);
+        var info_OnQuery = that.filters;
+        that._columnNames = that.properties["order_of_headers"];
+        that._measureDimensionAtIndex = that._columnNames.indexOf("@MeasureDimension");
+        that._columnValues = new Set();
+        that._columnValueOrder = [];
+        that._dimensions = new Set();
+        that._measures = new Set();
+        that._custom_DimensionHeader_Flag = false;
+        that._custom_MeasureHeaders_Flag = false;
+        var temp_key = [], cntr = 0;
 
-            // console.log("Measure Dimension At Index")
-            // console.log(this._measureDimensionAtIndex)
-        // --------------------------------------------------
+        //Custom Header 
+        that._custom_DimensionHeaders = that.dimensions;
+        that._custom_MeasureHeaders = that.measures;
+        that._numericColumnNames = that.properties["not_number"];
 
-            // Xls
-            var o = Object.fromEntries(this._columnNames.map(key => [key, new Set()]))
+        // Xls
+        that._colData_Xls = []
 
-            for (var s in rset) {    
+    // ------------------ Check Points -----------------   
+        // console.log(rset)
+        // console.log("Column Names")
+        // console.log(that._columnNames)
 
-                for (var k of this._columnNames) {
-                    if (k != "@MeasureDimension") {
-                        if(rset[s][k]) {
-                            this._columnValues.add(rset[s][k].description);
-                            // Xls
-                            o[k].add(rset[s][k].description)
-                        }
-                    } else {
+        // console.log("Measure Dimension At Index")
+        // console.log(that._measureDimensionAtIndex)
+    // --------------------------------------------------
+
+        // Xls
+        var o = Object.fromEntries(that._columnNames.map(key => [key, new Set()]))
+
+        for (var s in rset) {    
+
+            for (var k of that._columnNames) {
+                if (k != "@MeasureDimension") {
+                    if(rset[s][k]) {
+                        that._columnValues.add(rset[s][k].description);
+                        // Xls
                         o[k].add(rset[s][k].description)
                     }
+                } else {
+                    o[k].add(rset[s][k].description)
                 }
-
-                for (var l in rset[s]) {
-                    if (!(this._columnNames.includes(l)) && l != "@MeasureDimension") {
-                        this._dimensions.add(l);
-                        if (cntr == 0) {
-                            temp_key.push(rset[0][l].description)
-                        }
-                    }
-                    if (l == "@MeasureDimension") {
-                        this._measures.add(rset[s][l].description);
-                    }
-                }
-
-                cntr += 1;
             }
 
-            // Xls
-            this._colData_Xls.push(o);
-
-            this._dimensions = Array.from(this._dimensions);
-            console.log("Dimensions");
-            console.log(this._dimensions);
-            // Xls
-            console.log(this._colData_Xls)
-
-            this._measures = Array.from(this._measures);
-            console.log("Measures");
-            console.log(this._measures);
-
-            console.log("Order of Measures");
-            console.log(this._orderOfMeasures);
-
-            // console.log("Sorted Measures based on Received Measure Orders")
-            // const sorter = (a, b) => {
-            //     if(this._orderOfMeasures.includes(a)){
-            //        return -1;
-            //     };
-            //     if(this._orderOfMeasures.includes(b)){
-            //        return 1;
-            //     };
-            //     return 0;
-            // };
-            // this._measures.sort(sorter)
-            this._measures = this._orderOfMeasures;
-
-            this._columnValues = Array.from(this._columnValues)
-            this._columnValues = order_of_dimensions;
-
-            // ------------------ Check Points -----------------   
-                // console.log(this._measures)
-                // console.log("Column Values");
-                // console.log(this._columnValues);
-            // -------------------------------------------------
-
-            var temp_key_1 = temp_key.slice();
-            var flag = false;
-
-            for (var i = 0; i < rset.length;) {
-
-                var obj = {};
-
-                if (this._measureDimensionAtIndex != 1) {
-                    obj = Object.fromEntries(this._measures.map(key => [key, Object.fromEntries(this._columnValues.map(key => [key, "-"]))]));
-                } else {
-                    obj = Object.fromEntries(this._columnValues.map(key => [key, Object.fromEntries(this._measures.map(key => [key, "-"]))]));
+            for (var l in rset[s]) {
+                if (!(that._columnNames.includes(l)) && l != "@MeasureDimension") {
+                    that._dimensions.add(l);
+                    if (cntr == 0) {
+                        temp_key.push(rset[0][l].description)
+                    }
                 }
-
-                if(!flag) { 
-                    this._columnValueOrder = Object.keys(Object.fromEntries(this._columnValues.map(key => [key, "-"]))).slice() 
+                if (l == "@MeasureDimension") {
+                    that._measures.add(rset[s][l].description);
                 }
+            }
 
-                while (JSON.stringify(temp_key.join("_#_")) == JSON.stringify(temp_key_1.join("_#_"))) {
+            cntr += 1;
+        }
 
-                    for (var k = 0; k < this._columnValues.length; k++) {
-                        for (var l = 0; l < this._columnNames.length; l++) {
-                            if (rset[i][this._columnNames[l]].description == this._columnValues[k]) {
-                                for (var m = 0; m < this._measures.length; m++) {
-                                    if (rset[i]["@MeasureDimension"].description == this._measures[m]) {
-                                        if (this._measureDimensionAtIndex != 1) {
-                                            obj[this._measures[m]][this._columnValues[k]] = rset[i]["@MeasureDimension"].rawValue;
-                                        } else {
-                                            obj[this._columnValues[k]][this._measures[m]] = rset[i]["@MeasureDimension"].rawValue;
-                                        }
+        // Xls
+        that._colData_Xls.push(o);
+
+        that._dimensions = Array.from(that._dimensions);
+        console.log("Dimensions");
+        console.log(that._dimensions);
+        // Xls
+        console.log(that._colData_Xls)
+
+        that._measures = Array.from(that._measures);
+        console.log("Measures");
+        console.log(that._measures);
+
+        console.log("Order of Measures");
+        console.log(that._orderOfMeasures);
+
+        that._measures = that._orderOfMeasures;
+
+        that._columnValues = Array.from(that._columnValues)
+        that._columnValues = Object.keys(that.dimensions);
+
+        // ------------------ Check Points -----------------   
+            // console.log(that._measures)
+            // console.log("Column Values");
+            // console.log(that._columnValues);
+        // -------------------------------------------------
+
+        var temp_key_1 = temp_key.slice();
+        var flag = false;
+
+        for (var i = 0; i < rset.length;) {
+
+            var obj = {};
+
+            if (that._measureDimensionAtIndex != 1) {
+                obj = Object.fromEntries(that._measures.map(key => [key, Object.fromEntries(that._columnValues.map(key => [key, "-"]))]));
+            } else {
+                obj = Object.fromEntries(that._columnValues.map(key => [key, Object.fromEntries(that._measures.map(key => [key, "-"]))]));
+            }
+
+            if(!flag) { 
+                that._columnValueOrder = Object.keys(Object.fromEntries(that._columnValues.map(key => [key, "-"]))).slice() 
+            }
+
+            while (JSON.stringify(temp_key.join("_#_")) == JSON.stringify(temp_key_1.join("_#_"))) {
+
+                for (var k = 0; k < that._columnValues.length; k++) {
+                    for (var l = 0; l < that._columnNames.length; l++) {
+                        if (rset[i][that._columnNames[l]].description == that._columnValues[k]) {
+                            for (var m = 0; m < that._measures.length; m++) {
+                                if (rset[i]["@MeasureDimension"].description == that._measures[m]) {
+                                    if (that._measureDimensionAtIndex != 1) {
+                                        obj[that._measures[m]][that._columnValues[k]] = rset[i]["@MeasureDimension"].formattedValue;
+                                    } else {
+                                        obj[that._columnValues[k]][that._measures[m]] = rset[i]["@MeasureDimension"].formattedValue;
                                     }
                                 }
                             }
                         }
                     }
-
-                    flag = true;
-                    this._resultSet[temp_key_1.join("_#_")] = obj
-
-                    i++;
-
-                    if (i >= rset.length) {
-                        break;
-                    }
-
-                    temp_key_1 = [];
-                    for (var j = 0; j < this._dimensions.length; j++) {
-                        temp_key_1.push(rset[i][this._dimensions[j]].description);
-                    }
-
                 }
+
+                flag = true;
+                that._resultSet[temp_key_1.join("_#_")] = obj
+
+                i++;
 
                 if (i >= rset.length) {
                     break;
                 }
 
-                temp_key = [];
-                for (var j = 0; j < this._dimensions.length; j++) {
-                    temp_key.push(rset[i][this._dimensions[j]].description);
+                temp_key_1 = [];
+                for (var j = 0; j < that._dimensions.length; j++) {
+                    temp_key_1.push(rset[i][that._dimensions[j]].description);
                 }
+
             }
 
-            console.log("Transformed Resultset")
-            console.log(this._resultSet);
+            if (i >= rset.length) {
+                break;
+            }
 
-            // ------------------ Check Points -----------------   
-                // console.log("Column Values Sorted...")
-                // this._columnValueOrder = order_of_dimensions;
-                // console.log(this._columnValueOrder);
-            // -------------------------------------------------
-
-        }
-
-        setCustomHeader(dimensionHeaders, measureHeaders) {
-
-            this._custom_DimensionHeaders = dimensionHeaders;
-            this._custom_MeasureHeaders = measureHeaders;
-
-            if(Object.keys(this._custom_DimensionHeaders).length > 0) {
-                if(Object.keys(this._custom_DimensionHeaders).length != this._columnValueOrder.length) {
-                    console.log("------- Error -------");
-                    console.log(`Length Mismatch for Custom Dimension Headers is ${Object.keys(this._custom_DimensionHeaders).length},  while length of Dimensions were ${this._columnValueOrder.length}`);
-                    console.log("---------------------");
-                    return;
-                }
-                console.log("Custom Dimension Headers");
-                console.log( this._custom_DimensionHeaders);
-                this._custom_DimensionHeader_Flag = true;
-            } 
-
-            if(Object.keys(this._custom_MeasureHeaders).length > 0) {
-                if(Object.keys(this._custom_MeasureHeaders).length != this._orderOfMeasures.length) {
-                    console.log("------- Error -------");
-                    console.log(`Length Mismatch for Custom Measure Headers is ${Object.keys(this._custom_MeasureHeaders).length},  while length of Measures were ${this._orderOfMeasures.length}`);
-                    console.log("---------------------");
-                    return;
-                }
-                console.log("Custom Measure Headers");
-                console.log( this._custom_MeasureHeaders);
-                this._custom_MeasureHeaders_Flag = true;
+            temp_key = [];
+            for (var j = 0; j < that._dimensions.length; j++) {
+                temp_key.push(rset[i][that._dimensions[j]].description);
             }
         }
 
-        prepareDataToBeExported() {
+        console.log("Transformed Resultset")
+        console.log(that._resultSet);
 
-            this._dataToExcel = [];
-            var rowArr = []
+        // Info on Query
+        info_OnQuery.push(["Dimensions",that._dimensions.join(", ")]);
+        info_OnQuery.push(["Measures",that._measures.join(", ")]);
+        // info_OnQuery.shift();
+        // info_OnQuery.shift();
+        that.filters = info_OnQuery;
+        that._exportFileName = info_OnQuery[0][1];
 
-            // Actual Data Preparation
-            for(var i = 0; i < this._dimensions.length - 1; i++) {
-                rowArr.push("")
-            }
+        setExtras(that);
+        exportToExcel(that);
 
-            rowArr = []
-            for(var k = 0; k < this._dimensions.length; k++) {
-                rowArr.push(this._dimensions[k])
-            }
-            this._dataToExcel.push(rowArr);
+        // ------------------ Check Points -----------------   
+            // console.log("Column Values Sorted...")
+            // that._columnValueOrder = Object.keys(that.dimensions);
+            // console.log(that._columnValueOrder);
+        // -------------------------------------------------
 
-            rowArr = []
-            for(var i in this._resultSet) {
-                rowArr = []
-                var names = i.split("_#_")
-                for(var j = 0; j < names.length; j++) {
-                    rowArr.push(names[j])
-                }
-                for(var k in this._resultSet[i]) {
-                    for(var v in this._resultSet[i][k]) {
-                        if(this._numericColumnNames && this._numericColumnNames.includes(v)) {
-                            if(this._resultSet[i][k][v] != "-") {
-                                rowArr.push(parseInt(this._resultSet[i][k][v]))
-                            } else {
-                                rowArr.push(this._resultSet[i][k][v])
-                            }
-                        } else {
-                            rowArr.push(this._resultSet[i][k][v])
-                        }
-                    }
-                }
-                this._dataToExcel.push(rowArr);
-            }
-
-            // Last Row Column (Header)
-            for(var i = 0, j = 0; i < this._dataToExcel[this._dataToExcel.length - 1].length - this._dimensions.length; i++) {
-                if(i == 0) {
-                    rowArr = [""];  
-                    if(this._columnNames[this._columnNames.length - 1] == "@MeasureDimension") {
-                        rowArr.push("")
-                    } else {
-                        rowArr.push(this._columnNames[this._columnNames.length - 1]);
-                    }
-                }
-                if(this._columnNames[this._columnNames.length - 1] == "@MeasureDimension") {
-                    if(this._custom_MeasureHeaders_Flag) {
-                        rowArr.push(this._custom_MeasureHeaders[this._orderOfMeasures[j]]);
-                    } else {
-                        rowArr.push(this._orderOfMeasures[j]);
-                    }
-                    j+=1;
-                    if(j >= this._orderOfMeasures.length) {
-                        j = 0;
-                    }
-                } else {
-                    if(this._custom_DimensionHeader_Flag) {
-                        rowArr.push(this._custom_DimensionHeaders[this._columnValueOrder[j]]);
-                    } else {
-                        rowArr.push(this._columnValueOrder[j]);
-                    }
-                    j+=1;
-                    if(j >= this._columnValueOrder.length) {
-                        j = 0;
-                    }
-                }
-            }
-            this._dataToExcel.unshift(rowArr);
-
-            // First Row Column (Header)
-            for(var i = 0; i < this._columnValueOrder.length; i++) {
-
-                if(i == 0) {
-                    rowArr = [""]; 
-                    if(this._columnNames[0] == "@MeasureDimension") {
-                        rowArr.push("");
-                    } else {
-                        rowArr.push(this._columnNames[0]);
-                    }
-                }
-
-                if(this._columnNames[0] == "@MeasureDimension") {
-                    if(this._orderOfMeasures[i] == undefined) {
-                        break;
-                    }
-                    if(this._custom_MeasureHeaders_Flag) {
-                        rowArr.push(this._custom_MeasureHeaders[this._orderOfMeasures[i]]);
-                    } else {
-                        rowArr.push(this._orderOfMeasures[i]);
-                    }
-                    for(var j = 0; j < this._columnValueOrder.length - 1; j++) {
-                        rowArr.push("");
-                    }
-                } else {
-                    if(this._custom_DimensionHeader_Flag) {
-                        rowArr.push(this._custom_DimensionHeaders[this._columnValueOrder[i]]);
-                    } else {
-                        rowArr.push(this._columnValueOrder[i]);
-                    }
-                    for(var j = 0; j < this._colData_Xls[0][this._dataToExcel[0][this._dimensions.length - 1]].size - 1; j++) {
-                        rowArr.push("");
-                    }
-                }
-
-            }
-            this._dataToExcel.unshift(rowArr);
-
-            // ------------------ Check Points -----------------   
-                // console.log("Data to be Exported...")
-                // console.log(this._dataToExcel)
-            // -------------------------------------------------
-        }
-
-        setAsNumericColumns(numericColumnNames) {
-            this._numericColumnNames = numericColumnNames;
-            console.log("Numeric Column Names")
-            console.log(this._numericColumnNames);
-        }
-
-        setFileName(fileName) {
-            this._exportFileName = fileName;
-            console.log("Exporting sheet filename is "+this._exportFileName);
-        }
-
-        async exportToExcel() {
-
-            this.prepareDataToBeExported();
-
-            console.log("Export to Excel Called...")
-            console.log("-------------------------")
-
-            if(!isLibLoaded) {
-                await getScriptPromisify("https://www.amcharts.com/lib/4/core.js");
-                await getScriptPromisify("https://www.amcharts.com/lib/4/charts.js");
-                isLibLoaded = true;
-            }
-
-            var chart = am4core.create(this._root, am4charts.XYChart);
-
-            var exportColumnNames = {}
-            for(var i = 0; i < this._dataToExcel[0].length; i++) {
-                exportColumnNames[i] = this._dataToExcel[0][i];
-            }
-
-            // console.log(exportColumnNames);
-
-            chart.exporting.dataFields = exportColumnNames;
-            this._dataToExcel.shift();
-            for(var i = 0; i < this._dimensions.length; i++) {
-                this._dataToExcel[0][i] = this._dimensions[i];
-            }
-            this._dataToExcel.splice(1,1)
-
-            // ------------------ Check Points -----------------   
-                console.log("Data to be Exported...")
-                console.log(this._dataToExcel)
-            // -------------------------------------------------
-
-            chart.data = this._dataToExcel;
-
-            // chart.exporting.addColumnNames = false;
-            // chart.exporting.dataFields = {
-            //     "0": "Expenses",
-            //     "1": "Category",
-            //     "2":"",
-            //     "3":""
-            //   }
-
-            if(this._exportFileName) {
-                chart.exporting.filePrefix = this._exportFileName;
-            }
-
-            chart.exporting.export("xlsx");
-        }
     }
+
+    function prepareDataToBeExported(that) {
+
+        that._dataToExcel = [];
+        var rowArr = []
+
+        // Actual Data Preparation
+        for(var i = 0; i < that._dimensions.length - 1; i++) {
+            rowArr.push("")
+        }
+
+        rowArr = []
+        for(var k = 0; k < that._dimensions.length; k++) {
+            rowArr.push(that._dimensions[k])
+        }
+        that._dataToExcel.push(rowArr);
+
+        rowArr = []
+        for(var i in that._resultSet) {
+            rowArr = []
+            var names = i.split("_#_")
+            for(var j = 0; j < names.length; j++) {
+                rowArr.push(names[j])
+            }
+            for(var k in that._resultSet[i]) {
+                for(var v in that._resultSet[i][k]) {
+                    if(that._numericColumnNames && that._numericColumnNames.includes(v)) {
+                        if(that._resultSet[i][k][v] != "-") {
+                            rowArr.push(parseFloat(that._resultSet[i][k][v].replaceAll(',', '')))
+                        } else {
+                            rowArr.push(that._resultSet[i][k][v])
+                        }
+                    } else {
+                        rowArr.push(that._resultSet[i][k][v])
+                    }
+                }
+            }
+            that._dataToExcel.push(rowArr);
+        }
+
+        // Last Row Column (Header)
+        for(var i = 0, j = 0; i < that._dataToExcel[that._dataToExcel.length - 1].length - that._dimensions.length; i++) {
+            if(i == 0) {
+                rowArr = [""];  
+                if(that._columnNames[that._columnNames.length - 1] == "@MeasureDimension") {
+                    rowArr.push(that._columnNames[that._columnNames.length - 1])
+                } else {
+                    rowArr.push(that._columnNames[that._columnNames.length - 1]);
+                }
+            }
+            if(that._columnNames[that._columnNames.length - 1] == "@MeasureDimension") {
+                if(that._custom_MeasureHeaders_Flag) {
+                    rowArr.push(that._custom_MeasureHeaders[that._orderOfMeasures[j]]);
+                } else {
+                    rowArr.push(that._orderOfMeasures[j]);
+                }
+                j+=1;
+                if(j >= that._orderOfMeasures.length) {
+                    j = 0;
+                }
+            } else {
+                if(that._custom_DimensionHeader_Flag) {
+                    rowArr.push(that._custom_DimensionHeaders[that._columnValueOrder[j]]);
+                } else {
+                    rowArr.push(that._columnValueOrder[j]);
+                }
+                j+=1;
+                if(j >= that._columnValueOrder.length) {
+                    j = 0;
+                }
+            }
+        }
+        that._dataToExcel.unshift(rowArr);
+
+        // First Row Column (Header)
+        for(var i = 0; i < that._columnValueOrder.length; i++) {
+
+            if(i == 0) {
+                rowArr = [""]; 
+                if(that._columnNames[0] == "@MeasureDimension") {
+                    rowArr.push("");
+                } else {
+                    rowArr.push(that._columnNames[0]);
+                }
+            }
+
+            if(that._columnNames[0] == "@MeasureDimension") {
+                if(that._orderOfMeasures[i] == undefined) {
+                    break;
+                }
+                if(that._custom_MeasureHeaders_Flag) {
+                    rowArr.push(that._custom_MeasureHeaders[that._orderOfMeasures[i]]);
+                } else {
+                    rowArr.push(that._orderOfMeasures[i]);
+                }
+                for(var j = 0; j < that._columnValueOrder.length - 1; j++) {
+                    rowArr.push("");
+                }
+            } else {
+                if(that._custom_DimensionHeader_Flag) {
+                    rowArr.push(that._custom_DimensionHeaders[that._columnValueOrder[i]]);
+                } else {
+                    rowArr.push(that._columnValueOrder[i]);
+                }
+
+                console.log(that._colData_Xls[0]);
+                console.log(that._dataToExcel[0]);
+                console.log(that._dimensions.length - 1);
+                console.log(that._columnNames[0]);
+                for(var j = 0; j < that._colData_Xls[0][that._dataToExcel[0][that._dimensions.length - 1]].size - 1; j++) {
+                    rowArr.push("");
+                }
+            }
+
+        }
+        that._dataToExcel.unshift(rowArr);
+
+        // ------------------ Check Points -----------------   
+            // console.log("Data to be Exported...")
+            // console.log(that._dataToExcel)
+        // -------------------------------------------------
+    }
+
+    function setExtras(that) {
+
+        if(Object.keys(that._custom_DimensionHeaders).length > 0) {
+            if(Object.keys(that._custom_DimensionHeaders).length != that._columnValueOrder.length) {
+                console.log("------- Error -------");
+                console.log(`Length Mismatch for Custom Dimension Headers is ${Object.keys(that._custom_DimensionHeaders).length},  while length of Dimensions were ${that._columnValueOrder.length}`);
+                console.log("---------------------");
+                return;
+            }
+            console.log("Custom Dimension Headers");
+            console.log( that._custom_DimensionHeaders);
+            that._custom_DimensionHeader_Flag = true;
+        } 
+
+        if(Object.keys(that._custom_MeasureHeaders).length > 0) {
+            if(Object.keys(that._custom_MeasureHeaders).length != that._orderOfMeasures.length) {
+                console.log("------- Error -------");
+                console.log(`Length Mismatch for Custom Measure Headers is ${Object.keys(that._custom_MeasureHeaders).length},  while length of Measures were ${that._orderOfMeasures.length}`);
+                console.log("---------------------");
+                return;
+            }
+            console.log("Custom Measure Headers");
+            console.log( that._custom_MeasureHeaders);
+            that._custom_MeasureHeaders_Flag = true;
+        }
+
+        console.log("Numeric Column Names")
+        console.log(that._numericColumnNames);
+
+        console.log("Exporting sheet filename is "+that._exportFileName);
+    }
+
+    async function exportToExcel(that) {
+
+        prepareDataToBeExported(that);
+
+        console.log("Export to Excel Called...")
+        console.log("-------------------------")
+
+        if(!isLibLoaded) {
+            await getScriptPromisify("https://www.amcharts.com/lib/4/core.js");
+            await getScriptPromisify("https://www.amcharts.com/lib/4/charts.js");
+            isLibLoaded = true;
+        }
+
+        var chart = am4core.create(that._root, am4charts.XYChart);
+
+        var exportColumnNames = {}
+        for(var i = 0; i < that._dataToExcel[0].length; i++) {
+            exportColumnNames[i] = that._dataToExcel[0][i];
+        }
+
+        // console.log(exportColumnNames);
+
+        chart.exporting.dataFields = exportColumnNames;
+        that._dataToExcel.shift();
+        for(var i = 0; i < that._dimensions.length; i++) {
+            that._dataToExcel[0][i] = that._dimensions[i];
+        }
+        that._dataToExcel.splice(1,1)
+
+        // ------------------ Check Points -----------------   
+            console.log("Data to be Exported...")
+            console.log(that._dataToExcel)
+        // -------------------------------------------------
+
+        chart.data = that._dataToExcel;
+
+        // chart.exporting.addColumnNames = false;
+        // chart.exporting.dataFields = {
+        //     "0": "Expenses",
+        //     "1": "Category",
+        //     "2":"",
+        //     "3":""
+        //   }
+
+        if(that._exportFileName) {
+            chart.exporting.filePrefix = that._exportFileName;
+        }
+
+        console.log(that.filters);
+
+        const infoOnQuery = that.filters;
+
+        chart.exporting.adapter.add("xlsxWorkbook", function (wb) 
+        {
+            // modify and add additional stuff to workbook object
+            // ...
+            wb.workbook.SheetNames.push("Information on Query");
+            wb.workbook.Sheets["Information on Query"] = wb.xlsx.utils.aoa_to_sheet(infoOnQuery);
+            return wb;
+        });
+
+        chart.exporting.export("xlsx");
+    }
+
     customElements.define("sample-export", customWidgetExport);
 
 })();
