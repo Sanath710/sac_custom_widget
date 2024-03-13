@@ -1,8 +1,8 @@
 {
     "id": "Custom_Export",
     "version": "1.0.0",
-    "name": "CW - Export",
-    "description": "Export Custom Widget using amcharts 4 library.",
+    "name": "Export Table to Excel",
+    "description": "Multi-Header Table Export to Excel using Amcharts 4 library",
     "newInstancePrefix": "Export",
     "icon": "https://sanath710.github.io/sac_custom_widget/Export%20Table%20to%20Excel/exportTableIcon.png",
     "vendor": "Sanath Ezhuthachan",
@@ -19,10 +19,27 @@
         }
     ],
     "properties": {
-
+        "resultset": {
+            "type": "any"
+        },
+        "measures": {
+            "type": "any"
+        },
+        "dimensions": {
+            "type": "any"
+        },
+        "filters": {
+            "type": "any"
+        },
+        "properties": {
+            "type": "any"
+        },
+        "method": {
+            "type": "string"
+        }
     },
     "methods": {
-        "setResultSet": {
+        "exportResultSetToExcel": {
             "description": "transform (format) ResultSet",
             "parameters": [
                 {
@@ -31,50 +48,27 @@
                     "description": "Resultset of DataSource"
                 },
                 {
-                    "name": "Columns",
-                    "type": "string[]",
-                    "description": "Columns in Order (Top - Bottom) - Excluding Measures."
+                    "name": "Dimensions",
+                    "type": "any",
+                    "description": "[Object]"
                 },
                 {
-                    "name": "Order_of_Measures",
+                    "name": "Measures",
                     "type": "any",
-                    "description": "[Array] Order of Measures to be preserved."
+                    "description": "[Object]"
                 },
                 {
-                    "name": "Order_of_Dimensions",
+                    "name": "Filters",
                     "type": "any",
-                    "description": "[Array] Order of Dimensions to be preserved."
-                }
-            ]
-        },
-        "setCustomHeader": {
-            "description": "Custom Header Values to be Exported.",
-            "parameters": [
-                {
-                    "name": "DimensionHeaders",
-                    "type": "any",
-                    "description": "[Object] Dimension Header"
+                    "description": "[Array]"
                 },
                 {
-                    "name": "MeasureHeaders",
+                    "name": "Properties",
                     "type": "any",
-                    "description": "[Object] Measure Header"
+                    "description": "[Array]"
                 }
-            ]
-        },
-        "setAsNumericColumns":{
-            "description": "To convert data into numeric value before exporting it into sheet",
-            "parameters": [
-                {
-                    "name": "ColumnNames",
-                    "type": "string[]",
-                    "description": "[Array] Dimension Header"
-                }
-            ]
-        },
-        "exportToExcel":{
-            "description": "Final Export Call to be converted to Xls sheet",
-            "parameters": []
+            ],
+            "body":"this.resultset = ResultSet; this.dimensions = Dimensions; this.measures = Measures; this.filters = Filters; this.properties=Properties; this.method = 'exportToExcel';"
         }
     },
     "events": {
