@@ -1,0 +1,147 @@
+{
+    "id": "digital.sweep.sac.sample.export",
+    "version": "1.0.1",
+    "name": "Export",
+    "description": "Export Custom Widget using amcharts 4 library.",
+    "newInstancePrefix": "Export",
+    "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA70lEQVR4nN3VPUoEMRQA4K+x91pKCrGysVbxAJa7pWC1B7AVLLQQG8HWa1isndsoCiqikYUsDP7MZCbZxgeBkLx5H3lkCP8x1nGH2DHGQ4Gc4rEEWXwcWsYD3lPe4TKAWILkAnEo0geIQ5C+QMRjY14FCC3oIOAire1jA/e4qQls4xWXmOADezWBgHM84xbXtVsU0ik+097uMoAJ3vCC48b6ak7RLmATs9SaKzxhK+2pAZyk9sxv0U6an34Dilp0lP7S3+5/FSBk9LwaoBToenDOsJJyD1ryRn8Ba5gWIqOck/SJJlK9+CLm7/OPN/oLWQy9lIV7CrsAAAAASUVORK5CYII=",
+    "vendor": "Digital-Sweep",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "digital-sweep-sac-sample-export",
+            "url": "/export.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "width": {
+            "type": "integer"
+        },
+        "height": {
+            "type": "integer"
+        },
+        "resultset": {
+            "type": "any"
+        },
+        "measures": {
+            "type": "any"
+        },
+        "dimensions": {
+            "type": "any"
+        },
+        "filters": {
+            "type": "any"
+        },
+        "properties": {
+            "type": "any"
+        },
+        "method": {
+            "type": "string"
+        }
+    },
+    "methods": {
+        "export": {
+            "description": "To Export Data",
+            "parameters": [
+                {
+                    "name": "Resultset",
+                    "type": "any",
+                    "description": "Resultset of dataSource."
+                },
+                {
+                    "name": "Measures",
+                    "type": "any",
+                    "description": "Object of measures with technical and display description mapping."
+                },                
+                {
+                    "name": "Dimensions",
+                    "type": "any",
+                    "description": "Object of dimension with technical and display description mapping."
+                },
+                {
+                    "name": "Filters",
+                    "type": "any",
+                    "description": "Filters on Query."
+                },
+                {
+                    "name": "Properties",
+                    "type": "any",
+                    "description": "Export properties."
+                }
+            ],
+            "body": " this.resultset=Resultset; this.measures=Measures; this.dimensions=Dimensions; this.filters=Filters; this.properties=Properties; this.method='export_table'; "
+        },
+        "export_pivot": {
+            "description": "To Export Data",
+            "parameters": [
+                {
+                    "name": "Resultset",
+                    "type": "any",
+                    "description": "Resultset of dataSource."
+                },
+                {
+                    "name": "Measures",
+                    "type": "any",
+                    "description": "Object of measures with technical and display description mapping."
+                },                
+                {
+                    "name": "Dimensions",
+                    "type": "any",
+                    "description": "Object of dimension with technical and display description mapping."
+                },
+                {
+                    "name": "Filters",
+                    "type": "any",
+                    "description": "Filters on Query."
+                },
+                {
+                    "name": "Properties",
+                    "type": "any",
+                    "description": "Export properties."
+                }
+            ],
+            "body": " this.resultset=Resultset; this.measures=Measures; this.dimensions=Dimensions; this.filters=Filters; this.properties=Properties; this.method='export_graph'; "
+        },
+        "exportResultSetToExcel": {
+            "description": "transform (format) ResultSet",
+            "parameters": [
+                {
+                    "name": "ResultSet",
+                    "type": "any",
+                    "description": "Resultset of DataSource"
+                },
+                {
+                    "name": "Dimensions",
+                    "type": "any",
+                    "description": "[Object]"
+                },
+                {
+                    "name": "Measures",
+                    "type": "any",
+                    "description": "[Object]"
+                },
+                {
+                    "name": "Filters",
+                    "type": "any",
+                    "description": "[Array]"
+                },
+                {
+                    "name": "Properties",
+                    "type": "any",
+                    "description": "[Array]"
+                }
+            ],
+            "body":"this.resultset = ResultSet; this.dimensions = Dimensions; this.measures = Measures; this.filters = Filters; this.properties=Properties; this.method = 'exportToExcel';"
+        }
+    },
+    "events": {
+        "onClick": {
+            "description": "Called when the user clicks the Export custom widget."
+        }
+    }
+}
