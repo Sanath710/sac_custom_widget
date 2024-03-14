@@ -54,8 +54,20 @@ var getScriptPromisify = (src) => {
     function exportResultSetToExcel(that) {
 
         var rset = that.resultset;
+        console.log(rset);
+        console.log(that.properties["ignore_column_headers"]);
         that._resultSet = [];
+        // if(that.properties["ignore_column_headers"].length > 0) {
+        //     var temp_order = new Set();
+        //     rset.forEach((element, index, array) => {
+        //         console.log(element); // 100, 200, 300
+        //         console.log(index); // 0, 1, 2
+        //         console.log(array); // same myArray object 3 times
+        //         return;
+        //     });
+        // } else {
         that._orderOfMeasures = Object.keys(that.measures);
+        // }
         var info_OnQuery = that.filters;
         that._columnNames = that.properties["order_of_headers"];
         that._measureDimensionAtIndex = that._columnNames.indexOf("@MeasureDimension");
@@ -77,8 +89,8 @@ var getScriptPromisify = (src) => {
 
     // ------------------ Check Points -----------------   
         // console.log(rset)
-        // console.log("Column Names")
-        // console.log(that._columnNames)
+        console.log("Column Names")
+        console.log(that._columnNames)
 
         // console.log("Measure Dimension At Index")
         // console.log(that._measureDimensionAtIndex)
@@ -102,7 +114,7 @@ var getScriptPromisify = (src) => {
             }
 
             for (var l in rset[s]) {
-                if (!(that._columnNames.includes(l)) && l != "@MeasureDimension") {
+                if (!(that._columnNames.includes(l) || that.properties["ignore_column_headers"].includes(l)) && l != "@MeasureDimension") {
                     that._dimensions.add(l);
                     if (cntr == 0) {
                         temp_key.push(rset[0][l].description)
@@ -134,7 +146,7 @@ var getScriptPromisify = (src) => {
 
         that._measures = that._orderOfMeasures;
 
-        that._columnValues = Array.from(that._columnValues)
+        that._columnValues = Array.from(that._columnValues);
         that._columnValues = Object.keys(that.dimensions);
 
         // ------------------ Check Points -----------------   
@@ -158,6 +170,8 @@ var getScriptPromisify = (src) => {
 
             if(!flag) { 
                 that._columnValueOrder = Object.keys(Object.fromEntries(that._columnValues.map(key => [key, "-"]))).slice() 
+                console.log("Column Value Order")
+                console.log(that._columnValueOrder)
             }
 
             while (JSON.stringify(temp_key.join("_#_")) == JSON.stringify(temp_key_1.join("_#_"))) {
@@ -221,6 +235,7 @@ var getScriptPromisify = (src) => {
         // ------------------ Check Points -----------------   
             // console.log("Column Values Sorted...")
             // that._columnValueOrder = Object.keys(that.dimensions);
+            // console.log(that.dimensions)
             // console.log(that._columnValueOrder);
         // -------------------------------------------------
 
@@ -329,12 +344,13 @@ var getScriptPromisify = (src) => {
                 } else {
                     rowArr.push(that._columnValueOrder[i]);
                 }
-
-                console.log(that._colData_Xls[0]);
-                console.log(that._dataToExcel[0]);
-                console.log(that._dimensions.length - 1);
-                console.log(that._columnNames[0]);
-                for(var j = 0; j < that._colData_Xls[0][that._dataToExcel[0][that._dimensions.length - 1]].size - 1; j++) {
+                // console.log(that._colData_Xls[0]);
+                // console.log(that._dataToExcel[0]);
+                // console.log(that._dimensions);
+                // console.log(that._dimensions.length - 1);
+                // console.log(that._columnNames[0]);
+                // console.log(that._colData_Xls[0][that._dataToExcel[0]]);
+                for(var j = 0; j < that._colData_Xls[0][that._dataToExcel[0][that._dimensions.length]].size - 1; j++) {
                     rowArr.push("");
                 }
             }
@@ -395,6 +411,9 @@ var getScriptPromisify = (src) => {
 
         var chart = am4core.create(that._root, am4charts.XYChart);
 
+        that._dataToExcel[0].splice(0, 1)
+        that._dataToExcel[0].push("")
+
         var exportColumnNames = {}
         for(var i = 0; i < that._dataToExcel[0].length; i++) {
             exportColumnNames[i] = that._dataToExcel[0][i];
@@ -403,11 +422,17 @@ var getScriptPromisify = (src) => {
         // console.log(exportColumnNames);
 
         chart.exporting.dataFields = exportColumnNames;
+        // console.log("-2-2--2-2")
+        // console.log(that._dataToExcel.slice())
         that._dataToExcel.shift();
         for(var i = 0; i < that._dimensions.length; i++) {
             that._dataToExcel[0][i] = that._dimensions[i];
         }
+        // console.log(that._dataToExcel.slice())
+        var colVal = that._dataToExcel[0][0]+" / "+that._dataToExcel[0][1];
         that._dataToExcel.splice(1,1)
+        that._dataToExcel[0].splice(1,1)
+        that._dataToExcel[0][0] = colVal;
 
         // ------------------ Check Points -----------------   
             console.log("Data to be Exported...")
