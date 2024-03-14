@@ -1,0 +1,3 @@
+var rs = Table_2.getDataSource().getResultSet();
+console.log(rs);
+CustomTable_1.setResultSet(2, rs, -1);
