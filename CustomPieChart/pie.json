@@ -1,0 +1,49 @@
+{
+    "id": "Custom_Pie",
+    "version": "1.0.0",
+    "name": "CW - Pie",
+    "description": "Pie Amcharts.",
+    "newInstancePrefix": "Pie",
+    "supportsLinkedAnalysisFilterOnSelection": true,
+    "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA70lEQVR4nN3VPUoEMRQA4K+x91pKCrGysVbxAJa7pWC1B7AVLLQQG8HWa1isndsoCiqikYUsDP7MZCbZxgeBkLx5H3lkCP8x1nGH2DHGQ4Gc4rEEWXwcWsYD3lPe4TKAWILkAnEo0geIQ5C+QMRjY14FCC3oIOAire1jA/e4qQls4xWXmOADezWBgHM84xbXtVsU0ik+097uMoAJ3vCC48b6ak7RLmATs9SaKzxhK+2pAZyk9sxv0U6an34Dilp0lP7S3+5/FSBk9LwaoBToenDOsJJyD1ryRn8Ba5gWIqOck/SJJlK9+CLm7/OPN/oLWQy9lIV7CrsAAAAASUVORK5CYII=",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "sample-pie",
+            "url": "http://127.0.0.1:5500/CustomPieChart/pieMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "dataBindings":{
+            "type":"any"
+        }
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+
+    },
+    "events":{
+
+    }
+}
