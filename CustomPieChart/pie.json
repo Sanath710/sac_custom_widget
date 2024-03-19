@@ -1,0 +1,84 @@
+{
+    "id": "Custom_Pie",
+    "version": "1.0.0",
+    "name": "PieChart with Multi-Slice Linked Analysis",
+    "description": "Pie Amcharts.",
+    "newInstancePrefix": "Pie",
+    "supportsLinkedAnalysisFilterOnSelection": true,
+    "supportsBookmark": true,
+    "imports": ["table"],
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomPieChart/pie-chart.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "sample-pie",
+            "url": "https://sanath710.github.io/sac_custom_widget/CustomPieChart/pieMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        },
+        {
+            "kind": "styling",
+            "tag": "cw-pie-styling",
+            "url": "https://sanath710.github.io/sac_custom_widget/CustomPieChart/pieStyling.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "myTable":{
+            "type":"Table",
+            "description":"Table Widget"
+        },
+        "colorPallate":{
+            "type":"string[]",
+            "description":"Color Pallete for Custom Widget",
+            "default":[]
+        }
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+        "setTableWidget": {
+        "description": "Pass Table Widget to Custom Widget Side.",
+        "parameters": [
+          {
+            "name": "passTable",
+            "type":"any",
+            "description": "Pass Table Widget to Custom Widget Side."
+          }
+        ]
+      },
+      "setColorPallate":{
+        "description":"Set Color Pallate Value",
+        "parameters":[
+            {
+            "name":"ColorPallate",
+            "type":"string[]",
+            "description":"Set Colors"
+         }
+        ],
+        "body":"this.colorPallate = ColorPallate;"
+      }
+    },
+    "events":{
+
+    }
+}
