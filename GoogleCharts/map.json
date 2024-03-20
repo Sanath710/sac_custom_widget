@@ -1,0 +1,46 @@
+{
+    "id": "Custom_Map_GoogleChart",
+    "version": "1.0.0",
+    "name": "GoogleChart_Map",
+    "description": "Google Charts",
+    "newInstancePrefix": "Map",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomPieChart/pie-chart.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "cw-d3-barchart",
+            "url": "http://127.0.0.1:5500/D3%20JS/d3Main.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+       
+    },
+    "events":{
+
+    }
+}
