@@ -1,0 +1,46 @@
+{
+    "id": "Custom_Map_GoogleChart",
+    "version": "1.0.0",
+    "name": "GoogleChart_Map",
+    "description": "Google Charts",
+    "newInstancePrefix": "Map",
+    "icon": "https://sanath710.github.io/sac_custom_widget/GoogleCharts/map.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "cw-weather-widget",
+            "url": "http://127.0.0.1:5500/WeatherWidget/weatherMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+       
+    },
+    "events":{
+
+    }
+}
