@@ -163,34 +163,6 @@ var data1 = undefined;
 
         legend = chart.children.push(am5.Legend.new(root, {}))
 
-        chart = root.container.children.push(
-          am5percent.PieChart.new(root, {})
-        )
-
-
-        // Define data
-data1 = [{
-  country: "France",
-  sales: 100000
-}, {
-  country: "Spain",
-  sales: 160000
-}, {
-  country: "United Kingdom",
-  sales: 80001
-}];
-
-// Create series
-var series3 = chart.series.push(
-  am5percent.PieSeries.new(root, {
-    name: "Series 3",
-    valueField: "sales",
-    categoryField: "country"
-  })
-);
-
-series3.data.setAll(data1);
-
       }
 
       console.log(root)
@@ -204,8 +176,6 @@ series3.data.setAll(data1);
       series1.data.setAll(data)
 
       series2.data.setAll(data)
-
-series3.data.setAll(data1);
 
 console.log(chart);
 
