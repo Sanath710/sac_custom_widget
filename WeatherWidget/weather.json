@@ -1,0 +1,59 @@
+{
+    "id": "Custom_Weather_Widget",
+    "version": "1.0.0",
+    "name": "WeatherWidget",
+    "description": "Weather Widget",
+    "newInstancePrefix": "WeatherWidget",
+    "icon": "https://sanath710.github.io/sac_custom_widget/WeatherWidget/cloudy.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true,
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "cw-weather-widget",
+            "url": "https://sanath710.github.io/sac_custom_widget/WeatherWidget/weatherMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+        "setLatLon": {
+            "parameters": [
+                {
+                    "name": "Latitude",
+                    "description":"Pass Latitude",
+                    "type": "any"
+                },
+                {
+                    "name": "Longitude",
+                    "description":"Pass Longitude",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events":{
+
+    }
+}
