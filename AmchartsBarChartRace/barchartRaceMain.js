@@ -151,6 +151,7 @@ var getScriptPromisify = src => {
         series.dataFields.categoryY = this._dim
         series.dataFields.valueX = this._mes
         series.tooltipText = '{valueX.value}'
+        series.columns.template.tooltipText = '{valueX.value}'
         series.columns.template.strokeOpacity = 0
         series.columns.template.column.cornerRadiusBottomRight = 5
         series.columns.template.column.cornerRadiusTopRight = 5
