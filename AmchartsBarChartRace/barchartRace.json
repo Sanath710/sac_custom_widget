@@ -1,0 +1,46 @@
+{
+    "id": "Custom_BarchartRace",
+    "version": "1.0.0",
+    "name": "BarchartRace Amcharts",
+    "description": "Barchart Race from AmCharts4",
+    "newInstancePrefix": "BarchartRace",
+    "icon": "https://sanath710.github.io/sac_custom_widget/AmchartsBarChartRace/bar-chart.png",
+    "vendor": "Sanath Ezhuthachan",
+    "eula": "",
+    "license": "",
+    "supportsMobile": true, 
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "cw-barchart-race",
+            "url": "https://sanath710.github.io/sac_custom_widget/AmchartsBarChartRace/barchartRaceMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "dataBindings":{
+        "myDataBinding":{
+            "feeds":[
+                {
+                    "id":"dimensions",
+                    "description":"Dimensions",
+                    "type":"dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                  }
+            ]
+        }
+    },
+    "methods": {
+        
+    },
+    "events":{
+
+    }
+}
