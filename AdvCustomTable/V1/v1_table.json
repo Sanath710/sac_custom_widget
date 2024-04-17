@@ -1,0 +1,40 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "V1_CustomTable_DigitalSweep",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomTable/table.png",
+    "version": "1.0.0",
+    "name": "V1 Custom Table - FY",
+    "newInstancePrefix": "V1_CustomTable",
+    "description": "V1 - Advanced Custom Table Widget",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "v1-custom-table",
+            "url": "http://127.0.0.1:5500/AdvCustomTable/V1/v1_tableMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        
+    },
+    "methods": {
+        "setResultSet": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "top_most_header_sequence",
+                    "description":"Header Value Sequence",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events": {}
+}

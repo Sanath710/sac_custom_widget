@@ -1,0 +1,87 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "Adv_CustomTable_DigitalSweep",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomTable/table.png",
+    "version": "1.0.0",
+    "name": "Advanced Custom Table",
+    "newInstancePrefix": "Adv_CustomTable",
+    "description": "Advanced Custom Table Widget with N - Selections",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "adv-custom-table",
+            "url": "http://127.0.0.1:5500/AdvCustomTable/advCustomTableMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "dimensionFeed": {
+            "type": "string[]",
+            "default": []
+        },
+        "measureFeed": {
+            "type": "string[]",
+            "default": []
+        }
+    },
+    "dataBindings": {
+        "myDataBinding": {
+            "feeds": [
+                {
+                    "id": "dimensions",
+                    "description": "Dimensions",
+                    "type": "dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                }
+            ]
+        }
+    },
+    "methods": {
+        "setResultSet": {
+            "parameters": [
+                {
+                    "name": "SelectionColumnsCount",
+                    "description":"No. of Selection Column Count",
+                    "type": "integer"
+                },
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_As_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                }
+            ]
+        },
+        "applyStyling":{
+            "parameters": [
+                {
+                    "name": "table_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "row_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "column_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events": {}
+}
