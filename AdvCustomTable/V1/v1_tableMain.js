@@ -161,8 +161,60 @@ var getScriptPromisify = src => {
                     bDestroy: true
                 })
 
-                for(var i = 0; i < this._resultSet.length; i++) {
-                    tbl.row.add(this._resultSet[i]).draw(false)
+                var commonDataPoints = 2, row = "";
+
+                for(var i = 0, tempInitials = ""; i < this._resultSet.length; i++) {
+
+                    var initials = "";
+
+                    for(var j = 0; j < commonDataPoints; j++) {
+                        initials += this._resultSet[i][j]+"_#_";
+                    }
+
+                    if(i == 0) {
+                        tempInitials = initials.substring(0,);
+                    }
+
+                    // if(i == 0) {
+                        row = this._resultSet[i].slice();
+                    // } else {
+                        // row = this._resultSet[i - 1].slice();
+                    // }
+
+                    var selectElement =  `<select>`;
+
+                    while(JSON.stringify(tempInitials) == JSON.stringify(initials)) {
+                       
+                        tempInitials = "";
+                        for(var j = 0; j < commonDataPoints; j++) {
+                            tempInitials += this._resultSet[i][j]+"_#_";
+                        }
+
+                        if(JSON.stringify(tempInitials) != JSON.stringify(initials)) {
+                            i--;
+                            // console.log(i, "---", this._resultSet[i], initials, tempInitials)
+                            break;
+                        }
+
+                        selectElement += `<option>${this._resultSet[i][5]}</option>`
+                        // console.log(initials, "---", tempInitials)
+                        // console.log(this._resultSet[i][5])
+
+                        i++;
+
+                        if(i >= this._resultSet.length) {
+                            break;
+                        }
+
+                    }
+
+                    // row = this._resultSet[i];
+                    selectElement += `</select>`;
+                    row[5] = selectElement;
+                    
+                    // console.log(row)
+
+                    tbl.row.add(row).draw(false)
                 }
 
                 console.log("Finished...");
