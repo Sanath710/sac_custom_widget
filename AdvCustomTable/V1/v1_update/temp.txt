@@ -1,32 +1,43 @@
-//	var headerSeq = {"Segment" : ["Consumer", "Corporate", "Home Office"]};
+//	var arr1 = ["A", "B", "C", "D", "E"];
+//	var arr2 = ["1","2", "3", "4", "5"];
+//	var arr3 = ["a", "b", "c", "d", "e"];
+//	var combinations = ArrayUtils.create(Type.Selection);
+
+//	for(var i = 0; i < arr1.length; i++) {
+//		for(var j = 0; j < arr2.length; j++) {
+//			for(var k = 0; k < arr3.length; k++) {
+//				var sel = {};
+//				sel["arr1"] = arr1[i];
+//				sel["arr2"] = arr2[j];
+//				sel["arr3"] = arr3[k];
+//				combinations.push(sel);
+//			}
+//		}
+//	}
+
+//	console.log(combinations);
+
+var rs = Table_2.getDataSource().getResultSet();
+
+console.log(rs);
+
 var headerSeq = {
 		"SCENARIO_ORDER":["Base", "Scenario1", "Scenario2", "Scenario3", "Scenario4", "Scenario5"],
 		"FIXED_SCENARIO":["Base"],
 		"COL_NAME_ORDER":["FY"],
-//			"COL_ORDER":["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 		"@MeasureDimension":["MES1", "MES2", "MES3"],
 		"Exclude":["SCENARIO_ORDER", "COL_ORDER"] // Include Exclude at last only
 };
-
 var customHeaders = {
 	"DIMEN_NAME":["Country", "Brand", "GX_Date", "Gx Date"], // in-order
 	"MES_NAME":["M1", "M2", "M3"],
 	"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"]
 };
 
-var rs = Table_1.getDataSource().getResultSet();
-//	rs.shift();
-//	rs.shift();
-
-console.log(rs);
-Adv_CustomTable_1.setResultSet(1, rs, 0, headerSeq, customHeaders);
-
-
-
+V1_CustomTable_1.setResultSet(1, rs, -1, headerSeq, customHeaders);
 
 var table_styling = ""; //font-size:14px;
 var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
 var col_styling = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
 
-Adv_CustomTable_1.applyStyling(table_styling, row_styling, "");
-//	Adv_CustomTable_1.applyStyling("", "", "");
+V1_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
