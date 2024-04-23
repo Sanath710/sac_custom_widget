@@ -1,1 +1,32 @@
+//	var headerSeq = {"Segment" : ["Consumer", "Corporate", "Home Office"]};
+var headerSeq = {
+		"SCENARIO_ORDER":["Base", "Scenario1", "Scenario2", "Scenario3", "Scenario4", "Scenario5"],
+		"FIXED_SCENARIO":["Base"],
+		"COL_NAME_ORDER":["FY"],
+//			"COL_ORDER":["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		"@MeasureDimension":["MES1", "MES2", "MES3"],
+		"Exclude":["SCENARIO_ORDER", "COL_ORDER"] // Include Exclude at last only
+};
 
+var customHeaders = {
+	"DIMEN_NAME":["Country", "Brand", "GX_Date", "Gx Date"], // in-order
+	"MES_NAME":["M1", "M2", "M3"],
+	"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"]
+};
+
+var rs = Table_1.getDataSource().getResultSet();
+//	rs.shift();
+//	rs.shift();
+
+console.log(rs);
+Adv_CustomTable_1.setResultSet(1, rs, 0, headerSeq, customHeaders);
+
+
+
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+Adv_CustomTable_1.applyStyling(table_styling, row_styling, "");
+//	Adv_CustomTable_1.applyStyling("", "", "");
