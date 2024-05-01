@@ -779,7 +779,7 @@ var isLibAvail = false;
                                 } else {
                                     if(fixRows.length != table_cols.length){
                                         fixRows = fixRows.concat(v)
-                                        dname.push(k)// ----
+                                        dname.push(v[0])// ----
                                     }
                                 }
                             }
@@ -808,7 +808,7 @@ var isLibAvail = false;
                                     c++;
                                 } else {
                                     fixRows = fixRows.concat(v)
-                                    dname.push(k)// ----
+                                    dname.push(v[0])// ----
                                 }
                             }
                         }
@@ -837,7 +837,7 @@ var isLibAvail = false;
                         var sliceLen = this._resultSet[0].length;
                         var sliced = fixRows.slice(sliceLen)
                         // console.log(sliced, this._dimensions.length)
-
+console.log("----", dateName)
                         for(var k = 0, optIdx = 0; k < sliced.length; k++) {
                             var select_html = `<select id='${k}' class='row_level_select' onchange='updateRow(this, ${this._dimensions.length}, ${this._measureOrder.length}, ${this._excludeHeaders.length}, "${fixRows[0]}_#_${fixRows[1]}", ${this._resultSet[0].length})'>`;
                             var options = "";
