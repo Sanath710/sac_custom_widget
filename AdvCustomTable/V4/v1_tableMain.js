@@ -206,7 +206,7 @@ var isLibAvail = false;
             //   this.render()
             // }
 
-            setResultSet(selCnt, rs, col_to_row = -1, headers, customHeaderNames, selColumnName, hideExtraVisibleColumnFromIndex, hide_Individual_ExtraVisibleColumnOfIndices) {
+            setResultSet(selCnt, rs, col_to_row = -1, headers, customHeaderNames, selColumnName, hideExtraVisibleColumnFromIndex, hide_Individual_ExtraVisibleColumnOfIndices, colspan_to_top_headers) {
                 
                 this._resultSet = [];
                 this._selectionColumnsCount = selCnt
@@ -225,6 +225,9 @@ var isLibAvail = false;
                 this._dateColName = selColumnName; //selectionColumn
                 this._hideExtraVisibleColumnFromIndex = hideExtraVisibleColumnFromIndex;
                 this._hide_Individual_ExtraVisibleColumnOfIndices = hide_Individual_ExtraVisibleColumnOfIndices;
+                this._colspan_EmptyCase = parseInt(colspan_to_top_headers["EmptyCase"]);
+                this._colspan_BaseCase = parseInt(colspan_to_top_headers["BaseCase"]);
+                this._colspan_RestCase = parseInt(colspan_to_top_headers["RestCase"]);
                
                 this._customHeaderNames = customHeaderNames;
 
@@ -508,9 +511,11 @@ var isLibAvail = false;
                 
                 // 1st empty top header blocks...
                 if(groupColumn != -1) {
-                    topHeader += `<th class='top-header' colspan='${this._dimensions.slice(0, this._dimensions.length - this._excludeHeaders.length).length - 3}'></th>`;
+                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                    // topHeader += `<th class='top-header' colspan='${this._dimensions.slice(0, this._dimensions.length - this._excludeHeaders.length).length - 3}'></th>`;
                 } else {
-                    topHeader += `<th class='top-header' colspan='${this._dimensions.slice(0, this._dimensions.length - this._excludeHeaders.length).length + 1}'></th>`;
+                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                    // topHeader += `<th class='top-header' colspan='${this._dimensions.slice(0, this._dimensions.length - this._excludeHeaders.length).length + 1}'></th>`;
                 }
                 // 
                 // CHANGED TO -2 in loop condition for neglecting last two scenarios
@@ -518,15 +523,17 @@ var isLibAvail = false;
                 // for(var i = 0; i < this._scenarioOrder.length; i++) {
     
                 for(var i = 0; i < this._scenarioOrder.length - 2; i++) {
+                    // Base Case/Scenario
                     if(this._fixedScenario.includes(this._scenarioOrder[i])) {
-                        topHeader += `<th class='top-header' colspan='${this._measureOrder.length + 1}'>${this._scenarioOrder[i]}</th>`
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}'>${this._scenarioOrder[i]}</th>`
+                        // topHeader += `<th class='top-header' colspan='${this._measureOrder.length + 1}'>${this._scenarioOrder[i]}</th>`
                     } else {
-                       
+                        // Rest Case/Scenario
                             for(var j = 0; j < this._scenarioOrder.length; j++) {
                                 if(!this._fixedScenario.includes(this._scenarioOrder[j])) {
                                     if(this._scenarioOrder[i] == this._scenarioOrder[j]) {
-                                        topHeader += 
-                                        `<th class='top-header' colspan='${this._measureOrder.length + 1}'>${this._scenarioOrder[j]}`;
+                                        topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}'>${this._scenarioOrder[j]}`;
+                                        // topHeader += `<th class='top-header' colspan='${this._measureOrder.length + 1}'>${this._scenarioOrder[j]}`;
                                         // console.log(this._scenarioOrder[j])
                                     } 
                                     // else {
