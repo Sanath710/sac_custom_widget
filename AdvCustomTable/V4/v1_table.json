@@ -62,6 +62,11 @@
                     "name": "hide_Individual_ExtraVisibleColumnOfIndices",
                     "description":"Hides particular visible columns (index)",
                     "type": "any"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
                 }
             ]
         },
