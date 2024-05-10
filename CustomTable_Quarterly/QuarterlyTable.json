@@ -1,0 +1,89 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "Quarterly_CustomTable_DigitalSweep",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomTable/table.png",
+    "version": "1.0.0",
+    "name": "Quarterly Custom Table",
+    "newInstancePrefix": "Quarterly_CustomTable",
+    "description": "Quarterly Advanced Custom Table Widget with N - Selections",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "quarterly-custom-table",
+            "url": "http://127.0.0.1:5500/CustomTable_Quarterly/QuarterlyTableMain.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+       
+    },
+    "methods": {
+        "setResultSet": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "top_most_header_sequence",
+                    "description":"Header Value Sequence",
+                    "type": "any"
+                },
+                {
+                    "name": "customHeaderNames",
+                    "description":"Custom Header Names of DataTable",
+                    "type": "any"
+                },
+                {
+                    "name": "selectionColumnName",
+                    "description":"Header Names of Selection Column",
+                    "type": "any"
+                },
+                {
+                    "name": "hideColumnsFrom",
+                    "description":"Hide Top-Most Columns From",
+                    "type": "any"
+                },
+                {
+                    "name": "hide_Individual_ExtraVisibleColumnOfIndices",
+                    "description":"Hides particular visible columns (index)",
+                    "type": "any"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                }
+            ]
+        },
+        "applyStyling":{
+            "parameters": [
+                {
+                    "name": "table_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "row_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "column_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events": {}
+}
