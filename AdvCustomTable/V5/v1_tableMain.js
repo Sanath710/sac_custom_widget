@@ -206,10 +206,10 @@ var isLibAvail = false;
             //   this.render()
             // }
 
-            setResultSet(selCnt, rs, col_to_row = -1, headers, customHeaderNames, selColumnName, hideExtraVisibleColumnFromIndex, hide_Individual_ExtraVisibleColumnOfIndices, colspan_to_top_headers) {
+            setResultSet(rs, col_to_row = -1, headers, customHeaderNames, selColumnName, hideExtraVisibleColumnFromIndex, hide_Individual_ExtraVisibleColumnOfIndices, colspan_to_top_headers) {
                 
                 this._resultSet = [];
-                this._selectionColumnsCount = selCnt
+                // this._selectionColumnsCount = selCnt
                 this._col_to_row = col_to_row // Row Grouping
 
                 var remove = headers["Exclude"].join(",")+",@MeasureDimension".split(",");
