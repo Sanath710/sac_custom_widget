@@ -24,11 +24,6 @@
         "setResultSet": {
             "parameters": [
                 {
-                    "name": "SelectionColumnsCount",
-                    "description":"No. of Selection Column Count",
-                    "type": "integer"
-                },
-                {
                     "name": "resultSet",
                     "description":"Pass the ResultSet",
                     "type": "any"
