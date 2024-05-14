@@ -1,0 +1,6 @@
+Updates : 
+1. If no rest case/scenario is found then add base data in whole empty cols.
+2. On dropdown selection show only those selected columns of datatable.
+
+Existing Bug : 
+1. If no base case is found then datatable columns wont be plotted for any... even if rest scenarios/cases exists. 
