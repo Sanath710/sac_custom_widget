@@ -144,7 +144,7 @@ var isLibAvail = false;
 
           </style>
           <script src= "https://code.jquery.com/jquery-3.7.1.js"></script>
-          <div id="root" style="width:100%; height:100%; padding:0.5%; padding-top:0%; overflow: auto; display: contents;">
+          <div id="root" style="width:100%; height:100%; padding:0.5%; padding-top:0%; overflow: auto; overflow-x:hidden; scrollbar-width:thin;">
 		  	<table id="example" class="table">
               <thead>
               </thead>
