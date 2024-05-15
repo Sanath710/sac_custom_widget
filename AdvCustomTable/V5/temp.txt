@@ -1,6 +1,41 @@
-Updates : 
+------------------------------------------------- Updates : -------------------------------------------------
 1. If no rest case/scenario is found then add base data in whole empty cols.
 2. On dropdown selection show only those selected columns of datatable.
 
-Existing Bug : 
+------------------------------------------------- Existing Bug : -------------------------------------------------
 1. If no base case is found then datatable columns wont be plotted for any... even if rest scenarios/cases exists. 
+
+------------------------------------------------- SAC - onInit : -------------------------------------------------
+var rs = Table_4.getDataSource().getResultSet();
+//	rs.shift();
+//	rs.shift();
+
+console.log(rs);
+if(" ") {
+	console.log("Empty Str");
+}
+
+var headerSeq = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["FY"],
+		"@MeasureDimension":["ACT_VER1", "ACT_VER16", "VS PY"],
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY_CODE", "FRS_BRAND_CODE", "SCENARIO_NAME", "GX Date"], // in-order
+	"MES_NAME":["ACT_VER1", "ACT_VER16", "VS PY"],
+	"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"]
+};
+
+var selectionColumnName = "GX_Entry_Date";
+var hideParticularCols = [2];
+var topHeaders_Colspan = {"EmptyCase":"2","BaseCase":"4","RestCase":"4"};
+
+V1_CustomTable_1.setResultSet(rs, -1, headerSeq, customHeaders, selectionColumnName, 19, hideParticularCols, topHeaders_Colspan);
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+V1_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
