@@ -6,6 +6,7 @@
 1. If no base case is found then datatable columns wont be plotted for any... even if rest scenarios/cases exists. 
 2. If re-rendering occurs then duplication of top headers happened. (fixed in bug fix 2.0.txt)
 3. Scroll & Padding issue. (fixed in bug fix 2.0.txt)
+4. Arrangement of measures on right & dimensions on left. (fixed in bug fix 2.0.txt) 
 
 ------------------------------------------------- SAC - onInit : -------------------------------------------------
 var rs = Table_4.getDataSource().getResultSet();
