@@ -542,7 +542,6 @@ var isLibAvail = false;
                                 })
                         },
                         bPaginate: false,
-                        scrollY: 50,
                         searching: false,
                         ordering: false,
                         info: false,     // Showing 1 of N Entries...
@@ -557,7 +556,7 @@ var isLibAvail = false;
                     // hideCols.push(6);
 
 
-
+                  
                     tbl = new DataTable(this._table, {
                         layout: {},
                         columns: table_cols,
@@ -576,6 +575,35 @@ var isLibAvail = false;
                         info: false,     // Showing 1 of N Entries...
                         bDestroy: true,
                     })
+
+                    if(tbl.data().any()) {
+                        tbl.rows().remove().draw();
+                        // tbl.fnClearTable();
+                        // tbl.destroy();
+                        // tbl = undefined
+                        // tbl = new DataTable(this._table, {
+                        //     layout: {},
+                        //     columns: table_cols,
+                        //     bAutoWidth: false, 
+                        //     columnDefs: [
+                        //         {
+                        //             defaultContent: '-',
+                        //             targets: hideCols, //_all
+                        //             visible:false
+                        //             // className: 'dt-body-left'
+                        //         }
+                        //     ],
+                        //     bPaginate: false,
+                        //     searching: false,
+                        //     ordering: false,
+                        //     info: false,     // Showing 1 of N Entries...
+                        //     bDestroy: true,
+                        // })
+                        console.log("hello", this._colspan_BaseCase, this._colspan_RestCase);
+                        // this._colspan_EmptyCase += 1;
+                        // this._colspan_RestCase += 1;
+                        // console.log("hello", this._colspan_BaseCase, this._colspan_RestCase);
+                    }
                 }
 
                 this._dataTableObj = tbl;
@@ -640,7 +668,7 @@ var isLibAvail = false;
 
                 // @--- uncomment below line
                 // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-                if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr").childElementCount != 5) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr").childElementCount != 5 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
                     document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 }
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
@@ -1040,7 +1068,7 @@ var isLibAvail = false;
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
                 // Styling Block Ends here
                 // document.querySelector("#__html3 > div > button").addEventListener('mouseover', function(){
                 //     alert("hiii");
