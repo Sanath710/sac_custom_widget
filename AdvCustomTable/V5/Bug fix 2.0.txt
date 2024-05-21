@@ -1068,6 +1068,14 @@ var isLibAvail = false;
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
+                const list =document.querySelector("#__widget3 > v1-custom-table").shadowRoot.querySelector("#example > thead");
+
+                if (list.hasChildNodes()) {
+                list.removeChild(list.children[0]);
+                    document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+
+                }
+
                 // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
                 // Styling Block Ends here
                 // document.querySelector("#__html3 > div > button").addEventListener('mouseover', function(){
