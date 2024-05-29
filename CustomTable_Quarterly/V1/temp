@@ -1,0 +1,31 @@
+var rs = Table_5.getDataSource().getResultSet();
+rs.shift();
+//	rs.shift();
+console.log(rs);
+
+var headerSeq = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["Q1","Q2","Q3","Q4","FY"],
+		"@MeasureDimension":["MES", "vs PY"],
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY_CODE", "FRS_BRAND_CODE", "GX Date"], // in-order
+	"MES_NAME":["MES", "vs PY"],
+	"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUN", "vs Py", "Scenario 1", "vs Py", "Scenario 2", "vs Py", "Scenario 3", "vs Py"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_Entry_Date";
+var hideColsFromIndex = 46; //from which column number
+var hideParticularCols = [-1];
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"6","RestCase":"5"};
+
+Quarterly_CustomTable_1.setResultSet(rs, 0, headerSeq, customHeaders, selectionColumnName, hideColsFromIndex, hideParticularCols, topHeaders_Colspan);
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+Quarterly_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
