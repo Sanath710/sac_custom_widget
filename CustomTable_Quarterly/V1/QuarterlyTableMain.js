@@ -619,7 +619,10 @@ var isLibAvail = false;
                 topHeader += "</tr>";
 
                 // @--- uncomment below line
-                document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                if(document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                    document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                }
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
                 // console.log(topHeader)
@@ -966,12 +969,12 @@ var isLibAvail = false;
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                // const list = document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead");
 
-                // for(var i = 0; i < list.children.length - 1; i++) {
-                //     list.removeChild(list.children[i]);
-                // }
-                // document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                for(var i = 0; i < list.children.length - 1; i++) {
+                    list.removeChild(list.children[i]);
+                }
+                document.querySelector("quarterly-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 this._dotsLoader.style.visibility = "hidden";
                 this._table.style.visibility = "visible";
