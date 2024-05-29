@@ -888,7 +888,17 @@ var isLibAvail = false;
 
                     // console.log("--------->>>>>>>", finalRow)
                     // Handling case where whole base-1/2/3/... scenario is not present ... 
-                    if(finalRow.length < table_cols.length) {
+                    if(finalRow.length == (this._dimensions.length - 1) + this._colOrder.length * 2) {
+                        var repeatBase = finalRow.slice(this._dimensions.indexOf(this._dateColName) - 1, );
+                        for(var l = finalRow.length, lcl_cnt = 0; l < table_cols.length; l++) {
+                            finalRow.push(repeatBase[lcl_cnt])
+                            if(lcl_cnt >= repeatBase.length) {
+                                lcl_cnt = 0;
+                            }
+                            lcl_cnt++;
+                        }
+                    } 
+                    else if(finalRow.length < table_cols.length) {
                         for(var l = finalRow.length; l < table_cols.length; l++) {
                             finalRow.push("-")
                         }
