@@ -1,1 +1,31 @@
+var headerSeq = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["FY"],
+		"@MeasureDimension":["ACT_VER1", "ACT_VER16", "VS PY", "New_TestMes"],
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY", "FRS", "SCENARIO_NAME", "GX Date"], // in-order
+	"MES_NAME":["ACT_VER1", "ACT_VER16", "VS PY", "New Mes"],
+	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
 
+var selectionColumnName = "GX_Entry_Date";
+var hideParticularCols = [2];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:7%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+V1_CustomTable_1.setExtraParams(headerSeq, customHeaders, selectionColumnName, 23, hideParticularCols);
+V1_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
+
+var rs = Table_8.getDataSource().getResultSet();
+//	rs.shift();
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"5","RestCase":"5"};
+
+V1_CustomTable_1.setResultSet(rs, 0, topHeaders_Colspan);
