@@ -447,7 +447,7 @@ var getScriptPromisify = src => {
                 ////// Empty Case
                 topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
                 ////// Base Case
-                topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._scenarioOrder[0].replace(" ","")}' >${this._scenarioOrder[0]}</th>`
+                topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
                 ////// Rest Case
                 for(var i = 0; i < top_header_names_to_show.length; i++) {
                     topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
