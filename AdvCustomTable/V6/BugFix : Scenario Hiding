@@ -343,6 +343,10 @@ var getScriptPromisify = src => {
 
             applyScaling(scaleTo = "K", numberOfDecimals = 2) {
 
+                this._dotsLoader.style.visibility = "visible";
+                this._table.style.visibility = "hidden";
+                this._root.style.display = "inline-grid";
+
                 var t = this._dataTableObj;
                 var lcl_tableColumnNames = this._tableColumnNames;
                 this._scaleTo = scaleTo;
@@ -374,10 +378,10 @@ var getScriptPromisify = src => {
                         if(!lcl_nonNumericColumns.includes(i)) {
                             if(cell.data() != undefined) {
                                 if(scaleTo == "M") {
-                                    cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(",","")/1000000)).toFixed(numberOfDecimals))
+                                    cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(",",""))).toFixed(numberOfDecimals))
                                 } 
                                 else {
-                                    cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(",",""))).toFixed(numberOfDecimals))
+                                    cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(",","")*1000)).toFixed(numberOfDecimals))
                                 }
                             }
                         }
@@ -395,6 +399,10 @@ var getScriptPromisify = src => {
                     }
                 }
                 console.log(fixRowsObj,"---",lcl_scaledRows)
+                this._dotsLoader.style.visibility = "hidden";
+                this._table.style.visibility = "visible";
+                this._root.style.display = "block";
+
             }
 
             showScenarios(fixedCols, col_start_indices, top_header_names_to_show, no_of_succeeding_measures) {
