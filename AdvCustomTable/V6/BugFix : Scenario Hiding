@@ -426,68 +426,72 @@ var getScriptPromisify = src => {
 
                 /////// hiddenCols = hiddenCols.concat(this._hide_Individual_ExtraVisibleColumnOfIndices);
 
-                ////// For Hiding Columns from indices
-                for(var i = 0; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                ////// For Hiding Columns from indices (Pre-Decided)
+                for(var i = 0; i < this._tableColumnNames.length; i++) {
                     if(!visibleCols.includes(i)) {
                         this._dataTableObj.column(i).visible(false);
                         // console.log(i)
                     }
                 }
+
                 // console.log(this._dataTableObj.column(2).data())
 
-                ////// Top header block to be displayed
-                // if(this._customTopHeader) {
-                    for(var i = 0; i < headerNames_to_show.length; i++) {
-                        if(!this._fixedScenario.includes(headerNames_to_show[i])) {
-                            var selector = "#"+headerNames_to_show[i].replace(" ", "");
-                            // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector))
-                            if(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector)) {
-                                document.querySelector("v1-custom-table").shadowRoot.querySelector(selector).style.display = "";
-                            }
-                        }
-                    }
-                    
-                // } else {
-                    // for(var i = 0; i < headerNames_to_show.length; i++) {
-                    //     document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+headerNames_to_show[i]).style.display = "";
-                    // }
-                // }
 
-                ////// (loop cntr = 4 bcz we need to display only 4 conditions)
-                // if(this._customTopHeader) {
-                //     for(var i = 0; i < 4; i++) {
-                //         if(!headerNames_to_show.includes(this._scenarioOrder[i])) {
-                //             // console.log(this._scenarioOrder[i])
-                //             document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+this._scenarioOrder[i]).style.display = "none";
-                //         }
-                //     }
-                // } else {
-                    for(var i = 1; i < 4; i++) {
-                        if(this._customTopHeader) {
-                            // headerNames_to_show[0] = this._customTopHeader[0];
-                            if(!headerNames_to_show.includes(this._customTopHeader[i])) {
-                                // console.log(this._scenarioOrder[i])
-                                if(this._customTopHeader[i]) {
-                                    var selector = this._customTopHeader[i].replace(" ", "");
-                                    // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
-                                    if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
-                                        document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
-                                    }
-                                }
-                            }
-                        } else {
-                            if(!headerNames_to_show.includes(this._scenarioOrder[i]) && document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
-                                // console.log(this._scenarioOrder[i])
-                                var selector = this._scenarioOrder[i].replace(" ", "");
-                                // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
-                                if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
-                                    document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
-                                }
-                            }
-                        }
-                    }
-                    // this._customTopHeader.pop();
-                // }
+                const list = document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead");
+
+                for(var i = 0; i < list.children.length - 1; i++) {
+                    list.removeChild(list.children[i]);
+                }
+
+                var topHeader = "<tr role='row'>";
+                ////// Empty Case
+                topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                ////// Base Case
+                topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._scenarioOrder[0].replace(" ","")}' >${this._scenarioOrder[0]}</th>`
+                ////// Rest Case
+                for(var i = 0; i < top_header_names_to_show.length; i++) {
+                    topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                }
+                topHeader += `</tr>`;
+
+                document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                
+
+                ////// Top header block to be displayed
+                    // for(var i = 0; i < headerNames_to_show.length; i++) {
+                    //     if(!this._fixedScenario.includes(headerNames_to_show[i])) {
+                    //         var selector = "#"+headerNames_to_show[i].replace(" ", "");
+                    //         // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector))
+                    //         if(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector)) {
+                    //             document.querySelector("v1-custom-table").shadowRoot.querySelector(selector).style.display = "";
+                    //         }
+                    //     }
+                    // }
+             
+                    // for(var i = 1; i < 4; i++) {
+                    //     if(this._customTopHeader) {
+                    //         // headerNames_to_show[0] = this._customTopHeader[0];
+                    //         if(!headerNames_to_show.includes(this._customTopHeader[i])) {
+                    //             // console.log(this._scenarioOrder[i])
+                    //             if(this._customTopHeader[i]) {
+                    //                 var selector = this._customTopHeader[i].replace(" ", "");
+                    //                 // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
+                    //                 if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
+                    //                     document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                    //                 }
+                    //             }
+                    //         }
+                    //     } else {
+                    //         if(!headerNames_to_show.includes(this._scenarioOrder[i]) && document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
+                    //             // console.log(this._scenarioOrder[i])
+                    //             var selector = this._scenarioOrder[i].replace(" ", "");
+                    //             // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
+                    //             if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
+                    //                 document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
             }
 
