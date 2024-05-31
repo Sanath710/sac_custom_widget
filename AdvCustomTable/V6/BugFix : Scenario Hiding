@@ -441,7 +441,9 @@ var getScriptPromisify = src => {
                         if(!this._fixedScenario.includes(headerNames_to_show[i])) {
                             var selector = "#"+headerNames_to_show[i].replace(" ", "");
                             // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector))
-                            document.querySelector("v1-custom-table").shadowRoot.querySelector(selector).style.display = "";
+                            if(document.querySelector("v1-custom-table").shadowRoot.querySelector(selector)) {
+                                document.querySelector("v1-custom-table").shadowRoot.querySelector(selector).style.display = "";
+                            }
                         }
                     }
                     
@@ -467,16 +469,20 @@ var getScriptPromisify = src => {
                                 // console.log(this._scenarioOrder[i])
                                 if(this._customTopHeader[i]) {
                                     var selector = this._customTopHeader[i].replace(" ", "");
-                                    console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
-                                    document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                                    // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
+                                    if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
+                                        document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                                    }
                                 }
                             }
                         } else {
-                            if(!headerNames_to_show.includes(this._scenarioOrder[i])) {
+                            if(!headerNames_to_show.includes(this._scenarioOrder[i]) && document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
                                 // console.log(this._scenarioOrder[i])
                                 var selector = this._scenarioOrder[i].replace(" ", "");
                                 // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector), selector)
-                                document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                                if(document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector)) {
+                                    document.querySelector("v1-custom-table").shadowRoot.querySelector("#"+selector).style.display = "none";
+                                }
                             }
                         }
                     }
