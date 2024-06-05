@@ -30,6 +30,12 @@ var getScriptPromisify = src => {
                 outline:none;
             }
 
+            select:focus>option:checked {
+                background:grey;
+                color:white;
+                /* selected */
+            }
+
             #example th {
                 text-wrap: nowrap;
                 border-bottom: 1px solid #CBCBCB;
@@ -1087,17 +1093,15 @@ var getScriptPromisify = src => {
                                 var options = "";
                                 for(var p = 0; p < dateNameArr.length; p++) {
                                     if(optIdx == p) {
-                                        options += `<option id='${p}' selected>${dateNameArr[p]}</option>`
+                                        options += `<option class='optionTag' id='${p}' selected>${dateNameArr[p]}</option>`
                                     } else {
-                                        options += `<option id='${p}' >${dateNameArr[p]}</option>`
+                                        options += `<option class='optionTag' id='${p}' >${dateNameArr[p]}</option>`
                                     }
                                 }
                                 select_html += options + `</select>`;
                                 sliced[k] = select_html;
                                 this._nonNumericColumnIndices_UnitConversion.add(k+this._dimensions.length - 1);
                                 cnt++;
-                            // }
-                        //    @ update new uncomment till above ----------------------------------------------- @
                             k += this._measureOrder.length;
                             optIdx += 1;
                         }
@@ -1149,10 +1153,10 @@ var getScriptPromisify = src => {
                     list.removeChild(list.children[i]);
                 }
 
-                
                 this._dotsLoader.style.visibility = "hidden";
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
+
                 // document.querySelector("#__widget5 > v1-custom-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)")
                 document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)").click();
                 document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
