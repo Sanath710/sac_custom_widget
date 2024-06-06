@@ -547,7 +547,7 @@ var load_libs_flag = false;
                         var selectorID = ".row_level_select_"+selector_ids[i];
                         var selElement = document.querySelector("v1-custom-table").shadowRoot.querySelector(selectorID);
                         selElement.selectedIndex = valArr[i];
-    a
+    
                         // console.log(selector_ids)
                         // console.log(selElement)
     
