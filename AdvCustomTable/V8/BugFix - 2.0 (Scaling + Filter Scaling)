@@ -429,7 +429,7 @@ var load_libs_flag = false;
                             if(cell.data() != undefined) {
                                 if(scaleTo == "M") {
                                 console.log()
-                                    cell.data(parseFloat(1000/parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(/,{1,}/g,"").replace("%",""))).toFixed(2))
+                                    cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(/,{1,}/g,"").replace("%",""))/1000000).toFixed(numberOfDecimals))
                                 } 
                                 else {
                                     cell.data(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(/,{1,}/g,"").replace("%","")))
