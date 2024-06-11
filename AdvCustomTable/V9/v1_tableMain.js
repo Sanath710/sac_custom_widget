@@ -443,7 +443,7 @@ var load_libs_flag = false;
                         for(var j = 0; j < d.length; j++) {
                             if(isNaN(d[j])) {
                                 if(d[j].includes("%")) {
-                                    sum = 0;
+                                    sum = "- %";
                                 } else {
                                     sum += parseFloat(d[j].replace(/,{1,}/g,""))
                                 }
@@ -984,7 +984,7 @@ var load_libs_flag = false;
                         var d = tbl.column(i).data();
                         for(var j = 1; j < d.length; j++) {
                             if(isNaN(d[j]) && d[j].includes("%")) {
-                                sum = 0
+                                sum = "- %"
                             } else {
                                 sum += parseFloat(d[j])
                             }
