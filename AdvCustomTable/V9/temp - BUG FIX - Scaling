@@ -58,6 +58,10 @@ var load_libs_flag = false;
                 font-size:14px;
             }
 
+            #example > tbody > tr:nth-child(2) {
+                font-weight:bold;
+            }
+
             /* ------------------------- TOP MOST - HEADER ROW ------------------------- */
 
             #example .top-header {
