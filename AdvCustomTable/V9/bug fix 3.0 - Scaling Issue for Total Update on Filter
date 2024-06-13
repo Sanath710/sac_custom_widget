@@ -985,16 +985,16 @@ var load_libs_flag = false;
 
                 // console.log(topHeader)
                
-                tbl.on('click', 'tbody tr', e => {
-                    let classList = e.currentTarget.classList
-                    tbl
-                        .rows()
-                        .nodes()
-                        .each(row => row.classList.remove('selected'))
-                    classList.add('selected')
-                    // console.log(tbl.row('.selected').data())
-                })
-
+                 tbl.on('click', 'tbody tr', e => {
+                        let classList = e.currentTarget.classList
+                        tbl
+                            .rows()
+                            .nodes()
+                            .each(row => row.classList.remove('selected'))
+                        if(classList.length != 1) {
+                            classList.add('selected')
+                        }
+                    })
                 
                 // Master Reference Node For Selection Elements used Inside updateRow(), updateColumns() Method
                 var hMap = {};
@@ -1020,6 +1020,17 @@ var load_libs_flag = false;
                 
                 function updateRow(state, no_of_dimens, no_of_mes, no_of_excludes, identifer, sliceFrom) 
                 {
+
+ 		    tbl.on('click', 'tbody tr', e => {
+                        let classList = e.currentTarget.classList
+                        tbl
+                            .rows()
+                            .nodes()
+                            .each(row => row.classList.remove('selected'))
+                        if(classList.length != 1) {
+                            classList.add('selected')
+                        }
+                    })
 
                     var selectData = tbl.row('.selected').data()
                     // console.log("Selected Row : ", selectData)
