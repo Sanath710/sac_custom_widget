@@ -1,7 +1,3 @@
-// ==================================================================================================================================
-// >>>>>>>>>>>>>>>>> ON Init <<<<<<<<<<<<<<<<<<
-// ==================================================================================================================================
-
 // ==========================================================================================================================
 // ------------------------------------------------------- Full Year --------------------------------------------------------
 // ==========================================================================================================================
@@ -30,8 +26,8 @@ var table_styling = ""; //font-size:14px;
 var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
 var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
 
-V1_CustomTable_FY.setExtraParams(headerSeq, customHeaders, selectionColumnName, 27, hideParticularCols);
-V1_CustomTable_FY.applyStyling(table_styling, row_styling, col_styling);
+CW_CustomTable_FY.setExtraParams(headerSeq, customHeaders, selectionColumnName, 27, hideParticularCols);
+CW_CustomTable_FY.applyStyling(table_styling, row_styling, col_styling);
 
 var rs = Table_FY.getDataSource().getResultSet();
 //	rs.shift();
@@ -39,12 +35,12 @@ console.log(rs);
 
 var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"4","RestCase":"4"};
 
-V1_CustomTable_FY.setResultSet_FY(rs, 0, topHeaders_Colspan);
+CW_CustomTable_FY.setResultSet_FY(rs, 0, topHeaders_Colspan);
 
 if(VAR_Scale_State === "123") {
-	V1_CustomTable_FY.columnVisibility([5,6,11,12,17,18,23,24], [-1]);
+	CW_CustomTable_FY.columnVisibility([5,6,11,12,17,18,23,24], [-1]);
 } else {
-	V1_CustomTable_FY.columnVisibility([7,8,13,14,19,20,25,26], [5,6,11,12,17,18,23,24]);
+	CW_CustomTable_FY.columnVisibility([7,8,13,14,19,20,25,26], [5,6,11,12,17,18,23,24]);
 }
 
 
@@ -76,8 +72,8 @@ if(VAR_Scale_State === "123") {
 	var row_styling_Q = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
 	var col_styling_Q = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
 
-	V1_CustomTable_QT.setExtraParams(headerSeq_Q, customHeaders_Q, selectionColumnName_Q, 61, hideParticularCols_Q);
-	V1_CustomTable_QT.applyStyling(table_styling_Q, row_styling_Q, col_styling_Q);
+	CW_CustomTable_QT.setExtraParams(headerSeq_Q, customHeaders_Q, selectionColumnName_Q, 61, hideParticularCols_Q);
+	CW_CustomTable_QT.applyStyling(table_styling_Q, row_styling_Q, col_styling_Q);
 
 
 //	var rs1 = Table_QT.getDataSource().getResultSet();
@@ -87,48 +83,4 @@ if(VAR_Scale_State === "123") {
 
 //	var topHeaders_Colspan1 = {"EmptyCase":"1","BaseCase":"4","RestCase":"4"};
 
-//	V1_CustomTable_QT.setResultSet_QT(rs1, 0, topHeaders_Colspan1);
-
-// ==================================================================================================================================
-// >>>>>>>>>>>>>>>>> ON QT ResultChanged Tbl <<<<<<<<<<<<<<<<<<
-// ==================================================================================================================================
-var rs = Table_QT.getDataSource().getResultSet();
-
-console.log(rs);
-
-
-var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"6","RestCase":"5"};
-
-V1_CustomTable_QT.setResultSet_QT(rs, 0, topHeaders_Colspan);
-
-var fixedCols = 13; // jo dikh raha hai vo view time pe utna
-var no_of_measures = 11;
-
-V1_CustomTable_QT.showScenarios(fixedCols, CheckboxGroup_3.getSelectedKeys(), CheckboxGroup_3.getSelectedTexts(), no_of_measures);
-
-
-
-console.log("On-Res-Changed Trigged...");
-console.log(rs);
-if(VAR_Scale_State === "123") {
-V1_CustomTable_QT.columnVisibility([8,9,10,11,12,  24,25,26,27,28,  40,41,42,43,44, 56,57,58,59,60], 
-									   [13,14,15,16,17, 29,30,31,32,33, 45,46,47,48,49, 61,62,63,64,65]);
-} else {
-	V1_CustomTable_QT.columnVisibility([13,14,15,16,17,  29,30,31,32,33,  45,46,47,48,49, 61,62,63,64,65], 
-									   [8,9,10,11,12,  24,25,26,27,28,  40,41,42,43,44, 56,57,58,59,60]);
-}
-
-var indices_QT = [18, 34, 50, 66];
-var selIndices_QT = CheckboxGroup_3.getSelectedKeys();
-var removeCols_QT = ArrayUtils.create(Type.integer);
-for(var k = 0; k < indices_QT.length; k++) {
-	if(!selIndices_QT.includes(ConvertUtils.numberToString(indices_QT[k]))) {
-		for(var l = indices_QT[k]; l < indices_QT[k + 1]; l++) {
-			removeCols_QT.push(l);
-		}
-	}
-}
-
-console.log("removeCols_QT");
-console.log(removeCols_QT);
-V1_CustomTable_QT.columnVisibility(removeCols_QT, [-1]);
+//	CW_CustomTable_QT.setResultSet_QT(rs1, 0, topHeaders_Colspan1);
