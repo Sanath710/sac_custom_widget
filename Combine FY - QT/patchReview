@@ -1,0 +1,10 @@
+var value = this._dataTableObj.cell(rowIDTotal, (indices[i]-3).toString()).data()
+                                    var val_minus_act = this._dataTableObj.cell(rowIDTotal, (indices[i]-2).toString()).data()
+                                    var act1 = Math.abs(value - val_minus_act)
+                                    sum = ((value - act1) / act1).toString()+" %"
+
+                                      if(!isNaN(sum)) {
+                        sum = parseFloat(sum).toFixed(1)
+                    } else {
+                        sum = parseFloat(sum).toFixed(1).toString()+"%"
+                    }
