@@ -1,10 +1,16 @@
-var value = this._dataTableObj.cell(rowIDTotal, (indices[i]-3).toString()).data()
-                                    var val_minus_act = this._dataTableObj.cell(rowIDTotal, (indices[i]-2).toString()).data()
-                                    var act1 = Math.abs(value - val_minus_act)
-                                    sum = ((value - act1) / act1).toString()+" %"
+  var cols = {
+                    7:[4,5],
+                    8:[4,6],
+                    13:[10,11],
+                    14:[10,12],
+                    19:[16,17],
+                    20:[16,18],
+                }
 
-                                      if(!isNaN(sum)) {
-                        sum = parseFloat(sum).toFixed(1)
-                    } else {
-                        sum = parseFloat(sum).toFixed(1).toString()+"%"
-                    }
+
+ if(Object.keys(cols).includes(indices[i].toString())){
+                                        var value = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][0]).toString()).data()
+                                        var val_minus_loFY = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][1]).toString()).data()
+                                        var act1 = value - val_minus_loFY
+                                        sum = ((value - act1) / act1).toString()+" %"
+                                    } 
