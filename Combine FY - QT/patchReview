@@ -1,16 +1,14 @@
-  var cols = {
-                    7:[4,5],
-                    8:[4,6],
-                    13:[10,11],
-                    14:[10,12],
-                    19:[16,17],
-                    20:[16,18],
-                }
+  var tempRef = [], refrenceIndex = 0, no_of_per_cols = 2;
+                var finalPerCols = {}
 
+  if(indices.slice(refrenceIndex, indices[i] + 2).filter(item => item !== -1).length > 0) {
+                                        tempRef = indices.slice(refrenceIndex, indices[i] + 2).filter(item => item !== -1)
+                                    }
+                                    finalPerCols[indices[i]] = tempRef
 
- if(Object.keys(cols).includes(indices[i].toString())){
-                                        var value = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][0]).toString()).data()
-                                        var val_minus_loFY = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][1]).toString()).data()
-                                        var act1 = value - val_minus_loFY
-                                        sum = ((value - act1) / act1).toString()+" %"
-                                    } 
+  var value = this._dataTableObj.cell(rowIDTotal, tempRef[0]).data()
+                                    var val_minus_act = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).data()
+                                    var act1 = value - val_minus_act
+                                    sum = (val_minus_act / act1).toString()+" %"
+
+                        refrenceIndex = indices[i] + 2; // 2 bcz 1 for GX_Entry_Date Col & + 1 for next indice 
