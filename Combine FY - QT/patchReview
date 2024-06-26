@@ -12,3 +12,76 @@
                                     sum = (val_minus_act / act1).toString()+" %"
 
                         refrenceIndex = indices[i] + 2; // 2 bcz 1 for GX_Entry_Date Col & + 1 for next indice 
+-----------------------------------
+ // var cols = {7:[4,5], 8:[4,6],}
+                var tempRef = [], refrenceIndex = 0, no_of_per_cols = 2;
+                var finalPerCols = {}
+                // var cols = {
+                //     7:[4,5],
+                //     8:[4,6],
+                //     13:[10,11],
+                //     14:[10,12],
+                //     19:[16,17],
+                //     20:[16,18],
+                // }
+                for(var i = 0; i < indices.length; i++) {
+                    var sum = 0;
+                    var rowIDTotal = this._dataTableObj.rows()[0][0];
+                    if(indices[i] != -1) {
+                        var d = this._dataTableObj.column(indices[i]).data();
+                        for(var j = 0; j < d.length; j++) {
+                            if(isNaN(d[j])) {
+                                if(d[j].includes("%")) {
+                                    // sum = "- %";
+                                    // console.log(indices[i] , tempRef);
+                                    if(indices.slice(refrenceIndex, indices[i] + 2).filter(item => item !== -1).length > 0) {
+                                        tempRef = indices.slice(refrenceIndex, indices[i] + 2).filter(item => item !== -1)
+                                    }
+                                    finalPerCols[indices[i]] = tempRef.slice()
+
+                                    // perCols.add(indices[i])
+                                    // if(! finalPerCols[indices[i]]) {
+                                    //     finalPerCols[indices[i]] = []
+                                    // }
+                                    // finalPerCols[indices[i]]
+                                    // if(Object.keys(cols).includes(indices[i].toString())){
+                                    var value = this._dataTableObj.cell(rowIDTotal, tempRef[0]).data()
+                                    var val_minus_act = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).data()
+                                    var act1 = value - val_minus_act
+                                    sum = (val_minus_act / act1).toString()+" %"
+                                       
+                                    // } 
+                                    // if(Object.keys(cols).includes(indices[i].toString())){
+                                    //     var value = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][0]).toString()).data()
+                                    //     var val_minus_loFY = this._dataTableObj.cell(rowIDTotal, (cols[indices[i]][1]).toString()).data()
+                                    //     var act1 = value - val_minus_loFY
+                                    //     sum = ((value - act1) / act1).toString()+" %"
+                                    // } 
+                                   
+                                    // if(!isNaN(parseFloat(d[j].replace(/,{1,}/g,"")))) {
+                                    //     sum += parseFloat(d[j].replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                    // }
+                                } else {
+                                    if(!isNaN(parseFloat(d[j].replace(/,{1,}/g,"")))) {
+                                        sum += parseFloat(d[j].replace(/,{1,}/g,""))
+                                    }
+                                }
+                            } else {
+                                if(!isNaN(parseFloat(d[j]))) {
+                                    sum += parseFloat(d[j])
+                                }
+                            }
+                        }
+                        // console.log(finalPerCols)
+                    }
+                    if(!isNaN(sum)) {
+                        sum = parseFloat(sum).toFixed(1)
+                    } else {
+                        refrenceIndex = indices[i] + 2; // 2 bcz 1 for GX_Entry_Date Col & + 1 for next indice 
+                        sum = parseFloat(sum).toFixed(1).toString()+"%"
+                    }
+                    this._dataTableObj.cell(rowIDTotal, indices[i].toString()).data(sum)
+                }
+                console.log(finalPerCols)
+
+                ////// ================================== Highest Overall Total Block Ends ==================================
