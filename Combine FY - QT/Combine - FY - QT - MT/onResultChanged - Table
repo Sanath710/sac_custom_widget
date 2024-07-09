@@ -1,0 +1,7 @@
+var rs = Table_2.getDataSource().getResultSet();
+//	rs.shift();
+//	rs.shift();
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"13","RestCase":"13"};
+CW_CustomTable_1.setResultSet_MT(rs, 0, topHeaders_Colspan);
