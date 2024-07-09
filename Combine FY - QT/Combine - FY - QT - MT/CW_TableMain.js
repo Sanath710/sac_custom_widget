@@ -732,6 +732,8 @@ var widget_ID_Name = {};
 
                 if(this._callFrom == "MT") {
 
+                    this._visibleCols = [];
+
                     if(hideCols[0] == "Num") {
                         this._stateShown = 'Num';
                         this.showPercentageWidVariance("Num");
@@ -744,6 +746,7 @@ var widget_ID_Name = {};
                         this._stateShown = 'Per';
                         this.showPercentageWidVariance("Per");
                     }
+
                 }
                 ///// ------------------------- For Non - MT  ------------------------------
                 else {
@@ -1486,9 +1489,9 @@ var widget_ID_Name = {};
                 // @--- uncomment below line
                 // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 console.log(this._widgetID+"cw-combine-table")
-                if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
-                    // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-                }
+                // if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                //     // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // }
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -2294,43 +2297,23 @@ var widget_ID_Name = {};
     
                 /* --------------------------- FREEZE 1ST COLUMN ---------------------------- */
 
-                #example > tbody > tr > td.truncate, #example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none, #example > thead > tr:nth-child(1) > th:nth-child(1)
+                #example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none, #example > thead > tr:nth-child(1) > th:nth-child(1),
+                #example > tbody > tr:nth-child(2) > td.truncate, #example > tbody > tr > td.truncate
                 {
                     position:sticky;
                     left:0px;
                 }
 
-            /*
-                #example > tbody > tr > td:nth-child(2), #example > thead > tr:nth-child(2) > th:nth-child(2),#example > thead > tr:nth-child(1) > th:nth-child(2) {
-                    position:sticky;
-                    left:min(313px);
+                td.truncate, #example > tbody > tr > td:not(.truncate) {
+                    mix-blend-mode: hue;
+                    scroll-behavior: smooth;
                 }
 
-                #example > tbody > tr > td:nth-child(3), #example > thead > tr:nth-child(3) > th:nth-child(3), #example > thead > tr:nth-child(2) > th:nth-child(3) {
-                    position:sticky;
-                    left:min(435px);
+                #example > tbody > tr:nth-child(1) {
+                    position:sticky!important;
+                    top:80px!important;
                 }
 
-                #example > thead > tr:nth-child(2) > th:nth-child(4), #example > tbody > tr:nth-child(1) > td:nth-child(4), #example > tbody > tr > td:nth-child(4) {
-                    position:sticky;
-                    left:min(546px);
-                }
-
-                #example > thead > tr:nth-child(2) > th:nth-child(5), #example > tbody > tr:nth-child(1) > td:nth-child(5), #example > tbody > tr > td:nth-child(5) {
-                    position:sticky;
-                    left:min(657px);
-                }
-
-                #example > thead > tr:nth-child(2) > th:nth-child(6), #example > tbody > tr:nth-child(1) > td:nth-child(6), #example > tbody > tr > td:nth-child(6) {
-                    position:sticky;
-                    left:min(768px);
-                }
-
-                 #example > thead > tr:nth-child(2) > th:nth-child(7), #example > tbody > tr:nth-child(1) > td:nth-child(7), #example > tbody > tr > td:nth-child(7) {
-                    position:sticky;
-                    left:min(879px);
-                }
-            */
                 `;
             }
 
@@ -3805,28 +3788,33 @@ var widget_ID_Name = {};
                 // 
                 // for(var i = 0; i < this._scenarioOrder.length; i++) {
     
-                for(var i = 0; i < this._scenarioOrder.length - 2; i++) {
-                    if(this._fixedScenario.includes(this._scenarioOrder[i])) {
-                        topHeader += `<th class='top-header' colspan='${this._colOrder.length + 1}'>${this._scenarioOrder[i]}</th>`
-                    } else {
-                        for(var j = 0; j < this._scenarioOrder.length; j++) {
-                            if(!this._fixedScenario.includes(this._scenarioOrder[j])) {
-                                if(this._scenarioOrder[i] == this._scenarioOrder[j]) {
-                                    topHeader += 
-                                    `<th class='top-header' colspan='${this._colOrder.length + 1}'>${this._scenarioOrder[j]}`;
-                                    // console.log(this._scenarioOrder[j])
-                                } 
-                                // else {
-                                //     opts += `<option id='${j}' >${this._scenarioOrder[j]}</option>`;
-                                // }
-                            }
-                        }
-                        topHeader +=  `</th>`;
+                if(this._customTopHeader) {
+                    for(var i = 0; i < 4; i++) {
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[i].replace(" ","")}' >${this._customTopHeader[i]}</th>`
                     }
+                } else {
+                    for(var i = 0; i < this._scenarioOrder.length - 2; i++) {
+                        if(this._fixedScenario.includes(this._scenarioOrder[i])) {
+                            topHeader += `<th class='top-header' colspan='${this._colOrder.length + 1}'>${this._scenarioOrder[i]}</th>`
+                        } else {
+                            for(var j = 0; j < this._scenarioOrder.length; j++) {
+                                if(!this._fixedScenario.includes(this._scenarioOrder[j])) {
+                                    if(this._scenarioOrder[i] == this._scenarioOrder[j]) {
+                                        topHeader += 
+                                        `<th class='top-header' colspan='${this._colOrder.length + 1}'>${this._scenarioOrder[j]}`;
+                                        // console.log(this._scenarioOrder[j])
+                                    } 
+                                    // else {
+                                    //     opts += `<option id='${j}' >${this._scenarioOrder[j]}</option>`;
+                                    // }
+                                }
+                            }
+                            topHeader +=  `</th>`;
+                        }
+                    }
+                    topHeader += "</tr>";
                 }
-                
-
-                topHeader += "</tr>";
+               
 
                 // @--- uncomment below line
                 // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
