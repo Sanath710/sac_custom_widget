@@ -1,0 +1,13 @@
+var selText = this.getSelectedText();
+
+switch(selText) {
+	case "Variance" :
+		CW_CustomTable_1.columnVisibility(["Var"], []);
+		break;
+	case "Percentage" : 
+		CW_CustomTable_1.columnVisibility(["Per"], []);
+		break;
+	default : 
+		CW_CustomTable_1.columnVisibility(["Num"], []);
+		break;
+};
