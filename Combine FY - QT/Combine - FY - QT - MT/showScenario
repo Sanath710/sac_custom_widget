@@ -1,0 +1,4 @@
+var fixedCols = 38;
+var no_of_measures = 36;
+
+CW_CustomTable_1.showScenarios(fixedCols, this.getSelectedKeys(), this.getSelectedTexts(), no_of_measures);
