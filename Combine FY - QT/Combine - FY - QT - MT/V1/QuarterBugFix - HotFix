@@ -35,7 +35,7 @@ var widget_ID_Name = {};
         const masterRows = [];
         var indices = [], indices_QT = [], indices_MT = [];
         var gbl_finalPerCols_FY = {}, gbl_finalPerCols_QT = {}, gbl_finalPerCols_MT = {};
-        var no_of_decimalPlaces = 5;
+        var no_of_decimalPlaces = 1;
 
         class CustomTable extends HTMLElement {
 
