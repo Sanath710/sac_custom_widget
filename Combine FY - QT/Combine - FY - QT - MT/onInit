@@ -1,19 +1,18 @@
-
 var headerSeq = {
 	"SCENARIO_ORDER":["Base", "Scenario1", "Scenario2", "Scenario3", "Scenario4", "Scenario5"],
 	"FIXED_SCENARIO":["BASE"],
-	"COL_NAME_ORDER":["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	"COL_NAME_ORDER":["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "FY"],
 	"@MeasureDimension":["MES1", "MES2", "PER"],
 	"FIXED_INDICES":["0","1","2"], //----to be modified
 	"DROPDOWN_INDICES":["2", "27", "52", "77", "102", "127"],//"15", "28", "41", "54", "67"
-	"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only //----to be modified
+	"DROPDOWN_SELECTED":["BASE-3","BASE-3","BASE-4"], // Uppercase only //----to be modified
 	"Exclude":["SCENARIO_ORDER", "COL_ORDER", "42870276-3523-4694-3453-423229186415"] // Include Exclude at last only
 };
 var customHeaders = {
 	"DIMEN_NAME":["COUNTRY", "FRS", "GX Date"], // in-order
-	"MES_NAME":["Jan-", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	"MES_NAME":["Jan-", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "FY"],
 	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
-	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+	"TOP_HEADER":["VAR_AI_RUNS", "Scenario 1", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
 };
 
 var selectionColumnName = "GX_ENTRY_NAME";
@@ -24,7 +23,7 @@ var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; paddi
 var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
 
 var hideFrom = 54;
-CW_CustomTable_1.setExtraParams(headerSeq, customHeaders, selectionColumnName, 149, hideParticularCols); 
+CW_CustomTable_1.setExtraParams(headerSeq, customHeaders, selectionColumnName, 162, hideParticularCols); 
 CW_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
 
 
@@ -33,7 +32,7 @@ rs.shift();
 rs.shift();
 console.log(rs);
 
-var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"13","RestCase":"13"};
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"14","RestCase":"14"};
 CW_CustomTable_1.setResultSet_MT(rs, 0, topHeaders_Colspan);
 
 //	var headerSeq = {
