@@ -619,8 +619,8 @@ var widget_ID_Name = {};
                     var selCol = this._dataTableObj.columns('.selColClass')[0];
                     selCol.push(2); // selection column base
 
-                    const filteredArray = numCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
                     var numCols = numCols.concat(selCol);
+                    const filteredArray = numCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
 
                     ///// -------------- Handling Base Scenario Visibility Starts ---------------------
                     const filteredBase = [];
@@ -653,8 +653,8 @@ var widget_ID_Name = {};
                     }
                 } 
                 else if(scene == "Var") {
-                    var perCols = this._dataTableObj.columns('.perColCSS')[0];
-                    var numCols = this._dataTableObj.columns('.numCol')[0];
+                    // var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                    // var numCols = this._dataTableObj.columns('.numCol')[0];
                     var selCol = this._dataTableObj.columns('.selColClass')[0];
                     var varCols = this._dataTableObj.columns('.varCol')[0];
                     selCol.push(2); // selection column base
@@ -731,9 +731,6 @@ var widget_ID_Name = {};
             columnVisibility(hideCols, showCols) {
 
                 if(this._callFrom == "MT") {
-
-                    this._visibleCols = [];
-
                     if(hideCols[0] == "Num") {
                         this._stateShown = 'Num';
                         this.showPercentageWidVariance("Num");
@@ -3478,6 +3475,7 @@ var widget_ID_Name = {};
 
                 this._widgetID = "#"+this["parentNode"].id+" > ";
                 this._stateShown = "Num"; // for num - numeric, var - variance, per - percentage;
+                this._visibleCols = [];
 
                 var table_cols = []
 
@@ -3700,6 +3698,7 @@ var widget_ID_Name = {};
                         },
                         order: [[groupColumn, 'asc']],
                         displayLength: 25,
+                       
                         // drawCallback: function (settings) {
                         //     var api = this.api()
                         //     var rows = api.rows({ page: 'current' }).nodes()
@@ -4033,12 +4032,17 @@ var widget_ID_Name = {};
 
                         if(masterObj[masterKey.join("_#_")] == undefined) {
                             masterObj[masterKey.join("_#_")] = structuredClone(scenarioObj);
+                            masterObj[masterKey.join("_#_")]["DropDownSelected"] = new Set()
                         }
 
                         if(masterObj[masterKey.join("_#_")][scene] != undefined){
                             masterObj[masterKey.join("_#_")][scene][this._resultSet[i].slice(this._dimensions.length - 1, )[0]] = this._resultSet[i].slice(this._dimensions.indexOf(this._dateColName), )
                             // console.log(this._resultSet[i].slice(this._dimensions.indexOf(this._dateColName), ),"---")
                             masterObj[masterKey.join("_#_")]["DropDownFieldName"].add(this._resultSet[i][this._dimensions.indexOf(this._dateColName)]);
+                        }
+
+                        if(this._dropdownsSelected.includes(this._resultSet[i][fixedScenarioAt].toUpperCase())) {
+                            masterObj[masterKey.join("_#_")]["DropDownSelected"].add(this._resultSet[i][this._dimensions.indexOf(this._dateColName)]);
                         }
                         // console.log(structuredClone(masterObj))
                         // console.log(this._resultSet[i])
@@ -4113,6 +4117,8 @@ var widget_ID_Name = {};
                     var sliced = finalRow.slice(sliceLen)
                     // console.log("---------", sliced)
                     var dropdownArr = Array.from(masterObj[k]["DropDownFieldName"]).slice(1, );
+                    var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
+                    var caughtDropDownsAt = new Set();
                     // console.log(dropdownArr);
 
 
@@ -4162,6 +4168,7 @@ var widget_ID_Name = {};
 
 
                     tbl.row.add(finalRow).draw(false)
+                    // tbl.row.child(finalRow)
                     // console.log(finalRow);
                 }
 
