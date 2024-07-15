@@ -1,0 +1,40 @@
+var headerSeq = {
+	"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"], // max scenarios possible
+	"FIXED_SCENARIO":["BASE"],
+	"COL_NAME_ORDER":["FY"],
+	"@MeasureDimension":["2020", "2021", "2022", "2023", "2024", "2020_Var", "2021_Var", "2022_Var", "2023_Var", "2024_Var", "2020_Per", "2021_Per", "2022_Per", "2023_Per", "2024_Per", "CAGR"],
+	"FIXED_INDICES":["0","1","2","3"],
+	"DROPDOWN_INDICES":["9","15","21","27","33"],
+	"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+	"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY", "FRS", "SCENARIO_NAME", "GX Date"], // in-order
+	"MES_NAME":["2020 - ", "2021", "2022", "2023", "2024", "2020_Var", "2021_Var", "2022_Var", "2023_Var", "2024_Var", "2020_Per", "2021_Per", "2022_Per", "2023_Per", "2024_Per", "CAGR"],
+	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1-", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_Entry_Date";
+var hideParticularCols = [2];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+CW_CustomTable_5Y.setExtraParams(headerSeq, customHeaders, selectionColumnName, 71, hideParticularCols);
+CW_CustomTable_5Y.applyStyling(table_styling, row_styling, col_styling);
+
+var rs = Table_5Y.getDataSource().getResultSet();
+//	rs.shift();
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"7","RestCase":"7"};
+
+CW_CustomTable_5Y.setResultSet_5Y(rs, 0, topHeaders_Colspan);
+
+//	if(VAR_Scale_State === "123") {
+//		CW_CustomTable_FY.columnVisibility([5,6,11,12,17,18,23,24], [-1]);
+//	} else {
+//		CW_CustomTable_FY.columnVisibility([7,8,13,14,19,20,25,26], [5,6,11,12,17,18,23,24]);
+//	}
