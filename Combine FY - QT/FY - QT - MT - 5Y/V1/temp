@@ -1,1 +1,237 @@
+///// ---------------------------------------------- FY Starts -------------------------------------------- 
+
+++++++++++++++++++++++++++++++++++++
+******** Scenario Checkbox *********
+var fixedCols = 8;
+var no_of_measures = 5;
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Per-123 *********
+CW_CustomTable_FY.columnVisibility(["Per"],[]);
+CW_CustomTable_FY.columnVisibility(["vsPy"],[]);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** On Init *********
+var headerSeq = {
+	"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"], // max scenarios possible
+	"FIXED_SCENARIO":["BASE"],
+	"COL_NAME_ORDER":["FY"],
+	"@MeasureDimension":["2020", "2021", "2022", "2020_Per", "2021_Per"],
+	"FIXED_INDICES":["0","1","2","3"],
+	"DROPDOWN_INDICES":["9","15","21","27","33"],
+	"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+	"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY", "FRS", "SCENARIO_NAME", "GX Date"], // in-order
+	"MES_NAME":["ACT_VER1", "ACT_VER16", "VS PY", "New Mes1", "New Mes2"],
+	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_Entry_Date";
+var hideParticularCols = [2];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+CW_CustomTable_FY.setExtraParams(headerSeq, customHeaders, selectionColumnName, 27, hideParticularCols);
+CW_CustomTable_FY.applyStyling(table_styling, row_styling, col_styling);
+
+var rs = Table_FY.getDataSource().getResultSet();
+//	rs.shift();
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"4","RestCase":"4"};
+
+CW_CustomTable_FY.setResultSet_FY(rs, 0, topHeaders_Colspan);
+++++++++++++++++++++++++++++++++++++
+
+///// ---------------------------------------------- FY Ends ---------------------------------------------- 
+///// ---------------------------------------------- QT Starts -------------------------------------------- 
+
+++++++++++++++++++++++++++++++++++++
+******** Scenario Checkbox *********
+var fixedCols = 13; // jo dikh raha hai vo view time pe utna
+var no_of_measures = 15;
+CW_CustomTable_QT.showScenarios(fixedCols, this.getSelectedKeys(), this.getSelectedTexts(), no_of_measures);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Per-123 *********
+CW_CustomTable_FY.columnVisibility(["Per"],[]);
+CW_CustomTable_FY.columnVisibility(["vsPy"],[]);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** On Init *********
+var headerSeq_Q = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["Q1","Q2","Q3","Q4","FY"],
+		"@MeasureDimension":["MES", "vs PY", "ACT_VER1"],
+		"FIXED_INDICES":["0","1","2","3"],
+		"DROPDOWN_INDICES":["9","15","21","27","33"],
+		"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+	};
+	var customHeaders_Q = {
+		"DIMEN_NAME":["COUNTRY_CODE", "FRS_BRAND_CODE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "GX Date"], // in-order
+		"MES_NAME":["MES", "vs PY", "Per"],
+		"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"],
+		"TOP_HEADER":["VAR_AI_RUN", "vs Py", "Scenario 1", "vs Py", "Scenario 2", "vs Py", "Scenario 3", "vs Py"]
+	};
+
+	var selectionColumnName_Q = "GX_Entry_Date";
+	var hideParticularCols_Q = [-1];
+
+	var table_styling_Q = ""; //font-size:14px;
+	var row_styling_Q = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+	var col_styling_Q = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+	CW_CustomTable_QT.setExtraParams(headerSeq_Q, customHeaders_Q, selectionColumnName_Q, 66, hideParticularCols_Q);
+	CW_CustomTable_QT.applyStyling(table_styling_Q, row_styling_Q, col_styling_Q);
+
+//	var rs1 = Table_QT.getDataSource().getResultSet();
+//	console.log(rs1);
+
+//	var topHeaders_Colspan1 = {"EmptyCase":"1","BaseCase":"4","RestCase":"4"};
+//	CW_CustomTable_QT.setResultSet_QT(rs1, 0, topHeaders_Colspan1);
+++++++++++++++++++++++++++++++++++++
+
+///// ---------------------------------------------- QT Ends --------------------------------------------- 
+///// ---------------------------------------------- MT Starts ------------------------------------------- 
+
+++++++++++++++++++++++++++++++++++++
+******** On Init *********
+var headerSeq = {
+	"SCENARIO_ORDER":["Base", "Scenario1", "Scenario2", "Scenario3", "Scenario4", "Scenario5"],
+	"FIXED_SCENARIO":["BASE"],
+	"COL_NAME_ORDER":["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "FY"],
+	"@MeasureDimension":["MES1", "MES2", "PER"],
+	"FIXED_INDICES":["0","1","2"], //----to be modified
+	"DROPDOWN_INDICES":["2", "27", "52", "77", "102", "127"],//"15", "28", "41", "54", "67"
+	"DROPDOWN_SELECTED":["SCENARIO2","SCENARIO4","SCENARIO3"], // Uppercase only //----to be modified
+	"Exclude":["SCENARIO_ORDER", "COL_ORDER"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY", "FRS", "GX Date"], // in-order
+	"MES_NAME":["Jan-", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "FY"],
+	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUNS", "Scenario 1", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_ENTRY_NAME";
+var hideParticularCols = [-1];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+
+CW_CustomTable_1.setExtraParams(headerSeq, customHeaders, selectionColumnName, 162, hideParticularCols); 
+CW_CustomTable_1.applyStyling(table_styling, row_styling, col_styling);
+
+
+var rs = Table_2.getDataSource().getResultSet();
+rs.shift();
+rs.shift();
+//	console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"14","RestCase":"14"};
+CW_CustomTable_1.setResultSet_MT(rs, 0, topHeaders_Colspan);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Show Scenario *********
+var fixedCols = 42; 
+var no_of_measures = 39;
+CW_CustomTable_1.showScenarios(fixedCols, this.getSelectedKeys(), this.getSelectedTexts(), no_of_measures);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Show 123/% *********
+var selText = this.getSelectedText();
+
+switch(selText) {
+	case "Variance" :
+		CW_CustomTable_1.columnVisibility(["Var"], []);
+		break;
+	case "Percentage" : 
+		CW_CustomTable_1.columnVisibility(["Per"], []);
+		break;
+	default : 
+		CW_CustomTable_1.columnVisibility(["Num"], []);
+		break;
+};
+++++++++++++++++++++++++++++++++++++
+
+///// ---------------------------------------------- MT Ends ------------------------------------------- 
+///// ---------------------------------------------- 5Y Starts ----------------------------------------- 
+
+++++++++++++++++++++++++++++++++++++
+******** On Init *********
+var headerSeq = {
+	"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"], // max scenarios possible
+	"FIXED_SCENARIO":["BASE"],
+	"COL_NAME_ORDER":["FY"],
+	"@MeasureDimension":["2020", "2021", "2022", "2023", "2024", "2020_Var", "2021_Var", "2022_Var", "2023_Var", "2024_Var", "2020_Per", "2021_Per", "2022_Per", "2023_Per", "2024_Per", "CAGR"],
+	"FIXED_INDICES":["0","1","2","3"],
+	"DROPDOWN_INDICES":["9","15","21","27","33"],
+	"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+	"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["COUNTRY", "FRS", "SCENARIO_NAME", "GX Date"], // in-order
+	"MES_NAME":["2020 - ", "2021", "2022", "2023", "2024", "2020_Var", "2021_Var", "2022_Var", "2023_Var", "2024_Var", "2020_Per", "2021_Per", "2022_Per", "2023_Per", "2024_Per", "CAGR"],
+	"SCENARIO_NAME":["Base", "  Gx Date", "  Gx Date", "  Gx Date", "Gx Date", "Gx Date"],
+	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1-", "Scenario 2", "Scenario 3"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_Entry_Date";
+var hideParticularCols = [2];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+CW_CustomTable_5Y.setExtraParams(headerSeq, customHeaders, selectionColumnName, 71, hideParticularCols);
+CW_CustomTable_5Y.applyStyling(table_styling, row_styling, col_styling);
+
+var rs = Table_5Y.getDataSource().getResultSet();
+//	rs.shift();
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"7","RestCase":"7"};
+
+CW_CustomTable_5Y.setResultSet_5Y(rs, 0, topHeaders_Colspan);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Show Scenario *********
+var fixedCols = 71; 
+var no_of_measures = 16;
+CW_CustomTable_5Y.showScenarios(fixedCols, this.getSelectedKeys(), this.getSelectedTexts(), no_of_measures);
+++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++
+******** Show 123/% *********
+var selText = this.getSelectedText();
+
+switch(selText) {
+	case "Variance" :
+		CW_CustomTable_5Y.columnVisibility(["Var"], []);
+		break;
+	case "Percentage" : 
+		CW_CustomTable_5Y.columnVisibility(["Per"], []);
+		break;
+	default : 
+		CW_CustomTable_5Y.columnVisibility(["Num"], []);
+		break;
+};
+++++++++++++++++++++++++++++++++++++
+///// ---------------------------------------------- 5Y Ends ----------------------------------------- 
 
