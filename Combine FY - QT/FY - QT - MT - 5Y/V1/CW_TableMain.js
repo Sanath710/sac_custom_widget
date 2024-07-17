@@ -2162,11 +2162,16 @@ var widget_ID_Name = {};
                     // var subsetChildren = groupRowMapping[parentID].slice(1, );
 
                     var indices = [];
+                    var numericCols = [];
                     for(var i = 0; i < table_cols.length; i++) {
                         if(table_cols[i]["className"] == "numericColsCSS") {
                             indices.push(i);
                         } else {
                             indices.push(-1);
+                        }
+                         ///// Numeric Col Indices
+                         if(table_cols[i]["className"] == "numericColsCSS" || table_cols[i]["className"] == "numericColsCSS numCol") {
+                            numericCols.push(i)
                         }
                     }
                     var no_of_per_cols = 2;
@@ -2179,8 +2184,39 @@ var widget_ID_Name = {};
 
                         var d = tbl.column(i).data();
                         for(var j = 1; j < d.length; j++) {
+
                             var node = tbl.column(i).nodes()[j]["_DT_CellIndex"]["row"]
+
+                            ///// ---------------------- For cell color red or green starts ---------------------------
+                            if(!numericCols.includes(i)) {
+                                var cell_rid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["row"];
+                                var cell_cid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["column"];
+                                var cell_node = tbl.cell(cell_rid, cell_cid).node();
+                                var flagColor = false, data = undefined;
+                                
+                                if(isNaN(tbl.cell(cell_rid, cell_cid).data())) {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
+                                    if(tbl.cell(cell_rid, cell_cid).data().includes("%")) {
+                                        data = parseFloat(tbl.cell(cell_rid, cell_cid).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""));
+                                    }
+                                } else {
+                                    data = tbl.cell(cell_rid, cell_cid).data();
+                                }
+
+                                if(data < 0) {
+                                    flagColor = true;
+                                }
+
+                                if(flagColor) {
+                                    cell_node.style.color = "#A92626";
+                                } else {
+                                    cell_node.style.color = "#2D7230";
+                                }
+                            }
+                            ///// ---------------------- For cell color red or green ends -----------------------------
+
                             if(!Object.keys(groupRowMapping).includes(j.toString()) && !Object.keys(groupRowMapping).includes(node.toString())){
+                                
                                 if(isNaN(d[j]) && d[j].includes("%")) {
                                     // sum = "- %"
                                     // if(indices.slice(refrenceIndex, indices[i] + 2).filter(item => item !== -1).length > 0) {
@@ -3396,6 +3432,7 @@ var widget_ID_Name = {};
                     // var subsetChildren = groupRowMapping[parentID].slice(1, );
 
                     var indices = [];
+                    var numericCols = [];
                     let considerConditions = ["numericColsCSS", "perCols"];
 
                     for(var i = 0; i < table_cols.length; i++) {
@@ -3403,6 +3440,10 @@ var widget_ID_Name = {};
                             indices.push(i);
                         } else {
                             indices.push(-1);
+                        }
+                        ///// Numeric Col Indices
+                        if(table_cols[i]["className"] == "numericColsCSS" || table_cols[i]["className"] == "numericColsCSS numCol") {
+                            numericCols.push(i)
                         }
                     }
                     var no_of_per_cols = 5;
@@ -3412,7 +3453,38 @@ var widget_ID_Name = {};
                         var sum = 0;
                         var d = tbl.column(i).data();
                         for(var j = 1; j < d.length; j++) {
+
                             var node = tbl.column(i).nodes()[j]["_DT_CellIndex"]["row"]
+
+                            ///// ---------------------- For cell color red or green starts ---------------------------
+                            if(!numericCols.includes(i)) {
+                                var cell_rid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["row"];
+                                var cell_cid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["column"];
+                                var cell_node = tbl.cell(cell_rid, cell_cid).node();
+                                var flagColor = false, data = undefined;
+                                
+                                if(isNaN(tbl.cell(cell_rid, cell_cid).data())) {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
+                                    if(tbl.cell(cell_rid, cell_cid).data().includes("%")) {
+                                        data = parseFloat(tbl.cell(cell_rid, cell_cid).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""));
+                                    }
+                                } else {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
+                                }
+
+                                if(data < 0) {
+                                    flagColor = true;
+                                }
+
+                                if(flagColor) {
+                                    cell_node.style.color = "#A92626";
+                                } else {
+                                    cell_node.style.color = "#2D7230";
+                                }
+                            }
+                            ///// ---------------------- For cell color red or green ends -----------------------------
+
+
                             if(!Object.keys(groupRowMapping).includes(j.toString()) && !Object.keys(groupRowMapping).includes(node.toString())){
                                 if(isNaN(d[j])) {
                                     // sum = "- %"
@@ -4576,6 +4648,8 @@ var widget_ID_Name = {};
                                     if(tbl.cell(cell_rid, cell_cid).data().includes("%")) {
                                         data = parseFloat(tbl.cell(cell_rid, cell_cid).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""));
                                     }
+                                } else {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
                                 }
 
                                 if(data < 0) {
@@ -5844,8 +5918,22 @@ var widget_ID_Name = {};
                                 var cell_rid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["row"];
                                 var cell_cid = tbl.column(i).nodes()[j]["_DT_CellIndex"]["column"];
                                 var cell_node = tbl.cell(cell_rid, cell_cid).node();
+                                var flagColor = false, data = undefined;
     
-                                if(tbl.cell(cell_rid, cell_cid).data() < 0) {
+                                if(isNaN(tbl.cell(cell_rid, cell_cid).data())) {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
+                                    if(tbl.cell(cell_rid, cell_cid).data().includes("%")) {
+                                        data = parseFloat(tbl.cell(cell_rid, cell_cid).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""));
+                                    }
+                                } else {
+                                    data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
+                                }
+
+                                if(data < 0) {
+                                    flagColor = true;
+                                }
+
+                                if(flagColor) {
                                     cell_node.style.color = "#A92626";
                                 } else {
                                     cell_node.style.color = "#2D7230";
