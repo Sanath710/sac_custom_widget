@@ -628,7 +628,16 @@ var widget_ID_Name = {};
                         selCol.push(2); // selection column base
     
                         var numCols = numCols.concat(selCol);
-                        const filteredArray = numCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+                        var filteredArray = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = numCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
+    
     
                         ///// -------------- Handling Base Scenario Visibility Starts ---------------------
                         const filteredBase = [];
@@ -663,11 +672,20 @@ var widget_ID_Name = {};
                     else if(scene == "Var") {
                         // var perCols = this._dataTableObj.columns('.perColCSS')[0];
                         // var numCols = this._dataTableObj.columns('.numCol')[0];
-                        var selCol = this._dataTableObj.columns('.selColClass')[0];
                         var varCols = this._dataTableObj.columns('.varCol')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
                         selCol.push(2); // selection column base
     
-                        const filteredArray = varCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+                        varCols = varCols.concat(selCol);
+                        var filteredArray = [];
+                       
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = varCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
     
                         ///// -------------- Handling Base Scenario Visibility Starts ---------------------
                         const filteredBase = [];
@@ -679,7 +697,6 @@ var widget_ID_Name = {};
                         ///// -------------- Handling Base Scenario Visibility Ends -----------------------
     
                         for(var i = 2; i < this._hideExtraVisibleColumnFromIndex; i++) {
-                            varCols = varCols.concat(selCol);
                             // if(varCols.includes(i)) {
                             //     this._dataTableObj.column(i).visible(true);
                             // } else {
@@ -706,7 +723,16 @@ var widget_ID_Name = {};
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
                         selCol.push(2); // selection column base
     
-                        const filteredArray = perCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+                        var filteredArray = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = perCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
+    
                         
                         ///// -------------- Handling Base Scenario Visibility Starts ---------------------
                         const filteredBase = [];
@@ -1133,7 +1159,9 @@ var widget_ID_Name = {};
                 this._headerNames_to_show =headerNames_to_show;
                 var fixedCols = fixedCols;
                 this._fixedCols = fixedCols;
-                var visibleCols = []; 
+                var visibleCols = [];
+                this._colIndices = colIndices.slice();
+                this._no_of_succeeding = no_of_succeeding;
 
 
                 if(this._callFrom == "MT") {
