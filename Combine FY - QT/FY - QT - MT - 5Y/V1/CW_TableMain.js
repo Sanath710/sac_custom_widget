@@ -4777,6 +4777,7 @@ var widget_ID_Name = {};
 
                     // Pushing Measures to finalRow
                     var varianceCol = [];
+
                     for(const v1 in v) {
                         if(v1 != "DropDownFieldName") {
                             // finalRow.push(Array.from(v["DropDownFieldName"])[0])
@@ -4793,19 +4794,25 @@ var widget_ID_Name = {};
                                 //         finalRow.push("-")
                                 //     }
                                 // } else {
-                                if(masterObj[k]["DropDownFieldName"].size > 1) {
-                                    for(var h = 2; h < 2 + this._measureOrder.length; h++) {
-                                        if(vm[h] != undefined) {
-                                            finalRow.push(vm[h])
-                                        } else {
-                                            finalRow.push("-")
-                                        }
+                                if(vm.length == 0) {
+                                    for(var h = 0; h < this._measureOrder.length; h++) {
+                                        finalRow.push("-")
                                     }
                                 } else {
-                                    f = true;
-                                    for(var h = 2; h < 2 + this._measureOrder.length; h++) {
-                                        if(vm[h] != undefined) {
-                                            finalRow.push(vm[h])
+                                    if(masterObj[k]["DropDownFieldName"].size > 1) {
+                                        for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                            if(vm[h] != undefined) {
+                                                finalRow.push(vm[h])
+                                            } else {
+                                                finalRow.push("-")
+                                            }
+                                        }
+                                    } else {
+                                        f = true;
+                                        for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                            if(vm[h] != undefined) {
+                                                finalRow.push(vm[h])
+                                            }
                                         }
                                     }
                                 }
@@ -4826,29 +4833,40 @@ var widget_ID_Name = {};
                     // var len = finalRow.slice().length;
                     // var temp = finalRow.slice();
                     // finalRow.push("--Variance--")
-                    finalRow = finalRow.concat(varianceCol);
-                    fixRowsObj[k] = finalRow
+                    finalRow = finalRow.concat(varianceCol).slice(0, table_cols.length);
+                    fixRowsObj[k] = finalRow.slice()
 
 
                     // console.log("--------->>>>>>>", finalRow)
                     var flag = false;
 
-                    if(finalRow.length == (this._dimensions.length - 2) + this._colOrder.length * 3) {
-                        var repeatBase = finalRow.slice(this._dimensions.indexOf(this._dateColName) - 1, );
-                        for(var l = finalRow.length, lcl_cnt = 0; l < table_cols.length; l++) {
-                            finalRow.push(repeatBase[lcl_cnt])
+                    //////// if only base is coming ----------- 
+                    var emptyFinal = finalRow.slice(0, 2);
+                    if(masterObj[k]["DropDownFieldName"].size == 1) {
+                        var repeatBase = finalRow.slice(this._dimensions.indexOf(this._dateColName) - 1, ((this._colOrder.length + 1) * this._measureOrder.length));
+                        for(var l = 0, lcl_cnt = 0; l < table_cols.length; l++) {
+
+                            if(emptyFinal.length == table_cols.length) {
+                                break;
+                            }
+
                             if(lcl_cnt >= repeatBase.length) {
                                 lcl_cnt = 0;
                             }
+
+                            emptyFinal.push(repeatBase[lcl_cnt])
+
                             lcl_cnt++;
                         }
                         flag = true;
+                        finalRow = emptyFinal.slice();
                     } 
                     else if(finalRow.length < table_cols.length) {
                         for(var l = finalRow.length; l < table_cols.length; l++) {
                             finalRow.push("-")
                         }
                     }
+                   
 
                     // Adding Dropdowns to finalRow
                     var varianceCnt = this._measureOrder.length
