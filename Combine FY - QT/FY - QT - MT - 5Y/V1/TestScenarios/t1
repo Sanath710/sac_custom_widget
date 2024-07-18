@@ -4882,56 +4882,57 @@ var widget_ID_Name = {};
                     finalRow.push(Array.from(v["DropDownFieldName"])[0])
 
                     // Pushing Measures to finalRow
-                    var varianceCol = [], isEmptyCaseCnt = 0;
 
-                    var cnt = 1;
-                    var checkRest = false;
-                        for(const v1 in v) {
-                            // console.log(v, "---", v1)
-                            if(v1 != "DropDownFieldName") {
-                                // console.log(this._colOrder.length * this._measureOrder.length)
-                                for(var e = 0; e < this._measureOrder.length; e++)  {
-                                    for(const [km, vm] of Object.entries(masterObj[k][v1])) {
-                                        // console.log(v1, km, vm)
-                                        // finalRow.push(km)
-                                        // console.log(vm[e])
-                                        if(vm[e] != undefined) {
-                                            var d = vm.slice(2,)
-                                            finalRow.push(d[e])
-                                        } 
-                                        else {
-                                            ////// checking if whole scenario is empty or not
-                                            for(var g = 0; g < this._colOrder.length; g++) {
-                                                if(masterObj[k][v1][this._colOrder[g]] && masterObj[k][v1][this._colOrder[g]].length > 0) {
-                                                    checkRest = true;
+                    for(const v1 in v) {
+                        if(v1 != "DropDownFieldName") {
+                            // finalRow.push(Array.from(v["DropDownFieldName"])[0])
+                            var f = false;
+                            ///// checking if whole scenario is empty or not ----------------------------------
+                            var checkEmpty = true;
+                            for(var g = 0; g < this._colOrder.length; g++) {
+                                if(masterObj[k][v1][this._colOrder[g]] && masterObj[k][v1][this._colOrder[g]].length > 0) {
+                                    checkEmpty = false;
+                                }
+                            }
+                            ///// -----------------------------------------------------------------------------
+
+                            for(const [km, vm] of Object.entries(masterObj[k][v1])) {
+                                
+                                if(!checkEmpty) {
+                                    if(vm.length == 0) {
+                                        for(var h = 0; h < this._measureOrder.length; h++) {
+                                            finalRow.push("-")
+                                        }
+                                    } else {
+                                        if(masterObj[k]["DropDownFieldName"].size > 1) {
+                                            for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                                if(vm[h] != undefined) {
+                                                    finalRow.push(vm[h])
+                                                } else {
+                                                    finalRow.push("-")
                                                 }
                                             }
-                                            if(checkRest) {
-                                                finalRow.push("-")
+                                        } else {
+                                            f = true;
+                                            for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                                if(vm[h] != undefined) {
+                                                    finalRow.push(vm[h])
+                                                }
                                             }
                                         }
-                                        if(cnt == (this._colOrder.length * this._measureOrder.length)) {
-                                            if(finalRow[finalRow.length - 1] != "--selection--") {
-                                                finalRow.push("--selection--")
-                                            }
-                                            cnt = 0;
-                                            // console.log("HELLO...")
-                                        }
-                                        cnt++;
-                                        // console.log(relocate_idx)
                                     }
                                 }
-                               
-                                // relocate_idx++;
-                                // finalRow.pop()
-                               
-                        //         // finalRow.push("--Selection--")
-                        //         // console.log(masterObj[k][v1])
-                            } else {
-                                // dropdown data
+                                                               
                             }
+                        } else {
+                            // dropdown data
+                        }
+                        if(finalRow[finalRow.length - 1] != "--Selection--") {
+                            finalRow.push("--Selection--")
+                        }
                     }
 
+                    // console.log(finalRow)
                     finalRow.pop()
                     // var len = finalRow.slice().length;
                     // var temp = finalRow.slice();
