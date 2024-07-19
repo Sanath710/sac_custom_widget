@@ -4235,6 +4235,7 @@ var widget_ID_Name = {};
                 this._widgetID = "#"+this["parentNode"].id+" > ";
                 this._stateShown = "Num"; // for num - numeric, var - variance, per - percentage;
                 this._visibleCols = [];
+                this._colIndices = [];
 
                 var table_cols = []
 
@@ -4839,6 +4840,7 @@ var widget_ID_Name = {};
 
                         var masterKey = tempKey.split("_#_").slice(0, fixedScenarioAt);
                         var scene = this._resultSet[i][fixedScenarioAt];
+                        
 
                         if(masterObj[masterKey.join("_#_")] == undefined) {
                             masterObj[masterKey.join("_#_")] = structuredClone(scenarioObj);
@@ -4863,6 +4865,8 @@ var widget_ID_Name = {};
                     prev_key = key;
                 }
 
+                console.log("---", structuredClone(masterObj))
+
                 // Final Row Assignment
                 for(const [k, v] of Object.entries(masterObj)) {
                     // console.log(k)
@@ -4878,64 +4882,62 @@ var widget_ID_Name = {};
                     finalRow.push(Array.from(v["DropDownFieldName"])[0])
 
                     // Pushing Measures to finalRow
-                    var varianceCol = [];
 
                     for(const v1 in v) {
                         if(v1 != "DropDownFieldName") {
                             // finalRow.push(Array.from(v["DropDownFieldName"])[0])
                             var f = false;
+                            ///// checking if whole scenario is empty or not ----------------------------------
+                            var checkEmpty = true;
+                            for(var g = 0; g < this._colOrder.length; g++) {
+                                if(masterObj[k][v1][this._colOrder[g]] && masterObj[k][v1][this._colOrder[g]].length > 0) {
+                                    checkEmpty = false;
+                                }
+                            }
+                            ///// -----------------------------------------------------------------------------
+
                             for(const [km, vm] of Object.entries(masterObj[k][v1])) {
-                                // console.log(masterObj[k][v1], km, vm)
-                                // if(vm[vm.length - 2] != undefined) {
-                                //     finalRow.push(vm[vm.length - 2])
-                                // } else {
-                                //     finalRow.push("-")
-                                // }
-                                // if(vm.length == 0) {
-                                //     for(var h = 0; h < this._measureOrder.length; h++) {
-                                //         finalRow.push("-")
-                                //     }
-                                // } else {
-                                if(vm.length == 0) {
-                                    for(var h = 0; h < this._measureOrder.length; h++) {
-                                        finalRow.push("-")
-                                    }
-                                } else {
-                                    if(masterObj[k]["DropDownFieldName"].size > 1) {
-                                        for(var h = 2; h < 2 + this._measureOrder.length; h++) {
-                                            if(vm[h] != undefined) {
-                                                finalRow.push(vm[h])
-                                            } else {
-                                                finalRow.push("-")
-                                            }
+                                
+                                if(!checkEmpty) {
+                                    if(vm.length == 0) {
+                                        for(var h = 0; h < this._measureOrder.length; h++) {
+                                            finalRow.push("-")
                                         }
                                     } else {
-                                        f = true;
-                                        for(var h = 2; h < 2 + this._measureOrder.length; h++) {
-                                            if(vm[h] != undefined) {
-                                                finalRow.push(vm[h])
+                                        if(masterObj[k]["DropDownFieldName"].size > 1) {
+                                            for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                                if(vm[h] != undefined) {
+                                                    finalRow.push(vm[h])
+                                                } else {
+                                                    finalRow.push("-")
+                                                }
+                                            }
+                                        } else {
+                                            f = true;
+                                            for(var h = 2; h < 2 + this._measureOrder.length; h++) {
+                                                if(vm[h] != undefined) {
+                                                    finalRow.push(vm[h])
+                                                }
                                             }
                                         }
                                     }
                                 }
-                                   
-                                // }
+                                                               
                             }
-                            if(!f) {
-                                finalRow.push("--Selection--")
-                            }
-                            // varianceCol.push("--Selection--")
-                            // console.log(masterObj[k][v1])
                         } else {
                             // dropdown data
                         }
+                        if(finalRow[finalRow.length - 1] != "--Selection--") {
+                            finalRow.push("--Selection--")
+                        }
                     }
 
+                    // console.log(finalRow)
                     finalRow.pop()
                     // var len = finalRow.slice().length;
                     // var temp = finalRow.slice();
                     // finalRow.push("--Variance--")
-                    finalRow = finalRow.concat(varianceCol).slice(0, table_cols.length);
+                    finalRow = finalRow.slice(0, table_cols.length);
                     fixRowsObj[k] = finalRow.slice()
 
 
@@ -4981,6 +4983,7 @@ var widget_ID_Name = {};
                     var dropdownArr = Array.from(masterObj[k]["DropDownFieldName"]).slice(1,);
                     var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
                     var caughtDropDownsAt = new Set();
+                    var isEmptyUpdated = false;
                     // var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
                     // console.log(dropdownArr);
 
@@ -5013,6 +5016,12 @@ var widget_ID_Name = {};
                         } else {
                             var select_html = `<select id='${kk}' class='row_level_select row_level_select_${kk}_${this._dataTableObj.rows().count()}' onchange='updateRow(this, ${this._dimensions.length}, ${this._measureOrder.length}, ${this._excludeHeaders.length}, "${finalRow[0]}_#_${finalRow[1]}", ${fixedScenarioAt + 1 + (this._colOrder.length * this._measureOrder.length)}, ${this._colOrder.length * this._measureOrder.length})'>`;
                             var options = "";
+                            if(sliced[kk] == "EMPTY_DROPDOWN" && !isEmptyUpdated) {
+                                dropdownArr.unshift("");
+                                dropdownSel.unshift("");
+                                isEmptyUpdated = true;
+                                // options += "<option selected disabled></option>";
+                            }
                             for(var p = 0; p < dropdownArr.length; p++) {
                                 if(dropdownSel.includes(dropdownArr[p])) {
                                     caughtDropDownsAt.add(p)
