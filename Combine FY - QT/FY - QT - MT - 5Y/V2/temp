@@ -2449,6 +2449,7 @@ var widget_ID_Name = {};
 
 
                     var dropdownArr = Array.from(masterObj[k]["DropDownFieldName"]).slice();
+                    var master_dropdownArr = new Set();
                     var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
                     var caughtDropDownsAt = new Set(),  dropdownIDs = new Set(), cnt = 0;
 
@@ -2467,6 +2468,8 @@ var widget_ID_Name = {};
                             for(var i = 0; i < dropdownArr.length; i++) {
                                 if(dropdownSel.includes(dropdownArr[i])) {
                                     caughtDropDownsAt.add(i)
+                                } else {
+                                    master_dropdownArr.add(i)
                                 }
                                 if(optIdx == i) {
                                     options += `<option class='optionTag' id='${i}' selected>${dropdownArr[i]}</option>`
@@ -2500,8 +2503,20 @@ var widget_ID_Name = {};
                     tbl.row.add(finalRow).draw()
 
                     if(!onlyBaseAvailable) {
-                        var cda = Array.from(caughtDropDownsAt).slice(0, 3);
-                        this.setSelectorsSelectedValue(dropdownIDs, cda);
+
+                        var cga = Array.from(caughtDropDownsAt);
+                        master_dropdownArr = Array.from(master_dropdownArr);
+
+                        if(cga.length < 3) {
+                            for(var b = 0; b < master_dropdownArr.length; b++) {
+                                if(cga.length >= 3) {
+                                    break;
+                                }
+                                cga.push(master_dropdownArr[b]);
+                            }
+                        }
+
+                        this.setSelectorsSelectedValue(dropdownIDs, cga);
                     }
 
                 }
@@ -3680,7 +3695,7 @@ var widget_ID_Name = {};
                     var options = "";
                     var flag_sel = sliced[0];
                     // var isSelectionUpdatedByUser = false;
-                    var dropdownIDs = new Set();
+                    var dropdownIDs = new Set(), master_dropdownArr = new Set();
 
                     for(var kk = 0, optIdx = 0; kk < sliced.length; kk++) {
 
@@ -3698,6 +3713,8 @@ var widget_ID_Name = {};
                                 for(var p = 0; p < dropdownArr.length; p++) {
                                     if(dropdownSel.includes(dropdownArr[p])) {
                                         caughtDropDownsAt.add(p)
+                                    } else {
+                                        master_dropdownArr.add(p);
                                     }
                                     if(optIdx == p) {
                                         emptyOption += `<option id='${p}' selected>${dropdownArr[p]}</option>`
@@ -3714,6 +3731,8 @@ var widget_ID_Name = {};
                             for(var p = 0; p < dropdownArr.length; p++) {
                                 if(dropdownSel.includes(dropdownArr[p])) {
                                     caughtDropDownsAt.add(p)
+                                } else {
+                                    master_dropdownArr.add(p);
                                 }
                                 if(optIdx == p) {
                                     options += `<option id='${p}' selected>${dropdownArr[p]}</option>`
@@ -3744,7 +3763,23 @@ var widget_ID_Name = {};
                     ////// ================================ Group by Row Ends ============================================
 
                     tbl.row.add(finalRow).draw(false)
-                    this.setSelectorsSelectedValue(dropdownIDs, Array.from(caughtDropDownsAt));
+
+                    if(!flag) {
+
+                        var cga = Array.from(caughtDropDownsAt);
+                        master_dropdownArr = Array.from(master_dropdownArr);
+
+                        if(cga.length < 3) {
+                            for(var b = 0; b < master_dropdownArr.length; b++) {
+                                if(cga.length >= 3) {
+                                    break;
+                                }
+                                cga.push(master_dropdownArr[b]);
+                            }
+                        }
+
+                        this.setSelectorsSelectedValue(dropdownIDs, cga);
+                    }
                     // console.log(finalRow);
                 }
 
@@ -4860,6 +4895,7 @@ var widget_ID_Name = {};
                     var selectionCnt = 0, cnt = 0;
                     var flag_sel = sliced[0];
                     var dropdownArr = Array.from(masterObj[k]["DropDownFieldName"]).slice(1,);
+                    // var master_dropdownArr = new Set();
                     var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
                     var caughtDropDownsAt = new Set();
                     var isEmptyUpdated = false;
@@ -4952,7 +4988,19 @@ var widget_ID_Name = {};
 
                     tbl.row.add(finalRow).draw(false);
                     if(!flag){
-                        this.setSelectorsSelectedValue(dropdownIDs, Array.from(caughtDropDownsAt));
+
+                        // var cga = Array.from(caughtDropDownsAt);
+                        // master_dropdownArr = Array.from(master_dropdownArr);
+
+                        // if(cga.length < 3) {
+                        //     for(var b = 0; b < master_dropdownArr.length; b++) {
+                        //         if(cga.length >= 3) {
+                        //             break;
+                        //         }
+                        //         cga.push(master_dropdownArr[b]);
+                        //     }
+                        // }
+                        this.setSelectorsSelectedValue(dropdownIDs, cga);
                     }
                     // tbl.row.child(finalRow)
                     // console.log(finalRow);
