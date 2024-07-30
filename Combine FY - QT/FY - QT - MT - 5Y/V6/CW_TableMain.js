@@ -107,6 +107,9 @@ var widget_ID_Name = {};
                     this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
                 }
 
+                if(changedProperties["NO_OF_DECIMAL"]) {
+                    this.no_of_decimalPlaces = parseInt(this._headers["NO_OF_DECIMAL"][0])
+                }
                 // console.log("BU")
 
             }
@@ -135,6 +138,10 @@ var widget_ID_Name = {};
                 if(changedProperties["_customHeaderNames"]) {
                     this._customHeaderNames = changedProperties["_customHeaderNames"];
                     this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
+                }
+
+                if(changedProperties["NO_OF_DECIMAL"]) {
+                    this.no_of_decimalPlaces = parseInt(this._headers["NO_OF_DECIMAL"][0])
                 }
 
                 // console.log("AU")
@@ -198,6 +205,8 @@ var widget_ID_Name = {};
                 console.log("Measure Order", this._measureOrder)
                 console.log("Dimensions", this._dimensions)
                 console.log("Exclude Headers",this._excludeHeaders)
+
+                no_of_decimalPlaces = this.no_of_decimalPlaces;
 
 
                 for(var i = 0; i < rs.length;) {
@@ -5569,7 +5578,7 @@ var widget_ID_Name = {};
                     align-content: center;
                 }
     
-                #example .numericColsCSS {
+                #example .numericColsCSS,  #example .perCols,  #example .varCols,  #example .cagrCol {
                     text-align:right!important;
                 }
     
