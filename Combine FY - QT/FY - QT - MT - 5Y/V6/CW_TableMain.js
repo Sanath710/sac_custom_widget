@@ -107,9 +107,6 @@ var widget_ID_Name = {};
                     this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
                 }
 
-                if(changedProperties["NO_OF_DECIMAL"]) {
-                    this.no_of_decimalPlaces = parseInt(this._headers["NO_OF_DECIMAL"][0])
-                }
                 // console.log("BU")
 
             }
@@ -140,14 +137,10 @@ var widget_ID_Name = {};
                     this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
                 }
 
-                if(changedProperties["NO_OF_DECIMAL"]) {
-                    this.no_of_decimalPlaces = parseInt(this._headers["NO_OF_DECIMAL"][0])
-                }
-
                 // console.log("AU")
             }
 
-            setResultSet_FY(rs, col_to_row = -1, colspan_to_top_headers) {
+            setResultSet_FY(rs, col_to_row = -1, colspan_to_top_headers, lcl_no_of_decimalPlaces) {
 
                 // this.reinitialize_changedProperties_ClassVariables();
 
@@ -206,7 +199,7 @@ var widget_ID_Name = {};
                 console.log("Dimensions", this._dimensions)
                 console.log("Exclude Headers",this._excludeHeaders)
 
-                no_of_decimalPlaces = this.no_of_decimalPlaces;
+                no_of_decimalPlaces = lcl_no_of_decimalPlaces;
 
 
                 for(var i = 0; i < rs.length;) {
@@ -518,7 +511,15 @@ var widget_ID_Name = {};
                         sum = sum.split("%")[0];
                         count = nFormat.format(sum) + "%";
                     }
+
+                    if(callFrom == "FY") {
+                        if(numericCols.includes(i)) {
+                            count = count.split(".")[0];
+                        }
+                    }
                     ////// ------------------ Number Formatting Ends ----------------------------
+
+                   
 
                     var node = this._dataTableObj.cell(rowIDTotal, indices[i].toString()).data(count).node()
 
@@ -528,7 +529,9 @@ var widget_ID_Name = {};
                         } else {
                             node.style.color = "#2D7230";
                         }
-                    }
+                    } 
+                    
+                    
                 }
                
                 gbl_finalPerCols_FY = finalPerCols;
@@ -654,6 +657,12 @@ var widget_ID_Name = {};
                             if(isNaN(sum)) {
                                 sum = sum.split("%")[0];
                                 count = nFormat.format(sum) + "%";
+                            }
+
+                            if(callFrom == "FY") {
+                                if(numericCols.includes(i)) {
+                                    count = count.split(".")[0];
+                                }
                             }
                             ////// ------------------ Number Formatting Ends ----------------------------
 
@@ -1999,6 +2008,7 @@ var widget_ID_Name = {};
                  //// ------------------------ var cols indices starts ---------------------------------
                  var colorColIndices = new Set();
                  var considerCons = ["perCols", "vsPy"];
+                 var numColsForDecimal = [];
 
                  var alignCols = ["numericColsCSS", "perCols", "vsPy"]
                  var alignRight = new Set();
@@ -2008,6 +2018,9 @@ var widget_ID_Name = {};
                      }
                      if(alignCols.includes(this._tableColumnNames[i]["className"])) {
                         alignRight.add(i)
+                     }
+                     if(this._tableColumnNames[i]["className"] == "numericColsCSS") {
+                        numColsForDecimal.push(i);
                      }
                  }
                  //// ------------------------ var cols indices ends -----------------------------------
@@ -2087,6 +2100,15 @@ var widget_ID_Name = {};
                             },
                             { 
                                 targets:1, className:"truncate"
+                            },
+                            {
+                                targets:numColsForDecimal,
+                                render: function ( data, type, row ) {
+                                    if(data != undefined && !isNaN(data)) {
+                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0);
+                                    }
+                                    return data
+                                },
                             },
                             {
                                 "targets": Array.from(colorColIndices),
@@ -2382,6 +2404,10 @@ var widget_ID_Name = {};
                             sum = sum.split("%")[0];
                             count = nFormat.format(sum) + "%";
                         }
+
+                        if(numericCols.includes(i)) {
+                            count = count.split(".")[0];
+                        }
                         ////// ------------------ Number Formatting Ends ----------------------------
 
                         var node = tbl.cell(rowIDTotal, i).data(count).node()
@@ -2436,6 +2462,11 @@ var widget_ID_Name = {};
                             if(!isNaN(dc)) {
 
                                 count = nFormat.format(subsetSum);
+
+                                if(numericCols.includes(k)) {
+                                    count = count.split(".")[0];
+                                }
+
                                 tbl.cell(parseInt(parentID), k).data(count)
 
                             } else {
