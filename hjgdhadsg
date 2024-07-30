@@ -1,0 +1,17 @@
+
+                if(this._callFrom == "MT") {
+                    if(hideCols[0] == "Num") {
+                        this._stateShown = 'Num';
+                        this.showPercentageWidVariance("Num");
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    } 
+                    else if(hideCols[0] == "Var") {
+                        this._stateShown = 'Var';
+                        this.showPercentageWidVariance("Var");
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    }
+                    else if(hideCols[0] == "Per") {
+                        this._stateShown = 'Per';
+                        this.showPercentageWidVariance("Per");
+                    }
+
