@@ -706,6 +706,7 @@ var DO_FY = {};
                 var numCols_FY = this._dataTableObj.columns('.numericColsCSS')[0];
                 var vsPyCols_FY = this._dataTableObj.columns('.vsPy')[0];
                 var perCols_FY = this._dataTableObj.columns('.perCols')[0];
+                var selCols_FY = this._dataTableObj.columns('.selColClass')[0];
 
                 var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
                 
@@ -822,6 +823,9 @@ var DO_FY = {};
                             }
                             ///// ------------ For per Cols Ends ----------------
 
+                            ///// ===============================================
+
+
                             DO_FY["ScaledData"][i] = row.slice();
 
                         }
@@ -833,6 +837,13 @@ var DO_FY = {};
                             if(DO_FY["OriginalData"] == undefined) { DO_FY["OriginalData"] = {} }
                             DO_FY["OriginalData"][i] = dt_tbl_obj.rows().data()[i];
 
+                            if(DO_FY["OriginalData"]["KeyMap"] == undefined) {
+                                DO_FY["OriginalData"]["KeyMap"] = {}
+                            }
+
+                            DO_FY["OriginalData"]["KeyMap"][dt_tbl_obj.rows().data()[i][0]+"_#_"+dt_tbl_obj.rows().data()[i][1]] = i;
+
+
                         }
 
                     }
@@ -840,6 +851,7 @@ var DO_FY = {};
                 }
 
             }
+
 
             applyScaling_FY(scaleTo = "K", numberOfDecimals = 2) {
 
@@ -849,19 +861,31 @@ var DO_FY = {};
                 // var vsPyCols_FY = this._dataTableObj.columns('.vsPy')[0];
                 // var perCols_FY = this._dataTableObj.columns('.perCols')[0];
 
-
                 if(scaleTo == "K") 
                 {
+                    DO_FY["Current_Scale"] = "K";
+
                     if(!Object.keys(DO_FY).includes("OriginalData")) {
                         this.createDataObjects("FY", false);
                     }
 
+                    var selectionsIDs = Object.keys(DO_FY["DRP"]);
+
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+
                         this._dataTableObj.row(i).data(DO_FY["OriginalData"][i].slice()).draw();
+
+                        if(selectionsIDs.includes(i.toString())) {
+                            this.preserveSelection(i, Object.keys(DO_FY["DRP"][i]), Object.values(DO_FY["DRP"][i]));
+                        }
                     }
+
+
                 } 
                 else 
                 {
+                    DO_FY["Current_Scale"] = "M";
+
                     this.createDataObjects("FY", true);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
@@ -871,6 +895,11 @@ var DO_FY = {};
 
                 console.log(DO_FY);
 
+
+                // var selectionsID = Object.keys(DO_FY["DRP"]);
+                // var selectionsOpt = Object.values(DO_FY["DRP"]);
+
+                // this.setSelectorsSelectedValue(selectionsID, selectionsOpt);
 
 
                 ////// -------------------------------------------------------------------------------------
@@ -1789,6 +1818,69 @@ var DO_FY = {};
                 
             }
 
+            preserveSelection(rowid, selector_ids, valArr = []) {
+
+                selector_ids = Array.from(selector_ids);
+
+                /////////////// For Color ---------------- 
+                var idArr = [], changeCellColr = [];
+
+                var vsPyCols = this._dataTableObj.columns(".vsPy")[0];
+                var perCols = this._dataTableObj.columns(".perCols")[0];
+
+                for(var i = 0; i < selector_ids.length; i++) {
+                    var num = parseInt(selector_ids[i].split("_")[0]);
+                    idArr.push(num);
+                    for(var j = num; j < num + this._measureOrder.length; j++) {
+                        if(vsPyCols.includes(j) || perCols.includes(j)) {
+                            changeCellColr.push(j);
+                        }
+                    }
+                }
+                /////////////// For Color ---------------- 
+
+                for(var i = 0; i < valArr.length; i++) {
+
+                    this._dataTableObj
+                    .rows()
+                    .nodes()
+                    .each(row => row.classList.remove('selected'));
+
+                    this._dataTableObj.row(rowid).node().setAttribute("class","selected")
+                        
+                    for(var i = 0; i < valArr.length; i++) {
+                        var selectorID = ".row_level_select_"+selector_ids[i];
+                        var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                        if(selElement && selElement.selectedIndex != undefined) {
+                            selElement.selectedIndex = valArr[i];
+                            // console.log(selector_ids)
+                            // console.log(selElement)
+                            selElement.dispatchEvent(new Event("change"));
+                        }
+
+                        selElement.style.border = "none";
+                        selElement.style.backgroundColor = "#DCE6EF";
+                       
+                    }
+
+                    // var row_id = this._dataTableObj.row(':last')[0]
+                    var row_id = rowid;
+                    for(var j = 0; j < changeCellColr.length; j++) {
+
+                        var node = this._dataTableObj.cell(row_id, changeCellColr[j]).node();
+                        var data = this._dataTableObj.cell(row_id, changeCellColr[j]).data();
+
+                        if(data <= 0) {
+                            node.style.color = "#A92626";
+                        } else {
+                            node.style.color = "#2D7230";
+                        }
+
+                    }
+                    
+                }
+            }
+
             setSelectorsSelectedValue(selector_ids, valArr = []) {
 
                 selector_ids = Array.from(selector_ids);
@@ -2258,7 +2350,7 @@ var DO_FY = {};
 
                     hideCols.push(groupColumn);
 
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {},
                         columns: table_cols,
                         bAutoWidth: false, 
@@ -2352,7 +2444,7 @@ var DO_FY = {};
                         destroy: true,
                     })
                 } else {
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {},
                         columns: table_cols,
                         bAutoWidth: false, 
@@ -2374,12 +2466,13 @@ var DO_FY = {};
                    
                 }
 
+                tbl = this._dataTableObj
+
                 if(tbl.data().any()) {
                     tbl.rows().remove().draw();
                 }
 
-                tbl.col
-                this._dataTableObj = tbl;
+                // this._dataTableObj = tbl;
                 // console.log(this._dataTableObj)
 
                 ////// -------------------------- Show Total Row ------------------------
@@ -2441,17 +2534,19 @@ var DO_FY = {};
                 // console.log(topHeader)
                
                 tbl.on('click', 'tbody tr', e => {
+
                     // tbl.$('tr').removeClass('selected');
                     let classList = e.currentTarget.classList
                     tbl
                         .rows()
                         .nodes()
                         .each(row => row.classList.remove('selected'));
-
+                    
                     if(classList.length != 1) {
                         classList.add('selected')
                     }
-                    
+
+
                 })
 
                 
@@ -2681,8 +2776,9 @@ var DO_FY = {};
                 function updateRow(state, no_of_dimens, no_of_mes, no_of_excludes, identifer, sliceFrom, sliceFromBase) 
                 {
 
-
                     var selectData = tbl.row('.selected').data()
+
+                    // console.log(tbl.row('.selected').index())
                     // console.log("Selected Row : ", selectData)
 
                     var ROW_ID = tbl.row('.selected')[0][0];
@@ -2699,7 +2795,25 @@ var DO_FY = {};
                     // console.log(state.id,">>>>>>>>>>>>>>>>>>>>.")
                     var selOptID = state.getElementsByTagName('option')[state.options.selectedIndex].id
                     // var selOptVal = JSON.parse(state.getElementsByTagName('option')[state.options.selectedIndex].value)
-                    var selOptVal = fixRowsObj[identifer]
+
+                    var selOptVal = fixRowsObj[identifer];
+                    // var selOptVal = undefined;
+
+                    let sid = state.classList[1].split("row_level_select_")[1];
+                    DO_FY["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+                    console.log(DO_FY)
+                    // if(DO_FY["OriginalData"] == undefined || DO_FY["ScaledData"] == undefined) {
+                    //     selOptVal = fixRowsObj[identifer];
+                    // } else {
+                    //     if(DO_FY["Current_Scale"] == "K") {
+                    //         selOptVal = DO_FY["OriginalData"][DO_FY["OriginalData"]["KeyMap"][identifer]]
+                    //     } else {
+                    //         selOptVal = DO_FY["ScaledData"][DO_FY["ScaledData"]["KeyMap"][identifer]]
+                    //     }
+                    // }
+
+                   
+
                     // console.log(state)
 
                     var sliced = selOptVal.slice(sliceFromBase, ), data = {};
@@ -2963,8 +3077,8 @@ var DO_FY = {};
                     }
                     ////// ================================ Group by Row Ends ============================================
 
-                    tbl.row.add(finalRow).draw()
-
+                    tbl.row.add(finalRow).draw();
+                    var rid = tbl.rows().indexes().toArray()[tbl.rows().indexes().toArray().length - 1];
 
                     if(!onlyBaseAvailable) {
 
@@ -2985,6 +3099,20 @@ var DO_FY = {};
                                 cga.push(master_dropdownArr[b]);
                             }
                         }
+
+                        var drp = Array.from(dropdownIDs);
+
+                        if(DO_FY["DRP"] == undefined) {
+                            DO_FY["DRP"] = {}
+                        }
+
+                        if(DO_FY["DRP"][rid] == undefined) {
+                            DO_FY["DRP"][rid] = {}
+                        }
+
+                        DO_FY["DRP"][rid][drp[0]] = cga[0];
+                        DO_FY["DRP"][rid][drp[1]] = cga[1];
+                        DO_FY["DRP"][rid][drp[2]] = cga[2];
 
                         this.setSelectorsSelectedValue(dropdownIDs, cga);
                     }
