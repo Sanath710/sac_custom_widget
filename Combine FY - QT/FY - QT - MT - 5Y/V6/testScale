@@ -36,7 +36,7 @@ var DO_FY = {};
 
         var total_cols = 0;
         var fixRowsObj = {};
-        var groupRowMapping = {};
+        var groupRowMapping = {}, groupRowMapping_QT = {};
         const masterRows = [];
         var indices = [], indices_QT = [], indices_MT = [];
         var gbl_finalPerCols_FY = {}, gbl_finalPerCols_QT = {}, gbl_finalPerCols_MT = {};
@@ -546,6 +546,14 @@ var DO_FY = {};
                
                 gbl_finalPerCols_FY = finalPerCols;
                 console.log(finalPerCols)
+
+                if(callFrom == "FY") {
+                    
+                } else if(callFrom == "QT") {
+                    gbl_finalPerCols_QT = finalPerCols;
+                    console.log(finalPerCols)
+                }
+               
                 
                 ///// ------------------------ Hide Extra Cols STARTS -------------------------
                 if(callFrom == "MT") {
@@ -563,10 +571,10 @@ var DO_FY = {};
                     }
                 }
                 else if(callFrom == "FY") {
-                    // var perCols = this._dataTableObj.columns(".perCols")[0];
-                    // for(var inx = 0; inx < perCols.length; inx++) {
-                    //     this._dataTableObj.column(perCols[inx]).visible(false);
-                    // }
+                    var perCols = this._dataTableObj.columns(".perCols")[0];
+                    for(var inx = 0; inx < perCols.length; inx++) {
+                        this._dataTableObj.column(perCols[inx]).visible(false);
+                    }
                 }
                 else if(callFrom == "5Y") {
                     var varCols = this._dataTableObj.columns(".varCols")[0];
@@ -695,6 +703,121 @@ var DO_FY = {};
                             }
                         }
                     }
+                } 
+                else  if(callFrom == "QT") {
+                    // var rowID = undefined;
+                    // var no_of_per_cols = 5;
+                    // var lcl_groupRowMapping = {}
+                    
+                    // for(var i = 0; i < this._dataTableObj.rows()[0].length; i++) {
+                    //     var subsetRowID = this._dataTableObj.rows()[0][i];
+                    //     var considerThisRow = this._dataTableObj.row(subsetRowID).node().classList
+                    //     if(considerThisRow.length && considerThisRow[0] == "group") {
+                    //         rowID = subsetRowID;
+                    //         lcl_groupRowMapping[rowID] = [];
+                    //     } 
+                    //     if(rowID) {
+                    //         lcl_groupRowMapping[rowID].push(subsetRowID)
+                    //     }
+                    // }
+
+                    // groupRowMapping_QT = lcl_groupRowMapping;
+                    // // console.log("Row ID : Subset Group Mapping", lcl_groupRowMapping)
+
+                    // for(var [key, val] of Object.entries(lcl_groupRowMapping)) {
+                    //     for(var i = 0; i < indices.length; i++) {
+                    //         var sum = 0;
+                    //         if(indices[i] != -1) {
+                    //             for(var k = 1; k < val.length; k++) {
+                    //                 var d = this._dataTableObj.cell(val[k], indices[i]).data();
+                    //                 // console.log("----",d)
+                    //                 if(d != undefined && isNaN(d)) {
+                    //                     if(d.includes("%")) {
+                    //                         // sum = "- %";
+                    //                         var value = this._dataTableObj.cell(key, indices[i] - 10).data()
+                    //                         var val_minus_act = this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data()
+                    //                         var act1 = value - val_minus_act
+                    //                         // sum = (val_minus_act / act1).toString()+" %"
+
+                    //                         if(isNaN(value)) {
+                    //                             value = parseFloat(this._dataTableObj.cell(key, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                    //                         }
+                    //                         if(isNaN(val_minus_act)){
+                    //                             val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                    //                         }
+
+                    //                         var act1 = value - val_minus_act
+
+                    //                         if(value == 0 && act1 == 0) {
+                    //                             sum = "-"
+                    //                         } else if(value == 0) {
+                    //                             sum = "-100%"
+                    //                         } else if (act1 == 0) {
+                    //                             sum = "100%";
+                    //                         } else {
+                    //                             sum = (val_minus_act / act1).toString()+" %"
+                    //                         }
+
+                    //                     } else {
+                    //                         if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
+                    //                             sum += parseFloat(d.replace(/,{1,}/g,""))
+                    //                         }
+                    //                     }
+                    //                 } else {
+                    //                     if(!isNaN(parseFloat(d))){
+                    //                         sum += parseFloat(d)
+                    //                     }
+                    //                 }
+                    //             }
+                    //         }
+
+                    //         var colorFlagSubGroup = false;
+
+                    //         if(sum >= 0 || sum >= "0") {
+                    //             colorFlagSubGroup = true;
+                    //         }
+
+                    //         if(sum != "- %" && !isNaN(sum)) {
+                    //             sum = parseFloat(sum).toFixed(no_of_decimalPlaces)
+                    //         } else {
+                    //             sum = parseFloat(sum).toFixed(no_of_decimalPlaces).toString()+"%"
+                    //         }
+
+                    //         ////// ------------------ Number Formatting Starts --------------------------
+                    //         var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                    //         var count = nFormat.format(sum);
+
+                    //         if(isNaN(sum)) {
+                    //             sum = sum.split("%")[0];
+                    //             count = nFormat.format(sum) + "%";
+                    //         }
+
+                    //         if(callFrom == "FY") {
+                    //             if(numericCols.includes(i)) {
+                    //                 count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
+                    //             }
+                    //         }
+
+                    //         if(count == "NaN%") {
+                    //             if(value == 0) {
+                    //                 count = "-100%"
+                    //             } else if (act1 == 0) {
+                    //                 count = "100%";
+                    //             } 
+                    //         }
+                    //         ////// ------------------ Number Formatting Ends ----------------------------
+
+                    //         var node = this._dataTableObj.cell(key, indices[i]).data(count).node();
+
+                    //         if(!numericCols.includes(indices[i])) {
+                    //             if(colorFlagSubGroup) {
+                    //                 node.style.color = "#2D7230";
+                    //             } else {
+                    //                 node.style.color = "#A92626";
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
                 
                 ////// ================================== Subset Group Total Block Ends ===================================
@@ -870,6 +993,8 @@ var DO_FY = {};
                     }
 
                     var selectionsIDs = Object.keys(DO_FY["DRP"]);
+                    console.log(DO_FY);
+
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
 
@@ -1818,7 +1943,7 @@ var DO_FY = {};
                 
             }
 
-            preserveSelection(rowid, selector_ids, valArr = []) {
+            preserveSelection(rowid, selector_ids, valArr = [], ) {
 
                 selector_ids = Array.from(selector_ids);
 
@@ -1858,9 +1983,17 @@ var DO_FY = {};
                             selElement.dispatchEvent(new Event("change"));
                         }
 
+                        // console.log(">>>",Object.keys(DO_FY["DRP_USR_TRIGGERED"]).includes(rowid.toString()));
+                        // console.log("--->>>",Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i]));
+
                         selElement.style.border = "none";
                         selElement.style.backgroundColor = "#DCE6EF";
-                       
+
+                        if(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
+                            selElement.style.backgroundColor="#C4DBEE";
+                            selElement.style.border = "2px solid #0460A9";
+                        }
+
                     }
 
                     // var row_id = this._dataTableObj.row(':last')[0]
@@ -2543,9 +2676,24 @@ var DO_FY = {};
                         .each(row => row.classList.remove('selected'));
                     
                     if(classList.length != 1) {
-                        classList.add('selected')
+
+                        classList.add('selected');
+
+                        if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
+                            DO_FY["DRP_USR_TRIGGERED"] = {}
+                        }
+    
+                        if(DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] == undefined) {
+                            DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] = {}
+                        }
+    
                     }
 
+                    // console.log(typeof(e.target.classList), Object.keys(e.target.classList), e)
+                    if(e.target.classList && e.target.classList[0] == "row_level_select") {
+                        var sid = e.target.classList[1].split("row_level_select_")[1];
+                        DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
+                    }
 
                 })
 
@@ -2801,7 +2949,6 @@ var DO_FY = {};
 
                     let sid = state.classList[1].split("row_level_select_")[1];
                     DO_FY["DRP"][tbl.row('.selected').index()][sid] = selOptID;
-                    console.log(DO_FY)
                     // if(DO_FY["OriginalData"] == undefined || DO_FY["ScaledData"] == undefined) {
                     //     selOptVal = fixRowsObj[identifer];
                     // } else {
@@ -2858,11 +3005,16 @@ var DO_FY = {};
                     var updateFrom = sliceLen;  
 
                     if(showTotalonRowUpdateFlag) {
+
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
                         updateTotalOnRowUpdate(updateFrom, no_of_mes, ROW_ID);
+
                     }
+
+                    // console.log(DO_FY)
+
                 }
 
                 window.updateRow = updateRow
@@ -3157,8 +3309,8 @@ var DO_FY = {};
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 showTotalonRowUpdateFlag = true;
+                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 this.showTotal("FY");
 
                 // Styling Block Ends here
@@ -3167,7 +3319,7 @@ var DO_FY = {};
             // ==========================================================================================================================
             // ---------------------------------------------------------- QUARTER -------------------------------------------------------
             // ==========================================================================================================================
-            setResultSet_QT(rs, col_to_row = -1, colspan_to_top_headers) {
+            setResultSet_QT(rs, col_to_row = -1, colspan_to_top_headers, lcl_no_of_decimalPlaces) {
 
                 // this._dotsLoader.style.visibility = "visible";
                 if(this._table) {
@@ -3219,6 +3371,8 @@ var DO_FY = {};
                 console.log("Measure Order", this._measureOrder)
                 console.log("Dimensions", this._dimensions)
                 console.log("Exclude Headers",this._excludeHeaders)
+
+                no_of_decimalPlaces = lcl_no_of_decimalPlaces;
 
                 for(var i = 0; i < rs.length;) {
                     var tempArr = [], dims = new Set();
