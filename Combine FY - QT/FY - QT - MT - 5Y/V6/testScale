@@ -1986,12 +1986,17 @@ var DO_FY = {};
                         // console.log(">>>",Object.keys(DO_FY["DRP_USR_TRIGGERED"]).includes(rowid.toString()));
                         // console.log("--->>>",Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i]));
 
-                        selElement.style.border = "none";
-                        selElement.style.backgroundColor = "#DCE6EF";
+                        if(selElement) {
+                            selElement.style.border = "none";
+                            selElement.style.backgroundColor = "#DCE6EF";
+                        }
+                       
 
                         if(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
-                            selElement.style.backgroundColor="#C4DBEE";
-                            selElement.style.border = "2px solid #0460A9";
+                            if(selElement) {
+                                selElement.style.backgroundColor="#C4DBEE";
+                                selElement.style.border = "2px solid #0460A9";
+                            }
                         }
 
                     }
