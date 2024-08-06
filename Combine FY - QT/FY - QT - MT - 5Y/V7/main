@@ -400,6 +400,23 @@ var DO_FY = {};
                                             sum = (val_minus_act / act1).toString()+" %"
                                         }
 
+                                        ////// ---------------------- Coloring the cell Starts --------------------------
+                                        var node1 = this._dataTableObj.cell(rowIDTotal, indices[i] - 10).node()
+                                        var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - 5).node()
+ 
+                                        if(value >= 0) {
+                                            node1.style.color = "#2D7230";
+                                        } else {
+                                            node1.style.color = "#A92626";
+                                        }
+ 
+                                        if(val_minus_act >= 0) {
+                                            node2.style.color = "#2D7230";
+                                        } else {
+                                            node2.style.color = "#A92626";
+                                        }
+                                        ////// ---------------------- Coloring the cell Ends ----------------------------
+
                                     }
                                     else if(callFrom == "MT") {
 
@@ -431,22 +448,22 @@ var DO_FY = {};
                                             sum = (val_minus_act / act1).toString()+" %"
                                         }
 
-                                        //// ---------------------- Coloring the cell Starts --------------------------
-                                        // var node1 = this._dataTableObj.cell(rowIDTotal, tempRef[0]).node()
-                                        // var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).node()
+                                        // ---------------------- Coloring the cell Starts --------------------------
+                                        var node1 = this._dataTableObj.cell(rowIDTotal, tempRef[0]).node()
+                                        var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).node()
    
-                                        // if(value >= 0) {
-                                        //     node1.style.color = "#2D7230";
-                                        // } else {
-                                        //     node1.style.color = "#A92626";
-                                        // }
+                                        if(value >= 0) {
+                                            node1.style.color = "#2D7230";
+                                        } else {
+                                            node1.style.color = "#A92626";
+                                        }
    
-                                        // if(val_minus_act >= 0) {
-                                        //     node2.style.color = "#2D7230";
-                                        // } else {
-                                        //     node2.style.color = "#A92626";
-                                        // }
-                                        //// ---------------------- Coloring the cell Ends ----------------------------
+                                        if(val_minus_act >= 0) {
+                                            node2.style.color = "#2D7230";
+                                        } else {
+                                            node2.style.color = "#A92626";
+                                        }
+                                        // ---------------------- Coloring the cell Ends ----------------------------
                                            
 
                                     }
@@ -2151,7 +2168,7 @@ var DO_FY = {};
                 }
             }
 
-            setSelectorsSelectedValue(selector_ids, valArr = []) {
+            setSelectorsSelectedValue(selector_ids, valArr = [], callFrom) {
 
                 selector_ids = Array.from(selector_ids);
 
@@ -2161,14 +2178,36 @@ var DO_FY = {};
                 var vsPyCols = this._dataTableObj.columns(".vsPy")[0];
                 var perCols = this._dataTableObj.columns(".perCols")[0];
 
+
                 for(var i = 0; i < selector_ids.length; i++) {
                     var num = parseInt(selector_ids[i].split("_")[0]);
                     idArr.push(num);
-                    for(var j = num; j < num + this._measureOrder.length; j++) {
-                        if(vsPyCols.includes(j) || perCols.includes(j)) {
-                            changeCellColr.push(j);
+                    if(callFrom == "FY") {
+                        for(var j = num; j < num + this._measureOrder.length; j++) {
+                            if(vsPyCols.includes(j) || perCols.includes(j)) {
+                                changeCellColr.push(j);
+                            }
+                        }
+                    } else if(callFrom == "QT") {
+                        for(var j = num; j < num + this._colOrder.length * 3; j++) {
+                            if(vsPyCols.includes(j) || perCols.includes(j)) {
+                                changeCellColr.push(j);
+                            }
+                        }
+                    } else if(callFrom == "MT") {
+
+                        vsPyCols = this._dataTableObj.columns(".varCol")[0];
+                        perCols = this._dataTableObj.columns(".perColCSS")[0];
+
+                        num += 3; 
+
+                        for(var j = num; j < num + this._colOrder.length * 3; j++) {
+                            if(vsPyCols.includes(j) || perCols.includes(j)) {
+                                changeCellColr.push(j);
+                            }
                         }
                     }
+                   
                 }
                 /////////////// For Color ---------------- 
 
@@ -2200,7 +2239,7 @@ var DO_FY = {};
                         var node = this._dataTableObj.cell(row_id, changeCellColr[j]).node();
                         var data = this._dataTableObj.cell(row_id, changeCellColr[j]).data();
 
-                        if(data <= 0) {
+                        if(data <= 0 || data <= "0") {
                             node.style.color = "#A92626";
                         } else {
                             node.style.color = "#2D7230";
@@ -3405,7 +3444,7 @@ var DO_FY = {};
                         DO_FY["DRP"][rid][drp[1]] = cga[1];
                         DO_FY["DRP"][rid][drp[2]] = cga[2];
 
-                        this.setSelectorsSelectedValue(dropdownIDs, cga);
+                        this.setSelectorsSelectedValue(dropdownIDs, cga, "FY");
                     }
 
                 }
@@ -4831,7 +4870,7 @@ var DO_FY = {};
                             }
                         }
 
-                        this.setSelectorsSelectedValue(dropdownIDs, cga);
+                        this.setSelectorsSelectedValue(dropdownIDs, cga, "QT");
                     }
                     // console.log(finalRow);
                 }
@@ -6240,7 +6279,7 @@ var DO_FY = {};
                                 }
                             }
                         }
-                        this.setSelectorsSelectedValue(dropdownIDs, cga);
+                        this.setSelectorsSelectedValue(dropdownIDs, cga, "MT");
                     }
                     // tbl.row.child(finalRow)
                     // console.log(finalRow);
