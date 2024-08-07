@@ -4004,8 +4004,8 @@ var DO_FY = {};
                 //// ------------------------ Show Totals on Row Block Starts ---------------------------------
                 // var indices = [];
                 this._fixedIndices = this._fixedIndices.concat(this._dropdownIndices);
-                var fyCols_render = [];
-                var perColsFY_render = [];
+                var numCols_render = [];
+                // var perColsFY_render = [];
                 var templateGroupTotal = [];
                 // var templateGroupTotal = `<tr class="clTotalRow"><td>Total</td>`;
                 // var templateGroupTotal = "";
@@ -4019,16 +4019,17 @@ var DO_FY = {};
                     }
                     if(this._tableColumnNames[i].className == "numericColsCSS") {
                         templateGroupTotal.push("");
+                        numCols_render.push(i)
                     } else {
                         templateGroupTotal.push("");
                     }
 
-                    if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className != "perCols") {
-                        fyCols_render.push(i);
-                    }
-                    else if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className == "perCols") {
-                        perColsFY_render.push(i);
-                    }
+                    // if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className != "perCols") {
+                    //     fyCols_render.push(i);
+                    // }
+                    // else if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className == "perCols") {
+                    //     perColsFY_render.push(i);
+                    // }
                     // ////// -------------- For subset group total on rowgroup level starts --------------------
                     // if(i > 0) {
                     //     // templateGroupTotal += '<td class="numericColsCSS">'+i+'</td>';
@@ -4111,7 +4112,7 @@ var DO_FY = {};
                                 targets:1, className:"truncate"
                             },
                             {
-                                targets:fyCols_render,
+                                targets:numCols_render,
                                 render: function (data, type) {
                                     if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
                                         return parseFloat(data.replace(/,{1,}/g,"")).toFixed(0)
