@@ -964,7 +964,6 @@ var DO_FY = {};
                         }
                     }
                 }
-                
                 ////// ================================== Subset Group Total Block Ends ===================================
             }
 
@@ -2391,6 +2390,10 @@ var DO_FY = {};
                 #example .numericColsCSS,  #example .vsPy,  #example .perCols {
                     text-align:right!important;
                 }
+
+                #example .numericColsCSS {
+                    color:#212121!important;
+                }
     
                 /* ------------------------- ROW LEVEL SELECT ------------------------- */
     
@@ -3738,6 +3741,10 @@ var DO_FY = {};
                     text-align:right!important;
                 }
     
+                #example .numericColsCSS {
+                    color:#212121!important;
+                }
+
                 /* ------------------------- ROW LEVEL SELECT ------------------------- */
     
                 #example .row_level_select {
@@ -5063,6 +5070,10 @@ var DO_FY = {};
     
                 #example .numericColsCSS, #example .varCol, #example .perColCSS {
                     text-align:right!important;
+                }
+
+                #example .numericColsCSS {
+                    color:#212121!important;
                 }
     
                 /* ------------------------- ROW LEVEL SELECT ------------------------- */
