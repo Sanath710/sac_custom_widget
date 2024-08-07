@@ -356,13 +356,13 @@ var DO_FY = {};
                                         var node1 = this._dataTableObj.cell(rowIDTotal, tempRef[0]).node()
                                         var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).node()
 
-                                        if(value >= 0) {
+                                        if(value >= 0 || value >= "0") {
                                             node1.style.color = "#2D7230";
                                         } else {
                                             node1.style.color = "#A92626";
                                         }
 
-                                        if(val_minus_act >= 0) {
+                                        if(val_minus_act >= 0 || val_minus_act >= "0") {
                                             node2.style.color = "#2D7230";
                                         } else {
                                             node2.style.color = "#A92626";
@@ -404,13 +404,13 @@ var DO_FY = {};
                                         var node1 = this._dataTableObj.cell(rowIDTotal, indices[i] - 10).node()
                                         var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - 5).node()
  
-                                        if(value >= 0) {
+                                        if(value >= 0 || value >= "0") {
                                             node1.style.color = "#2D7230";
                                         } else {
                                             node1.style.color = "#A92626";
                                         }
  
-                                        if(val_minus_act >= 0) {
+                                        if(val_minus_act >= 0 || val_minus_act >= "0") {
                                             node2.style.color = "#2D7230";
                                         } else {
                                             node2.style.color = "#A92626";
@@ -452,13 +452,13 @@ var DO_FY = {};
                                         var node1 = this._dataTableObj.cell(rowIDTotal, tempRef[0]).node()
                                         var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).node()
    
-                                        if(value >= 0) {
+                                        if(value >= 0 || value >= "0") {
                                             node1.style.color = "#2D7230";
                                         } else {
                                             node1.style.color = "#A92626";
                                         }
    
-                                        if(val_minus_act >= 0) {
+                                        if(val_minus_act >= 0 || val_minus_act >= "0") {
                                             node2.style.color = "#2D7230";
                                         } else {
                                             node2.style.color = "#A92626";
@@ -495,12 +495,20 @@ var DO_FY = {};
                                   
                                 } else {
                                     if(!isNaN(parseFloat(d[j].replace(/,{1,}/g,"")))) {
-                                        sum += parseFloat(d[j].replace(/,{1,}/g,""))
+                                        if(numericCols.includes(indices[i])) {
+                                            sum += parseFloat(parseFloat(d[j].replace(/,{1,}/g,"")).toFixed(0))
+                                        } else {
+                                            sum += parseFloat(d[j].replace(/,{1,}/g,""))
+                                        }
                                     }
                                 }
                             } else {
                                 if(!isNaN(parseFloat(d[j]))) {
-                                    sum += parseFloat(d[j])
+                                    if(numericCols.includes(indices[i])) {
+                                        sum += parseFloat(parseFloat(d[j]).toFixed(0))
+                                    } else {
+                                        sum += parseFloat(d[j])
+                                    }
                                 }
                             }
                         }
@@ -559,6 +567,12 @@ var DO_FY = {};
 
                     if(callFrom == "QT") {
                         if(fyCols.includes(i) && !perCols.includes(i)) {
+                            count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
+                        }
+                    }
+
+                    if(callFrom == "MT") {
+                        if(numericCols.includes(i)) {
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
                     }
@@ -939,9 +953,9 @@ var DO_FY = {};
                                 count = nFormat.format(sum) + "%";
                             }
 
-                            // if(numericCols.includes(i)) {
-                            //     count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
-                            // }
+                            if(numericCols.includes(i)) {
+                                count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
+                            }
 
                             if(count == "NaN%") {
                                 if(value == 0) {
@@ -3082,7 +3096,7 @@ var DO_FY = {};
 
                         count = nFormat.format(subsetSum);
 
-                        if(subsetSum == "-") {
+                        if(subsetSum == "-" || isNaN(subsetSum)) {
                             count = "-"
                         }
 
@@ -3090,7 +3104,7 @@ var DO_FY = {};
 
                         var node = tbl.cell(parseInt(parentID), k).data(count.toString()+" %").node()
 
-                        if(count >= 0) {
+                        if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
                         } else {
                             node.style.color = "#A92626";
@@ -4535,7 +4549,7 @@ var DO_FY = {};
 
                         count = nFormat.format(subsetSum);
 
-                        if(subsetSum == "-") {
+                        if(subsetSum == "-" || isNaN(subsetSum)) {
                             count = "-"
                         }
 
@@ -4544,7 +4558,7 @@ var DO_FY = {};
 
                         var node = tbl.cell(parseInt(parentID), k).data(count.toString()+" %").node()
 
-                        if(count >= 0) {
+                        if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
                         } else {
                             node.style.color = "#A92626";
@@ -5072,7 +5086,7 @@ var DO_FY = {};
                     text-align:right!important;
                 }
 
-                #example .numericColsCSS {
+                #example .numericColsCSS.numCol {
                     color:#212121!important;
                 }
     
@@ -5384,8 +5398,9 @@ var DO_FY = {};
                  //// ------------------------ Show Totals on Row Block Starts ---------------------------------
                 // var indices = [];
                 this._fixedIndices = this._fixedIndices.concat(this._dropdownIndices);
-                var fyColsMT_render = [];
-                var perColsMT_render = [];
+                // var fyColsMT_render = [];
+                // var perColsMT_render = [];
+                var numMT_render = [];
                 var templateGroupTotal = ["Total"];
                 // var templateGroupTotal = `<tr class="clTotalRow"><td>Total</td>`;
                 // var templateGroupTotal = "";
@@ -5403,11 +5418,14 @@ var DO_FY = {};
                         templateGroupTotal.push("");
                     }
 
-                    if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className != "numericColsCSS perColCSS") {
-                        fyColsMT_render.push(i);
-                    }
-                    if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className == "numericColsCSS perColCSS") {
-                        perColsMT_render.push(i);
+                    // if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className != "numericColsCSS perColCSS") {
+                    //     fyColsMT_render.push(i);
+                    // }
+                    // if(this._tableColumnNames[i].title == "FY" && this._tableColumnNames[i].className == "numericColsCSS perColCSS") {
+                    //     perColsMT_render.push(i);
+                    // }
+                    if(this._tableColumnNames[i].className == "numericColsCSS numCol") {
+                        numMT_render.push(i);
                     }
                     // ////// -------------- For subset group total on rowgroup level starts --------------------
                     // if(i > 0) {
@@ -5480,13 +5498,22 @@ var DO_FY = {};
                                 targets:1, className:"truncate"
                             },
                             { 
-                                targets:fyColsMT_render,
+                                targets:numMT_render,
                                 render: function (data, type) {
                                     if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
                                         return parseFloat(data.replace(/,{1,}/g,"")).toFixed(0)
                                     }
                                     return data
                                 }
+                            },
+                            { 
+                                // targets:fyColsMT_render,
+                                // render: function (data, type) {
+                                //     if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
+                                //         return parseFloat(data.replace(/,{1,}/g,"")).toFixed(0)
+                                //     }
+                                //     return data
+                                // }
                             },
                             { 
                                 // targets:perColsMT_render,
@@ -5903,7 +5930,7 @@ var DO_FY = {};
     
                             var node = tbl.cell(parseInt(parentID), i).data(count.toString()+" %").node()
     
-                            if(count >= 0) {
+                            if(count >= 0 || count >= "0") {
                                 node.style.color = "#2D7230";
                             } else {
                                 node.style.color = "#A92626";
