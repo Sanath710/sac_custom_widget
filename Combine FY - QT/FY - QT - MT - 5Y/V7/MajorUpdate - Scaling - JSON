@@ -239,11 +239,6 @@
                     "name": "scaleTo",
                     "description":"Accepted [M, K]",
                     "type": "string"
-                },
-                {
-                    "name": "numberOfDecimals",
-                    "description":"Decimals places to be kept",
-                    "type": "number"
                 }
             ]
         },
