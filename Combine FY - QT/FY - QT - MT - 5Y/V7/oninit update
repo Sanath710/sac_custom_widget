@@ -1,0 +1,12 @@
+var headerSeq_Q = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["Q1","Q2","Q3","Q4","FY"],
+		"@MeasureDimension":["MES", "vsPy_Neg", "ACT_VER1"],
+		"FIXED_INDICES":["0","1","2","3"],
+		"DROPDOWN_INDICES":["9","15","21","27","33"],
+		"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+		"no_of_decimal_K":["0"],
+		"no_of_decimal_M":["1"],
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+	};
