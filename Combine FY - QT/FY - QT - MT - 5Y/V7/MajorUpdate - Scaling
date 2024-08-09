@@ -8,7 +8,7 @@ var load_libs_flag = false;
 var widget_ID_Name = {};
 
 //// -------- Data Objects Starts -----------
-var DO_FY = {};
+var DO_FY = {}, DO_QT = {}, DO_MT = {};
 //// -------- Data Objects Ends -------------
 
 
@@ -299,6 +299,7 @@ var DO_FY = {};
                 var numericCols = [];
                 var fyCols = [], perCols = [];
                 var cagrFlag = false;
+
                 for(var i = 0; i < this._tableColumnNames.length; i++) {
 
                     if(considerConditions.includes(this._tableColumnNames[i]["className"])) {
@@ -582,14 +583,12 @@ var DO_FY = {};
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
                     }
-
-                    if(callFrom == "QT") {
+                    else if (callFrom == "QT") {
                         if(fyCols.includes(i) && !perCols.includes(i)) {
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
                     }
-
-                    if(callFrom == "MT") {
+                    else if (callFrom == "MT") {
                         if(numericCols.includes(i)) {
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
@@ -611,13 +610,13 @@ var DO_FY = {};
                 }
                
                 gbl_finalPerCols_FY = finalPerCols;
-                console.log(finalPerCols)
+                // console.log(finalPerCols)
 
                 if(callFrom == "FY") {
                     
                 } else if(callFrom == "QT") {
                     gbl_finalPerCols_QT = finalPerCols;
-                    console.log(finalPerCols)
+                    // console.log(finalPerCols)
                 }
                
                 
@@ -650,9 +649,15 @@ var DO_FY = {};
                         this._dataTableObj.column(hideColsOfIndex[inx]).visible(false);
                     }
                 }
+
+                var end = performance.now();
+                var time = end - start;
+                console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total took approx : ")
+                var start = performance.now();
+
                 ///// ------------------------ Hide Extra Cols ENDS ---------------------------
                 ////// ================================== Highest Overall Total Block Ends ==================================
-               /////  ------------------------------------------------------------------------------------------------------
+                /////  ------------------------------------------------------------------------------------------------------
                 ////// ================================== Subset Group Total Block Starts ===================================
 
                 if(callFrom == "FY") {
@@ -999,19 +1004,21 @@ var DO_FY = {};
                 ////// ================================== Subset Group Total Block Ends ===================================
                 var end = performance.now();
                 var time = end - start;
-                console.log("Show Total took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+                console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total Brand Group took approx : ")
             }
 
             createDataObjects(call_from, is_scaled) {
 
-                var dt_tbl_obj = this._dataTableObj;
-                var numCols_FY = this._dataTableObj.columns('.numericColsCSS')[0];
-                var vsPyCols_FY = this._dataTableObj.columns('.vsPy')[0];
-                var perCols_FY = this._dataTableObj.columns('.perCols')[0];
-                var selCols_FY = this._dataTableObj.columns('.selColClass')[0];
+var start = performance.now();
 
-                
                 if(call_from == "FY") {
+
+                    var dt_tbl_obj = this._dataTableObj;
+                    var numCols_FY = this._dataTableObj.columns('.numericColsCSS')[0];
+                    var vsPyCols_FY = this._dataTableObj.columns('.vsPy')[0];
+                    var perCols_FY = this._dataTableObj.columns('.perCols')[0];
+                    var selCols_FY = this._dataTableObj.columns('.selColClass')[0];
+    
 
                     if(is_scaled) {
 
@@ -1187,12 +1194,386 @@ var DO_FY = {};
                     }
 
                 }
+                else if(call_from == "QT") {
+
+                    var dt_tbl_obj = this._dataTableObj;
+                    var numCols_QT = this._dataTableObj.columns('.numericColsCSS')[0];
+                    var vsPyCols_QT = this._dataTableObj.columns('.vsPy')[0];
+                    var perCols_QT = this._dataTableObj.columns('.perCols')[0];
+                    var selCols_QT = this._dataTableObj.columns('.selColClass')[0];
+
+                    if(is_scaled) {
+
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_M});
+
+                        for(var i = 0; i < dt_tbl_obj.rows().count(); i++) {
+
+                            if(DO_QT["ScaledData"] == undefined) { DO_QT["ScaledData"] = {} }
+
+                            var row = dt_tbl_obj.rows().data()[i].slice();
+                            
+                            ///// ------------ For Num Cols Starts --------------
+                            for(var a = 0; a < numCols_QT.length; a++) {
+
+                                var cell_data = row[numCols_QT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
+                                        }
+                                    } else {
+                                        cell_data = cell_data / 1000;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + " %";
+                                    } else {
+                                        cell_data = cell_data.toString();
+                                    }
+
+                                    row[numCols_QT[a]] = cell_data;
+                                
+                                }
+                                
+                            }
+                            ///// ------------ For Num Cols Ends ----------------
+
+                            ///// ===============================================
+
+                            ///// ------------ For vsPy Cols Starts -------------
+                            for(var a = 0; a < vsPyCols_QT.length; a++) {
+
+                                var cell_data = row[vsPyCols_QT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
+                                        }
+                                    } else {
+                                        cell_data = cell_data / 1000;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + " %";
+                                    } else {
+                                        cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
+                                    }
+
+                                    row[vsPyCols_QT[a]] = cell_data;
+                                
+                                }
+
+                            }
+                            ///// ------------ For vsPy Cols Ends ---------------
+
+                            ///// ===============================================
+
+                            ///// ------------ For per Cols Ends ----------------
+                            for(var a = 0; a < perCols_QT.length; a++) {
+
+                                var cell_data = row[perCols_QT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]).toFixed(this.no_of_decimalPlaces_M);
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M);
+                                        }
+                                    } else {
+                                        cell_data = cell_data;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + "%";
+                                    } else {
+                                        cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
+                                    }
+
+                                    if(cell_data == "NaN%") {
+                                        cell_data = "- %"
+                                    }
+
+                                    row[perCols_QT[a]] = cell_data;
+                                
+                                }
+
+                            }
+                            ///// ------------ For per Cols Ends ----------------
+
+                            ///// ===============================================
+
+
+                            DO_QT["ScaledData"][i] = row.slice();
+
+                            if(DO_QT["ScaledData"]["KeyMap"] == undefined) {
+                                DO_QT["ScaledData"]["KeyMap"] = {}
+                            }
+
+                            DO_QT["ScaledData"]["KeyMap"][dt_tbl_obj.rows().data()[i][0]+"_#_"+dt_tbl_obj.rows().data()[i][1]] = i;
+
+                        }
+
+                    } else {
+
+                        var numcols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        var varcols = this._dataTableObj.columns('.vsPy')[0];
+                        var percols = this._dataTableObj.columns('.perCols')[0];
+                        
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
+
+                        for(var i = 0; i < dt_tbl_obj.rows().count(); i++) {
+
+                            if(DO_QT["OriginalData"] == undefined) { DO_QT["OriginalData"] = {} }
+
+                            this._dataTableObj.rows().data()
+                            var removedDecimalRow = dt_tbl_obj.rows().data()[i].slice();
+                            for(var rr = 0; rr < removedDecimalRow.length; rr++) {
+                                if(numcols.includes(rr) || varcols.includes(rr)) {
+                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString()))) {
+                                        if(removedDecimalRow[rr].toString().includes(".")) {
+                                            removedDecimalRow[rr] = nFormat.format(parseFloat(removedDecimalRow[rr].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K))
+                                        }
+                                    }
+                                }
+                                else if(percols.includes(rr)) {
+                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(0))) {
+                                        removedDecimalRow[rr] = nFormat.format(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K)).toString()+"%";
+                                    }
+                                }
+                            }
+
+                            DO_QT["OriginalData"][i] = removedDecimalRow.slice();
+                            // DO_FY["OriginalData"][i] = dt_tbl_obj.rows().data()[i];
+
+                            if(DO_QT["OriginalData"]["KeyMap"] == undefined) {
+                                DO_QT["OriginalData"]["KeyMap"] = {}
+                            }
+
+                            DO_QT["OriginalData"]["KeyMap"][dt_tbl_obj.rows().data()[i][0]+"_#_"+dt_tbl_obj.rows().data()[i][1]] = i;
+
+
+                        }
+
+                    }
+
+                }
+                else if(call_from == "MT") {
+
+                    var dt_tbl_obj = this._dataTableObj;
+                    var numCols_MT = this._dataTableObj.columns('.numericColsCSS.numCol')[0];
+                    var varCols_MT = this._dataTableObj.columns('.varCol')[0];
+                    var perCols_MT = this._dataTableObj.columns('.numericColsCSS.perColCSS')[0];
+
+                    if(is_scaled) {
+
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_M});
+
+                        for(var i = 0; i < dt_tbl_obj.rows().count(); i++) {
+
+                            if(DO_MT["ScaledData"] == undefined) { DO_MT["ScaledData"] = {} }
+
+                            var row = dt_tbl_obj.rows().data()[i].slice();
+                            
+                            ///// ------------ For Num Cols Starts --------------
+                            for(var a = 0; a < numCols_MT.length; a++) {
+
+                                var cell_data = row[numCols_MT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
+                                        }
+                                    } else {
+                                        cell_data = cell_data / 1000;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + " %";
+                                    } else {
+                                        cell_data = cell_data.toString();
+                                    }
+
+                                    row[numCols_MT[a]] = cell_data;
+                                
+                                }
+                                
+                            }
+                            ///// ------------ For Num Cols Ends ----------------
+
+                            ///// ===============================================
+
+                            ///// ------------ For vsPy Cols Starts -------------
+                            for(var a = 0; a < varCols_MT.length; a++) {
+
+                                var cell_data = row[varCols_MT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
+                                        }
+                                    } else {
+                                        cell_data = cell_data / 1000;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + " %";
+                                    } else {
+                                        cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
+                                    }
+
+                                    if(cell_data == "NaN") {
+                                        cell_data = "-"
+                                    }
+
+                                    row[varCols_MT[a]] = cell_data;
+                                
+                                }
+
+                            }
+                            ///// ------------ For vsPy Cols Ends ---------------
+
+                            ///// ===============================================
+
+                            ///// ------------ For per Cols Ends ----------------
+                            for(var a = 0; a < perCols_MT.length; a++) {
+
+                                var cell_data = row[perCols_MT[a]];
+                                var isPerCell = false;
+
+                                if(cell_data != undefined) {
+
+                                    if(isNaN(cell_data)) {
+                                        if(cell_data.includes("%")) {
+                                            cell_data = parseFloat(cell_data.split("%")[0]).toFixed(this.no_of_decimalPlaces_M);
+                                            isPerCell = true;
+                                        } 
+                                        else if(cell_data.includes(",")) {
+                                            cell_data = parseFloat(cell_data.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M);
+                                        }
+                                    } else {
+                                        cell_data = cell_data;
+                                    }
+
+                                    if(isPerCell) {
+                                        cell_data = nFormat.format(cell_data).toString() + "%";
+                                    } else {
+                                        cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
+                                    }
+
+                                    if(cell_data == "NaN%" || cell_data == "NaN %") {
+                                        cell_data = "- %"
+                                    }
+
+                                    if(cell_data == "NaN") {
+                                        cell_data = "-"
+                                    }
+
+                                    row[perCols_MT[a]] = cell_data;
+                                
+                                }
+
+                            }
+                            ///// ------------ For per Cols Ends ----------------
+
+                            ///// ===============================================
+
+
+                            DO_MT["ScaledData"][i] = row.slice();
+
+                            if(DO_MT["ScaledData"]["KeyMap"] == undefined) {
+                                DO_MT["ScaledData"]["KeyMap"] = {}
+                            }
+
+                            DO_MT["ScaledData"]["KeyMap"][dt_tbl_obj.rows().data()[i][0]+"_#_"+dt_tbl_obj.rows().data()[i][1]] = i;
+
+                        }
+
+                    } else {
+
+                        var numcols = this._dataTableObj.columns('.numericColsCSS.numCol')[0];
+                        var varcols = this._dataTableObj.columns('.varCol')[0];
+                        var percols = this._dataTableObj.columns('.numericColsCSS.perColCSS')[0];
+                        
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
+
+                        for(var i = 0; i < dt_tbl_obj.rows().count(); i++) {
+
+                            if(DO_MT["OriginalData"] == undefined) { DO_MT["OriginalData"] = {} }
+
+                            this._dataTableObj.rows().data()
+                            var removedDecimalRow = dt_tbl_obj.rows().data()[i].slice();
+                            for(var rr = 0; rr < removedDecimalRow.length; rr++) {
+                                if(numcols.includes(rr) || varcols.includes(rr)) {
+                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString()))) {
+                                        if(removedDecimalRow[rr].toString().includes(".")) {
+                                            removedDecimalRow[rr] = nFormat.format(parseFloat(removedDecimalRow[rr].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K))
+                                        }
+                                    }
+                                }
+                                else if(percols.includes(rr)) {
+                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(0))) {
+                                        removedDecimalRow[rr] = nFormat.format(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K)).toString()+"%";
+                                    }
+                                }
+                            }
+
+                            DO_MT["OriginalData"][i] = removedDecimalRow.slice();
+                            // DO_FY["OriginalData"][i] = dt_tbl_obj.rows().data()[i];
+
+                            if(DO_MT["OriginalData"]["KeyMap"] == undefined) {
+                                DO_MT["OriginalData"]["KeyMap"] = {}
+                            }
+
+                            DO_MT["OriginalData"]["KeyMap"][dt_tbl_obj.rows().data()[i][0]+"_#_"+dt_tbl_obj.rows().data()[i][1]] = i;
+
+
+                        }
+
+                    }
+
+                }
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scaled Object took approx : ")
 
             }
 
 
             applyScaling_FY(scaleTo = "K") {
-
 
                 // var dt_tbl_obj = this._dataTableObj;
                 // var numCols_FY = this._dataTableObj.columns('.numericColsCSS')[0];
@@ -1208,14 +1589,14 @@ var DO_FY = {};
                     }
 
                     var selectionsIDs = Object.keys(DO_FY["DRP"]);
-                    console.log(DO_FY);
+                    // console.log(DO_FY);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
 
                         this._dataTableObj.row(i).data(DO_FY["OriginalData"][i].slice()).draw();
 
                         if(selectionsIDs.includes(i.toString())) {
-                            this.preserveSelection(i, Object.keys(DO_FY["DRP"][i]), Object.values(DO_FY["DRP"][i]));
+                            this.preserveSelection(i, Object.keys(DO_FY["DRP"][i]), Object.values(DO_FY["DRP"][i]), "FY");
                         }
                     }
 
@@ -1233,82 +1614,99 @@ var DO_FY = {};
 
                 console.log(DO_FY);
 
+            }
 
-                // var selectionsID = Object.keys(DO_FY["DRP"]);
-                // var selectionsOpt = Object.values(DO_FY["DRP"]);
+            applyScaling_QT(scaleTo = "K") {
 
-                // this.setSelectorsSelectedValue(selectionsID, selectionsOpt);
+                // var dt_tbl_obj = this._dataTableObj;
+                // var numCols_QT = this._dataTableObj.columns('.numericColsCSS')[0];
+                // var vsPyCols_QT = this._dataTableObj.columns('.vsPy')[0];
+                // var perCols_QT = this._dataTableObj.columns('.perCols')[0];
+
+                if(scaleTo == "K") 
+                {
+                    DO_QT["Current_Scale"] = "K";
+
+                    if(!Object.keys(DO_QT).includes("OriginalData")) {
+                        this.createDataObjects("QT", false);
+                    }
+
+                    var selectionsIDs = Object.keys(DO_QT["DRP"]);
+                    // console.log(DO_QT);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+
+                        this._dataTableObj.row(i).data(DO_QT["OriginalData"][i].slice()).draw();
+
+                        if(selectionsIDs.includes(i.toString())) {
+                            this.preserveSelection(i, Object.keys(DO_QT["DRP"][i]), Object.values(DO_QT["DRP"][i]), "QT");
+                        }
+                    }
+
+                } 
+                else 
+                {
+                    DO_QT["Current_Scale"] = "M";
+
+                    this.createDataObjects("QT", true);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+                        this._dataTableObj.row(i).data(DO_QT["ScaledData"][i].slice()).draw();
+                    }
+                }
+
+                console.log(DO_QT);
+
+            }
+
+            applyScaling_MT(scaleTo = "K") {
+
+var start = performance.now();
+
+                // var dt_tbl_obj = this._dataTableObj;
+                // var numCols_QT = this._dataTableObj.columns('.numericColsCSS')[0];
+                // var vsPyCols_QT = this._dataTableObj.columns('.vsPy')[0];
+                // var perCols_QT = this._dataTableObj.columns('.perCols')[0];
+
+                if(scaleTo == "K") 
+                {
+                    DO_MT["Current_Scale"] = "K";
+
+                    if(!Object.keys(DO_MT).includes("OriginalData")) {
+                        this.createDataObjects("MT", false);
+                    }
+
+                    var selectionsIDs = Object.keys(DO_MT["DRP"]);
+                    // console.log(DO_MT);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+
+                        this._dataTableObj.row(i).data(DO_MT["OriginalData"][i].slice()).draw();
+
+                        if(selectionsIDs.includes(i.toString())) {
+                            this.preserveSelection(i, Object.keys(DO_MT["DRP"][i]), Object.values(DO_MT["DRP"][i]), "MT");
+                        }
+                    }
+
+                } 
+                else 
+                {
+                    DO_MT["Current_Scale"] = "M";
+
+                    this.createDataObjects("MT", true);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+                        this._dataTableObj.row(i).data(DO_MT["ScaledData"][i].slice()).draw();
+                    }
+                }
 
 
-                ////// -------------------------------------------------------------------------------------
-                ////// ================================== Original below ===================================
+                console.log(DO_MT);
 
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling took approx : ")
 
-                // var t = this._dataTableObj;
-                // var lcl_tableColumnNames = this._tableColumnNames;
-                // this._scaleTo = scaleTo;
-                // scaleTo = scaleTo.toUpperCase();
-
-                // // console.log(">>>>>>",this._dataTableObj.rows().data(), "Count---", this._dataTableObj.rows().count())
-               
-                // var lcl_nonNumericColumns = Array.from(this._nonNumericColumnIndices_UnitConversion);
-                // // console.log(lcl_tableColumnNames, "------",lcl_nonNumericColumns)
-
-                // if(!this._masterRows_UnitConversion_Flag) {
-                //     // this._dataTableObj.rows().every(function(idx) {
-                //     //     this._masterRows_UnitConversion.push(t.cell(idx))
-                //     // });
-                //     this._masterRows_UnitConversion_Flag = true;
-                //     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
-                //         // console.log(this._dataTableObj.rows().data()[i])
-                //         this._masterRows_UnitConversion.push(this._dataTableObj.rows().data()[i].slice());
-                //     }
-                //     // console.log(this._masterRows_UnitConversion)
-                //     // console.log(this._dataTableObj.rows().count());
-                // }
-
-
-                // var lcl_masterRows_UnitConversion = this._masterRows_UnitConversion.slice(); 
-                // var lcl_scaledRows = [];
-
-                // // console.log("ROW : ",this._dataTableObj.rows())
-                // // this._dataTableObj.rows().every(function(idx) {
-                // for(var idx = 0; idx < this._dataTableObj.rows()[0].length; idx++) {
-                //     var tempRow = [];
-                //     for(var i = 0; i < lcl_tableColumnNames.length; i++) {
-                //         var cell = t.cell(this._dataTableObj.rows()[0][idx], i);
-                //         if(!lcl_nonNumericColumns.includes(i)) {
-                //             if(cell.data() != undefined && isNaN(lcl_masterRows_UnitConversion[idx][i])) {
-                //                 if(!lcl_masterRows_UnitConversion[idx][i].includes("%")) {
-                //                     if(scaleTo == "M") {
-                //                         cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(/,{1,}/g,""))/1000).toFixed(numberOfDecimals))
-                //                     } 
-                //                     else {
-                //                         cell.data(parseFloat(lcl_masterRows_UnitConversion[idx][i].replace(/,{1,}/g,"")))
-                //                     }
-                //                 }
-                //             } else {
-                //                 if(scaleTo == "M") {
-                //                     cell.data(parseFloat(parseFloat(lcl_masterRows_UnitConversion[idx][i])/1000).toFixed(numberOfDecimals))
-                //                 } 
-                //                 else {
-                //                     cell.data(parseFloat(lcl_masterRows_UnitConversion[idx][i]))
-                //                 }
-                //             }
-                //         }
-                //         tempRow.push(cell.data())
-                //     }
-                //     lcl_scaledRows.push(tempRow.slice());
-                //     // console.log(tempRow)
-                // } 
-
-                // if(this._masterRows_UnitConversion) {
-                //     var i = 0;
-                //     for(var key in fixRowsObj) {
-                //         fixRowsObj[key] = lcl_scaledRows[i]
-                //         i++;
-                //     }
-                // }
             }
 
             showPercentageWidVariance(scene = null) {
@@ -2160,7 +2558,7 @@ var DO_FY = {};
                 
             }
 
-            preserveSelection(rowid, selector_ids, valArr = []) {
+            preserveSelection(rowid, selector_ids, valArr = [], call_from) {
 
                 selector_ids = Array.from(selector_ids);
 
@@ -2208,12 +2606,47 @@ var DO_FY = {};
                             selElement.style.backgroundColor = "#DCE6EF";
                         }
                        
+                        if(call_from == "FY") {
 
-                        if(DO_FY["DRP_USR_TRIGGERED"] && DO_FY["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
-                            if(selElement) {
-                                selElement.style.backgroundColor="#C4DBEE";
-                                selElement.style.border = "2px solid #0460A9";
+                            if( DO_FY["DRP_USR_TRIGGERED"] && 
+                                DO_FY["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && 
+                                Object.keys(DO_FY["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
+                                
+                                if(selElement) {
+                                    selElement.style.backgroundColor="#C4DBEE";
+                                    selElement.style.border = "2px solid #0460A9";
+                                }
+
                             }
+
+                        }
+                        else if(call_from == "QT") {
+
+                            if( DO_QT["DRP_USR_TRIGGERED"] && 
+                                DO_QT["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && 
+                                Object.keys(DO_QT["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
+                                
+                                if(selElement) {
+                                    selElement.style.backgroundColor="#C4DBEE";
+                                    selElement.style.border = "2px solid #0460A9";
+                                }
+
+                            }
+
+                        }
+                        else if(call_from == "MT") {
+                            
+                            if( DO_MT["DRP_USR_TRIGGERED"] && 
+                                DO_MT["DRP_USR_TRIGGERED"][rowid.toString()] != undefined && 
+                                Object.keys(DO_MT["DRP_USR_TRIGGERED"][rowid.toString()]).includes(selector_ids[i])) {
+                                
+                                if(selElement) {
+                                    selElement.style.backgroundColor="#C4DBEE";
+                                    selElement.style.border = "2px solid #0460A9";
+                                }
+
+                            }
+
                         }
 
                     }
@@ -3658,6 +4091,8 @@ var DO_FY = {};
             // ==========================================================================================================================
             setResultSet_QT(rs, col_to_row = -1, colspan_to_top_headers, lcl_no_of_decimalPlaces) {
 
+                var start = performance.now();
+
                 // this._dotsLoader.style.visibility = "visible";
                 if(this._table) {
                     this._table.remove();
@@ -3765,9 +4200,17 @@ var DO_FY = {};
 
                 // widget_ID_Name[this["widgetName"]] = this["offsetParent"].id;
                 // console.log("Mapped Widgets : ",widget_ID_Name);
+                var end = performance.now();
+                var time = end - start;
+                console.log("setResultSet_QT took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+
+                var start = performance.now();
 
                 this.render_QT();
 
+                var end = performance.now();
+                var time = end - start;
+                console.log("Render_QT took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
             }
 
             applyStyling_QT() {
@@ -4148,7 +4591,7 @@ var DO_FY = {};
                 this._fixedIndices = this._fixedIndices.concat(this._dropdownIndices);
                 var numCols_render = [];
                 // var perColsFY_render = [];
-                var templateGroupTotal = [];
+                var templateGroupTotal = ["Total"];
                 // var templateGroupTotal = `<tr class="clTotalRow"><td>Total</td>`;
                 // var templateGroupTotal = "";
 
@@ -4231,7 +4674,7 @@ var DO_FY = {};
                     // nullArr.pop()
                     // console.log(nullArr)
 
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {
                         },
                         // fixedColumns: {
@@ -4256,8 +4699,9 @@ var DO_FY = {};
                             {
                                 targets:numCols_render,
                                 render: function (data, type) {
+                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                                     if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
-                                        return parseFloat(data.replace(/,{1,}/g,"")).toFixed(0)
+                                        return nFormat.format(parseFloat(data.replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
                                 }
@@ -4318,7 +4762,7 @@ var DO_FY = {};
                         bDestroy: true,
                     })
                 } else {
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {
                           
                         },
@@ -4349,11 +4793,13 @@ var DO_FY = {};
                     })
                 }
 
+                tbl =  this._dataTableObj;
+
                 if(tbl.data().any()) {
                     tbl.rows().remove().draw();
                 }
 
-                this._dataTableObj = tbl;
+                // this._dataTableObj = tbl;
 
                 ////// -------------------------- Show Total Row ------------------------
                 var showTotalRow = templateGroupTotal.slice();
@@ -4424,14 +4870,33 @@ var DO_FY = {};
                 // Top Most Header Block Ends
 
                 tbl.on('click', 'tbody tr', e => {
+
                     let classList = e.currentTarget.classList
                     tbl
                         .rows()
                         .nodes()
                         .each(row => row.classList.remove('selected'))
+
                     if(classList.length != 1) {
-                        classList.add('selected')
+
+                        classList.add('selected');
+
+                        if(DO_QT["DRP_USR_TRIGGERED"] == undefined) {
+                            DO_QT["DRP_USR_TRIGGERED"] = {}
+                        }
+    
+                        if(DO_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] == undefined) {
+                            DO_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] = {}
+                        }
+                        
                     }
+
+                    // console.log(typeof(e.target.classList), Object.keys(e.target.classList), e)
+                    if(e.target.classList && e.target.classList[0] == "row_level_select") {
+                        var sid = e.target.classList[1].split("row_level_select_")[1];
+                        DO_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
+                    }
+
                 })
 
                 
@@ -4570,6 +5035,16 @@ var DO_FY = {};
 
                         ////// ------------------ Number Formatting Starts --------------------------
                         var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                        
+                        if(DO_QT["Current_Scale"] == "K") {
+                            nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_K});
+                            if(sum.includes("%")) {
+                                sum = parseFloat(sum.split("%")[0]).toFixed(no_of_decimalPlaces_K) + "%"
+                            } else {
+                                sum = parseFloat(sum).toFixed(no_of_decimalPlaces_K)
+                            }
+                        }
+                        
                         var count = nFormat.format(sum);
 
                         if(isNaN(sum)) {
@@ -4635,6 +5110,10 @@ var DO_FY = {};
 
                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
                     var count = undefined;
+
+                    if(DO_QT["Current_Scale"] == "K") {
+                        nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_K});
+                    }
  
                     ///// -------------------- For Non % Cols Starts ------------------------------
                     for(var k = updateFrom; k < updateFrom + changeLength - no_of_per_cols; k++) {
@@ -4723,8 +5202,18 @@ var DO_FY = {};
 
                     var selOptID = state.getElementsByTagName('option')[state.options.selectedIndex].id
                     // var selOptVal = JSON.parse(state.getElementsByTagName('option')[state.options.selectedIndex].value)
-                    var selOptVal = fixRowsObj[identifer]
+                    // var selOptVal = fixRowsObj[identifer];
+                    var selOptVal = [];
+
+                    if(DO_QT["Current_Scale"] == "K") {
+                        selOptVal = fixRowsObj[identifer];
+                    } else {
+                        selOptVal = fixRowsObj["ScaledData"][identifer];
+                    }
                     // console.log(state)
+
+                    let sid = state.classList[1].split("row_level_select_")[1];
+                    DO_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
 
                     var sliced = selOptVal.slice(2, ), data = {};
                     // var sliced = selOptVal.slice(sliceFrom, ), data = {};
@@ -4906,7 +5395,7 @@ var DO_FY = {};
                     
 
                     finalRow.pop()
-                    fixRowsObj[k] = finalRow
+                    // fixRowsObj[k] = finalRow.slice()
 
 
                     // console.log("--------->>>>>>>", finalRow)
@@ -5004,6 +5493,55 @@ var DO_FY = {};
                   
                     finalRow = finalRow.slice(0, sliceLen).concat(sliced);
 
+                    /////// creating scaled data copy starts ------------------------ 
+                    var K_DataQT = finalRow.slice();
+                    var M_DataQT = finalRow.slice();
+                    var numCols_QT = this._dataTableObj.columns('.numericColsCSS')[0];
+                    var vsPyCols_QT = this._dataTableObj.columns('.vsPy')[0];
+                    var perCols_QT = this._dataTableObj.columns('.perCols')[0];
+   
+                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_M});
+                    var nFormat_K = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
+   
+   
+                    for(var ss = 0; ss < M_DataQT.length; ss++) {
+                        if(numCols_QT.includes(ss) || vsPyCols_QT.includes(ss)) {
+                            //////////
+                            if(!isNaN(parseFloat(M_DataQT[ss].toString()))) {
+                                if(M_DataQT[ss].toString().includes(".")) {
+                                    M_DataQT[ss] = nFormat.format(parseFloat(M_DataQT[ss].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M))
+                                }
+                            }
+   
+                           /////////
+                           if(!isNaN(parseFloat(K_DataQT[ss].toString()))) {
+                               if(K_DataQT[ss].toString().includes(".")) {
+                                   K_DataQT[ss] = nFormat_K.format(parseFloat(K_DataQT[ss].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K))
+                               }
+                           }
+                        }
+                        else if(perCols_QT.includes(ss)) {
+                            /////////
+                            if(!isNaN(parseFloat(M_DataQT[ss].toString().split("%")[0]).toFixed(0))) {
+                                M_DataQT[ss] = nFormat.format(parseFloat(M_DataQT[ss].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_M)).toString()+"%";
+                            }
+    
+                            ////////
+                            if(!isNaN(parseFloat(K_DataQT[ss].toString().split("%")[0]).toFixed(0))) {
+                                K_DataQT[ss] = nFormat_K.format(parseFloat(K_DataQT[ss].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K)).toString()+"%";
+                            }
+                        }
+                    }
+                    finalRow = K_DataQT.slice()
+                    fixRowsObj[k] = finalRow.slice()
+   
+                    if(fixRowsObj["ScaledData"] == undefined) {
+                        fixRowsObj["ScaledData"] = {}
+                    }
+   
+                    fixRowsObj["ScaledData"][k] = M_DataQT.slice()
+                    /////// creating scaled data copy ends ------------------------ 
+                    
                     ////// ================================ Group by Row Starts =========================================
                     if(!Array.from(groupBy).includes(finalRow[0])) {
                         groupBy.add(finalRow[0])
@@ -5014,6 +5552,7 @@ var DO_FY = {};
                     ////// ================================ Group by Row Ends ============================================
 
                     tbl.row.add(finalRow).draw(false)
+                    var rid = tbl.rows().indexes().toArray()[tbl.rows().indexes().toArray().length - 1];
 
                     if(!flag) {
 
@@ -5033,6 +5572,20 @@ var DO_FY = {};
                                 }
                             }
                         }
+
+                        var drp = Array.from(dropdownIDs);
+
+                        if(DO_QT["DRP"] == undefined) {
+                            DO_QT["DRP"] = {}
+                        }
+
+                        if(DO_QT["DRP"][rid] == undefined) {
+                            DO_QT["DRP"][rid] = {}
+                        }
+
+                        DO_QT["DRP"][rid][drp[0]] = cga[0];
+                        DO_QT["DRP"][rid][drp[1]] = cga[1];
+                        DO_QT["DRP"][rid][drp[2]] = cga[2];
 
                         this.setSelectorsSelectedValue(dropdownIDs, cga, "QT");
                     }
@@ -5083,6 +5636,7 @@ var DO_FY = {};
                 // isSelectionUpdatedByUser = true;
                 showTotalonRowUpdateFlag = true;
                 this.showTotal("QT");
+                this.applyScaling_QT("K")
             }
 
             // ==========================================================================================================================
@@ -5311,6 +5865,8 @@ var DO_FY = {};
 
             setResultSet_MT(rs, col_to_row = -1, colspan_to_top_headers, lcl_no_of_decimalPlaces) {
                 
+                var start = performance.now();
+
                 if(this._table) {
                     this._table.remove();
                     this._root.innerHTML = `
@@ -5408,12 +5964,25 @@ var DO_FY = {};
                 console.log(this._resultSet)
                 console.log("----------------")
 
+                var end = performance.now();
+                var time = end - start;
+                console.log("setResultSet_MT took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+
+                var start = performance.now();
+
                 this.render_MT();
+
+                var end = performance.now();
+                var time = end - start;
+                console.log("Render_MT took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+            
 
             }
 
             async render_MT() {
                 
+var start = performance.now();
+
                 if (!this._resultSet) {
                     return
                 }
@@ -5522,7 +6091,11 @@ var DO_FY = {};
                     }
                 }
                 
-               
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Heading -- Render_MT took approx : ") 
+var start = performance.now();
+
                 // TRIM LOGIC
                 // table_cols = table_cols.slice(0, this._dimensions.length - this._excludeHeaders.length + ((this._measureOrder.length + 1) * 3))
                 console.log('Data Table Columns : ', table_cols)
@@ -5624,7 +6197,7 @@ var DO_FY = {};
                     // nullArr.pop()
                     // console.log(nullArr)
 
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {},
                         columns: table_cols,
                         // bAutoWidth: true, 
@@ -5643,8 +6216,9 @@ var DO_FY = {};
                             { 
                                 targets:numMT_render,
                                 render: function (data, type) {
+                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                                     if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
-                                        return parseFloat(data.replace(/,{1,}/g,"")).toFixed(0)
+                                        return nFormat.format(parseFloat(data.replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
                                 }
@@ -5715,7 +6289,7 @@ var DO_FY = {};
                         bDestroy: true
                     })
                 } else {
-                    tbl = new DataTable(this._table, {
+                    this._dataTableObj = new DataTable(this._table, {
                         layout: {},
                         columns: table_cols,
                         bAutoWidth: true, 
@@ -5739,11 +6313,18 @@ var DO_FY = {};
                     })
                 }
 
+                tbl = this._dataTableObj;
+
                 if(tbl.data().any()) {
                     tbl.rows().remove().draw();
                 }
 
-                this._dataTableObj = tbl;
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Initialization -- Render_MT took approx : ") 
+var start = performance.now();
+
+                // this._dataTableObj = tbl;
 
                 ////// -------------------------- Show Total Row ------------------------
                 var showTotalRow = ["Total", "Total"];
@@ -5809,17 +6390,36 @@ var DO_FY = {};
 
 
                 tbl.on('click', 'tbody tr', e => {
+                    
                     let classList = e.currentTarget.classList
                     tbl
                         .rows()
                         .nodes()
                         .each(row => row.classList.remove('selected'))
+
                     if(classList.length != 1) {
-                        classList.add('selected')
+
+                        classList.add('selected');
+
+                        if(DO_MT["DRP_USR_TRIGGERED"] == undefined) {
+                            DO_MT["DRP_USR_TRIGGERED"] = {}
+                        }
+    
+                        if(DO_MT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] == undefined) {
+                            DO_MT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] = {}
+                        }
+
                     }
+
+                    // console.log(typeof(e.target.classList), Object.keys(e.target.classList), e)
+                    if(e.target.classList && e.target.classList[0] == "row_level_select") {
+                        var sid = e.target.classList[1].split("row_level_select_")[1];
+                        DO_MT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
+                    }
+
                 })
 
-                // Master Reference Node For Selection Elements used Inside updateRow(), updateColumns() Method
+                // Master Reference Node For Selection Elements used Inside updateRow_M(), updateColumns() Method
                 var fixRowsObj = {}, masterObj = {};
                 const masterRows = [];
                 var hMap = {};
@@ -5961,7 +6561,17 @@ var DO_FY = {};
                         }
 
                         ////// ------------------ Number Formatting Starts --------------------------
-                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_M});
+                        
+                        if(DO_MT["Current_Scale"] == "K") {
+                            nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_K});
+                            if(sum.includes("%")) {
+                                sum = parseFloat(sum.split("%")[0]).toFixed(no_of_decimalPlaces_K) + "%"
+                            } else {
+                                sum = parseFloat(sum).toFixed(no_of_decimalPlaces_K)
+                            }
+                        }
+                        
                         var count = nFormat.format(sum);
 
                         if(isNaN(sum)) {
@@ -6010,6 +6620,13 @@ var DO_FY = {};
                         ///  -----------------------------------------------------------------------------------------------
                         //// =============================== Subset Group Total Update Starts ==============================
                        
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_M});
+                        var count = undefined;
+    
+                        if(DO_MT["Current_Scale"] == "K") {
+                            nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_K});
+                        }
+ 
                         ///// -------------------- For Non % Cols Starts ------------------------------
                         var col_id = tbl.column(i)[0][0];
                         if(table_cols[col_id].className != "numericColsCSS perColCSS") {
@@ -6063,6 +6680,10 @@ var DO_FY = {};
                                 subsetSum = Math.round(parseFloat(val_minus_act / act1) * 10) / 10;
                             }
     
+                            if(DO_MT["Current_Scale"] == "K") {
+                                subsetSum = parseFloat(subsetSum).toFixed(no_of_decimalPlaces_K);
+                            }
+
                             count = nFormat.format(subsetSum);
     
                             if(subsetSum == "-" || isNaN(subsetSum)) {
@@ -6071,7 +6692,7 @@ var DO_FY = {};
     
                             idx++;
     
-                            var node = tbl.cell(parseInt(parentID), i).data(count.toString()+" %").node()
+                            var node = tbl.cell(parseInt(parentID), i).data(count.toString()+"%").node()
     
                             if(count >= 0 || count >= "0") {
                                 node.style.color = "#2D7230";
@@ -6111,8 +6732,20 @@ var DO_FY = {};
 
                     var selOptID = state.getElementsByTagName('option')[state.options.selectedIndex].id
                     // var selOptVal = JSON.parse(state.getElementsByTagName('option')[state.options.selectedIndex].value)
-                    var selOptVal = fixRowsObj[identifer]
+                    // var selOptVal = fixRowsObj[identifer]
                     // console.log(state)
+
+                    var selOptVal = [];
+
+                    if(DO_MT["Current_Scale"] == "K") {
+                        selOptVal = fixRowsObj[identifer];
+                    } else {
+                        selOptVal = fixRowsObj["ScaledData"][identifer];
+                    }
+                    // console.log(state)
+
+                    let sid = state.classList[1].split("row_level_select_")[1];
+                    DO_MT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
 
                     // @ ---
                     // var sliced = selOptVal.slice(no_of_dimens - no_of_excludes + no_of_mes, ), data = {};
@@ -6183,6 +6816,11 @@ var DO_FY = {};
                 // console.log(scenarioObj)
                 // var fixRows = this._resultSet[i].slice(0, fixedScenarioAt);
 
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Update Functions -- Render_MT took approx : ") 
+var start = performance.now();
+
                 for(var i = 0, prev_key = "", seqID = 0, scenarioMissing = false; i < this._resultSet.length;) {
 
                     var key = this._resultSet[i].slice(0, this._dimensions.indexOf(this._dateColName)).join("_#_");
@@ -6229,7 +6867,12 @@ var DO_FY = {};
                     prev_key = key;
                 }
 
-                console.log("---", structuredClone(masterObj))
+                // console.log("---", structuredClone(masterObj))
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Master Object creation -- Render_MT took approx : ") 
+var start = performance.now();
 
                 // Final Row Assignment
                 for(const [k, v] of Object.entries(masterObj)) {
@@ -6302,7 +6945,7 @@ var DO_FY = {};
                     // var temp = finalRow.slice();
                     // finalRow.push("--Variance--")
                     finalRow = finalRow.slice(0, table_cols.length);
-                    fixRowsObj[k] = finalRow.slice()
+                    // fixRowsObj[k] = finalRow.slice()
 
 
                     // console.log("--------->>>>>>>", finalRow)
@@ -6351,6 +6994,12 @@ var DO_FY = {};
                     var isEmptyUpdated = false;
                     // var dropdownSel = Array.from(masterObj[k]["DropDownSelected"]).slice();
                     // console.log(dropdownArr);
+
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Final Row Assignment -- Render_MT took approx : ") 
+var start = performance.now();
 
 
                     for(var kk = 0, optIdx = 0; kk < sliced.length; kk++) {
@@ -6432,6 +7081,67 @@ var DO_FY = {};
                     // console.log(sliced)
                     finalRow = finalRow.slice(0, sliceLen).concat(sliced);
 
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Dropdown Plotting Array -- Render_MT took approx : ") 
+var start = performance.now();
+
+                    /////// creating scaled data copy starts ------------------------ 
+                    var K_DataMT = finalRow.slice();
+                    var M_DataMT = finalRow.slice();
+                    var numCols_MT = this._dataTableObj.columns('.numericColsCSS.numCol')[0];
+                    var vsPyCols_MT = this._dataTableObj.columns('.varCol')[0];
+                    var perCols_MT = this._dataTableObj.columns('.numericColsCSS.perColCSS')[0];
+    
+                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_M});
+                    var nFormat_K = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
+    
+    
+                    for(var ss = 0; ss < M_DataMT.length; ss++) {
+                        if(numCols_MT.includes(ss) || vsPyCols_MT.includes(ss)) {
+                            //////////
+                            if(!isNaN(parseFloat(M_DataMT[ss].toString()))) {
+                                if(M_DataMT[ss].toString().includes(".")) {
+                                    M_DataMT[ss] = nFormat.format(parseFloat(M_DataMT[ss].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M))
+                                }
+                            }
+    
+                           /////////
+                           if(!isNaN(parseFloat(K_DataMT[ss].toString()))) {
+                               if(K_DataMT[ss].toString().includes(".")) {
+                                   K_DataMT[ss] = nFormat_K.format(parseFloat(K_DataMT[ss].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K))
+                               }
+                           }
+                        }
+                        else if(perCols_MT.includes(ss)) {
+                            /////////
+                            if(!isNaN(parseFloat(M_DataMT[ss].toString().split("%")[0]).toFixed(0))) {
+                                M_DataMT[ss] = nFormat.format(parseFloat(M_DataMT[ss].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_M)).toString()+"%";
+                            }
+     
+                            ////////
+                            if(!isNaN(parseFloat(K_DataMT[ss].toString().split("%")[0]).toFixed(0))) {
+                                K_DataMT[ss] = nFormat_K.format(parseFloat(K_DataMT[ss].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K)).toString()+"%";
+                            }
+                        }
+                    }
+                    finalRow = K_DataMT.slice()
+                    fixRowsObj[k] = finalRow.slice()
+    
+                    if(fixRowsObj["ScaledData"] == undefined) {
+                        fixRowsObj["ScaledData"] = {}
+                    }
+    
+                    fixRowsObj["ScaledData"][k] = M_DataMT.slice()
+                    /////// creating scaled data copy ends ------------------------ 
+                     
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Scaled Object Creation -- Render_MT took approx : ") 
+var start = performance.now();
+
+
                     ////// ================================ Group by Row Starts =========================================
                     if(!Array.from(groupBy).includes(finalRow[0])) {
                         groupBy.add(finalRow[0])
@@ -6441,8 +7151,9 @@ var DO_FY = {};
                     }
                     ////// ================================ Group by Row Ends ============================================
 
-
                     tbl.row.add(finalRow).draw(false);
+                    var rid = tbl.rows().indexes().toArray()[tbl.rows().indexes().toArray().length - 1];
+
                     if(!flag){
                         var cga = Array.from(caughtDropDownsAt);
                         master_dropdownArr = Array.from(master_dropdownArr).slice(1,);
@@ -6460,22 +7171,47 @@ var DO_FY = {};
                                 }
                             }
                         }
+
+                        var drp = Array.from(dropdownIDs);
+
+                        if(DO_MT["DRP"] == undefined) {
+                            DO_MT["DRP"] = {}
+                        }
+
+                        if(DO_MT["DRP"][rid] == undefined) {
+                            DO_MT["DRP"][rid] = {}
+                        }
+
+                        DO_MT["DRP"][rid][drp[0]] = cga[0];
+                        DO_MT["DRP"][rid][drp[1]] = cga[1];
+                        DO_MT["DRP"][rid][drp[2]] = cga[2];
+
                         this.setSelectorsSelectedValue(dropdownIDs, cga, "MT");
                     }
                     // tbl.row.child(finalRow)
                     // console.log(finalRow);
                 }
 
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Selector Selected Value -- Render_MT took approx : ") 
+var start = performance.now();
+
                 this.applyStyling_MT();
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Styling -- Render_MT took approx : ") 
+var start = performance.now();
 
                 // Styling Block Starts
                 if (this._tableCSS.length > 1) {
-                    console.log(this._tableCSS)
+                    // console.log(this._tableCSS)
                     this._table.style.cssText = this._tableCSS
                 }
 
                 if (this._rowCSS.length > 1) {
-                    console.log(this._rowCSS)
+                    // console.log(this._rowCSS)
                     document
                         .querySelector(this._widgetID+'cw-combine-table')
                         .shadowRoot.querySelectorAll('td')
@@ -6487,7 +7223,7 @@ var DO_FY = {};
                 }
 
                 if (this._colCSS.length > 1) {
-                    console.log(this._colCSS)
+                    // console.log(this._colCSS)
                     document
                         .querySelector(this._widgetID+'cw-combine-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
@@ -6507,10 +7243,19 @@ var DO_FY = {};
                 this._root.style.display = "block";
 
                 showTotalonRowUpdateFlag = true;
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling -- Render_MT took approx : ") 
+                
                 this.showTotal("MT");
-                   
-               
+                this.applyScaling_MT("K")
+
             }
+
+            // ==========================================================================================================================
+            // ---------------------------------------------------------- 5-Year -------------------------------------------------------
+            // ==========================================================================================================================
 
             setResultSet_5Y(rs, col_to_row = -1, colspan_to_top_headers) {
 
@@ -7772,14 +8517,7 @@ var DO_FY = {};
 
                 // Styling Block Ends here
             }
-
-            // connectedCallback() {
-            //     if(this._widgetID) {
-            //         console.log(">>>>>>>>>>>>>",this._widgetID);
-            //         // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > tbody > tr:nth-child(1) > td.truncate").click()
-            //     }
-            //     // console.log(this._widgetPreviousState, "---------", this._widgetID)
-            // }
+            
         }
         customElements.define('cw-combine-table', CustomTable)
     })()
