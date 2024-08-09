@@ -242,6 +242,15 @@
                 }
             ]
         },
+        "applyScaling_MT":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
         "columnVisibility":{
             "parameters": [
                 {
