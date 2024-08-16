@@ -941,100 +941,100 @@ var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {};
                     }
 
                     groupRowMapping_MT = lcl_groupRowMapping;
-                //     // console.log("Row ID : Subset Group Mapping", lcl_groupRowMapping)
+                    // console.log("Row ID : Subset Group Mapping", lcl_groupRowMapping)
 
-                //     for(var [key, val] of Object.entries(lcl_groupRowMapping)) {
-                //         for(var i = 0; i < indices.length; i++) {
-                //             var sum = 0;
-                //             if(indices[i] != -1) {
-                //                 for(var k = 1; k < val.length; k++) {
-                //                     var d = this._dataTableObj.cell(val[k], indices[i]).data();
-                //                     // console.log("----",d)
-                //                     if(d != undefined && isNaN(d)) {
-                //                         if(d.includes("%")) {
-                //                             // sum = "- %";
-                //                             var value = this._dataTableObj.cell(key, indices[i] - 2).data()
-                //                             var val_minus_act = this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data()
-                //                             var act1 = value - val_minus_act
-                //                             // sum = (val_minus_act / act1).toString()+" %"
+                    for(var [key, val] of Object.entries(lcl_groupRowMapping)) {
+                        for(var i = 0; i < indices.length; i++) {
+                            var sum = 0;
+                            if(indices[i] != -1) {
+                                for(var k = 1; k < val.length; k++) {
+                                    var d = this._dataTableObj.cell(val[k], indices[i]).data();
+                                    // console.log("----",d)
+                                    if(d != undefined && isNaN(d)) {
+                                        if(d.includes("%")) {
+                                            // sum = "- %";
+                                            var value = this._dataTableObj.cell(key, indices[i] - 2).data()
+                                            var val_minus_act = this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data()
+                                            var act1 = value - val_minus_act
+                                            // sum = (val_minus_act / act1).toString()+" %"
 
-                //                             if(isNaN(value)) {
-                //                                 value = parseFloat(this._dataTableObj.cell(key, indices[i] - 2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                //                             }
-                //                             if(isNaN(val_minus_act)){
-                //                                 val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                //                             }
+                                            if(isNaN(value)) {
+                                                value = parseFloat(this._dataTableObj.cell(key, indices[i] - 2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                            }
+                                            if(isNaN(val_minus_act)){
+                                                val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                            }
 
-                //                             var act1 = value - val_minus_act
+                                            var act1 = value - val_minus_act
 
-                //                             if(value == 0 && act1 == 0) {
-                //                                 sum = "-"
-                //                             } else if(value == 0) {
-                //                                 sum = "-100%"
-                //                             } else if (act1 == 0) {
-                //                                 sum = "100%";
-                //                             } else {
-                //                                 sum = (val_minus_act / act1 * 100).toString()+" %"
-                //                             }
+                                            if(value == 0 && act1 == 0) {
+                                                sum = "-"
+                                            } else if(value == 0) {
+                                                sum = "-100%"
+                                            } else if (act1 == 0) {
+                                                sum = "100%";
+                                            } else {
+                                                sum = (val_minus_act / act1 * 100).toString()+" %"
+                                            }
 
-                //                         } else {
-                //                             if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
-                //                                 sum += parseFloat(d.replace(/,{1,}/g,""))
-                //                             }
-                //                         }
-                //                     } else {
-                //                         if(!isNaN(parseFloat(d))){
-                //                             sum += parseFloat(d)
-                //                         }
-                //                     }
-                //                 }
-                //             }
+                                        } else {
+                                            if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
+                                                sum += parseFloat(d.replace(/,{1,}/g,""))
+                                            }
+                                        }
+                                    } else {
+                                        if(!isNaN(parseFloat(d))){
+                                            sum += parseFloat(d)
+                                        }
+                                    }
+                                }
+                            }
 
-                //             var colorFlagSubGroup = false;
+                            var colorFlagSubGroup = false;
 
-                //             if(sum >= 0 || sum >= "0") {
-                //                 colorFlagSubGroup = true;
-                //             }
+                            if(sum >= 0 || sum >= "0") {
+                                colorFlagSubGroup = true;
+                            }
 
-                //             if(sum != "- %" && !isNaN(sum)) {
-                //                 sum = parseFloat(sum).toFixed(no_of_decimalPlaces)
-                //             } else {
-                //                 sum = parseFloat(sum).toFixed(no_of_decimalPlaces).toString()+"%"
-                //             }
+                            if(sum != "- %" && !isNaN(sum)) {
+                                sum = parseFloat(sum).toFixed(no_of_decimalPlaces)
+                            } else {
+                                sum = parseFloat(sum).toFixed(no_of_decimalPlaces).toString()+"%"
+                            }
 
-                //             ////// ------------------ Number Formatting Starts --------------------------
-                //             var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
-                //             var count = nFormat.format(sum);
+                            ////// ------------------ Number Formatting Starts --------------------------
+                            var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                            var count = nFormat.format(sum);
 
-                //             if(isNaN(sum)) {
-                //                 sum = sum.split("%")[0];
-                //                 count = nFormat.format(sum) + "%";
-                //             }
+                            if(isNaN(sum)) {
+                                sum = sum.split("%")[0];
+                                count = nFormat.format(sum) + "%";
+                            }
 
-                //             if(numericCols.includes(i)) {
-                //                 count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
-                //             }
+                            if(numericCols.includes(i)) {
+                                count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
+                            }
 
-                //             if(count == "NaN%") {
-                //                 if(value == 0) {
-                //                     count = "-100%"
-                //                 } else if (act1 == 0) {
-                //                     count = "100%";
-                //                 } 
-                //             }
-                //             ////// ------------------ Number Formatting Ends ----------------------------
+                            if(count == "NaN%") {
+                                if(value == 0) {
+                                    count = "-100%"
+                                } else if (act1 == 0) {
+                                    count = "100%";
+                                } 
+                            }
+                            ////// ------------------ Number Formatting Ends ----------------------------
 
-                //             var node = this._dataTableObj.cell(key, indices[i]).data(count).node();
+                            var node = this._dataTableObj.cell(key, indices[i]).data(count).node();
 
-                //             if(!numericCols.includes(indices[i])) {
-                //                 if(colorFlagSubGroup) {
-                //                     node.style.color = "#2D7230";
-                //                 } else {
-                //                     node.style.color = "#A92626";
-                //                 }
-                //             }
-                //         }
-                //     }
+                            if(!numericCols.includes(indices[i])) {
+                                if(colorFlagSubGroup) {
+                                    node.style.color = "#2D7230";
+                                } else {
+                                    node.style.color = "#A92626";
+                                }
+                            }
+                        }
+                    }
                 }
                 else if(callFrom == "5Y") {
                     var rowID = undefined;
@@ -3040,7 +3040,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         var node = this._dataTableObj.cell(row_id, changeCellColr[j]).node();
                         var data = this._dataTableObj.cell(row_id, changeCellColr[j]).data();
 
-                        if(data <= 0) {
+                        if(data <= 0 || data <= "0") {
                             node.style.color = "#A92626";
                         } else {
                             node.style.color = "#2D7230";
@@ -3822,7 +3822,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                     data = tbl.cell(cell_rid, cell_cid).data();
                                 }
 
-                                if(data < 0) {
+                                if(data < 0 || data < "0") {
                                     flagColor = true;
                                 }
 
@@ -5453,7 +5453,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         }
 
                         ////// ------------------ Number Formatting Starts --------------------------
-                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                        var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_M});
                         
                         if(DO_QT["Current_Scale"] == "K") {
                             nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces_K});
@@ -5609,7 +5609,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         idx_parent++;
                         idx++;
 
-                        var node = tbl.cell(parseInt(parentID), k).data(count.toString()+" %").node()
+                        var node = tbl.cell(parseInt(parentID), k).data(count.toString()+"%").node()
 
                         if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
@@ -8747,7 +8747,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         }
 
                         var node = tbl.cell(parseInt(parentID), k).data(count).node()
-                        
+
                         if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
                         } else {
