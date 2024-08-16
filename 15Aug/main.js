@@ -641,11 +641,10 @@ var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {};
                     
                 }
                
-                gbl_finalPerCols_FY = finalPerCols;
                 // console.log(finalPerCols)
 
                 if(callFrom == "FY") {
-                    
+                    gbl_finalPerCols_FY = finalPerCols;
                 } else if(callFrom == "QT") {
                     gbl_finalPerCols_QT = finalPerCols;
                     // console.log(finalPerCols)
@@ -1374,6 +1373,7 @@ var start = performance.now();
                                         cell_data = cell_data / 1000;
                                     }
 
+                                    cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
                                     row[numCols_QT[a]] = cell_data;
                                 
                                 }
@@ -1406,9 +1406,7 @@ var start = performance.now();
                                     // if(isPerCell) {
                                     //     cell_data = nFormat.format(cell_data).toString() + " %";
                                     // } else {
-                                    //     cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
-                                    // }
-
+                                    cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
                                     row[vsPyCols_QT[a]] = cell_data;
                                 
                                 }
@@ -1895,6 +1893,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scale
                     }
 
                     var selectionsIDs = Object.keys(DO_FY["DRP"]);
+                    var reSelectIDs = []
                     // console.log(DO_FY);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
@@ -1902,8 +1901,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scale
                         this._dataTableObj.row(i).data(DO_FY["OriginalData"][i].slice()).draw();
 
                         if(selectionsIDs.includes(i.toString())) {
-                            this.preserveSelection(i, Object.keys(DO_FY["DRP"][i]), Object.values(DO_FY["DRP"][i]), "FY");
+                            reSelectIDs.push(i);
                         }
+                    }
+
+                    for(var i = 0; i < reSelectIDs.length; i++) {
+                        this.preserveSelection(reSelectIDs[i], Object.keys(DO_FY["DRP"][reSelectIDs[i]]), Object.values(DO_FY["DRP"][reSelectIDs[i]]), "FY");
                     }
 
                 } 
@@ -1938,6 +1941,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scale
                     }
 
                     var selectionsIDs = Object.keys(DO_QT["DRP"]);
+                    var reSelectIDs = []
                     // console.log(DO_QT);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
@@ -1945,8 +1949,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scale
                         this._dataTableObj.row(i).data(DO_QT["OriginalData"][i].slice()).draw();
 
                         if(selectionsIDs.includes(i.toString())) {
-                            this.preserveSelection(i, Object.keys(DO_QT["DRP"][i]), Object.values(DO_QT["DRP"][i]), "QT");
+                            reSelectIDs.push(i);
+                            // this.preserveSelection(i, Object.keys(DO_QT["DRP"][i]), Object.values(DO_QT["DRP"][i]), "QT");
                         }
+                    }
+
+                    for(var i = 0; i < reSelectIDs.length; i++) {
+                        this.preserveSelection(reSelectIDs[i], Object.keys(DO_QT["DRP"][reSelectIDs[i]]), Object.values(DO_QT["DRP"][reSelectIDs[i]]), "QT");
                     }
 
                 } 
@@ -1983,6 +1992,7 @@ var start = performance.now();
                     }
 
                     var selectionsIDs = Object.keys(DO_MT["DRP"]);
+                    var reSelectIDs = [];
                     // console.log(DO_MT);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
@@ -1990,8 +2000,13 @@ var start = performance.now();
                         this._dataTableObj.row(i).data(DO_MT["OriginalData"][i].slice()).draw();
 
                         if(selectionsIDs.includes(i.toString())) {
-                            this.preserveSelection(i, Object.keys(DO_MT["DRP"][i]), Object.values(DO_MT["DRP"][i]), "MT");
+                            reSelectIDs.push(i);
+                            // this.preserveSelection(i, Object.keys(DO_MT["DRP"][i]), Object.values(DO_MT["DRP"][i]), "MT");
                         }
+                    }
+
+                    for(var i = 0; i < reSelectIDs.length; i++) {
+                        this.preserveSelection(reSelectIDs[i], Object.keys(DO_MT["DRP"][reSelectIDs[i]]), Object.values(DO_MT["DRP"][reSelectIDs[i]]), "MT");
                     }
 
                 } 
@@ -2031,6 +2046,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     }
 
                     var selectionsIDs = Object.keys(DO_5Y["DRP"]);
+                    var reSelectIDs = [];
                     // console.log(DO_5Y);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
@@ -2038,8 +2054,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.row(i).data(DO_5Y["OriginalData"][i].slice()).draw();
 
                         if(selectionsIDs.includes(i.toString())) {
-                            this.preserveSelection(i, Object.keys(DO_5Y["DRP"][i]), Object.values(DO_5Y["DRP"][i]), "5Y");
+                            reSelectIDs.push(i);
+                            // this.preserveSelection(i, Object.keys(DO_5Y["DRP"][i]), Object.values(DO_5Y["DRP"][i]), "5Y");
                         }
+                    }
+
+                    for(var i = 0; i < reSelectIDs.length; i++) {
+                        this.preserveSelection(reSelectIDs[i], Object.keys(DO_5Y["DRP"][reSelectIDs[i]]), Object.values(DO_5Y["DRP"][reSelectIDs[i]]), "5Y");
                     }
 
                 } 
@@ -3746,7 +3767,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 var fixRowsObj = {}, masterObj = {};
                 var is_col_updated = false;
 
-                function updateTotalOnRowUpdate(updateFrom, no_of_mes, updateFromRowID) {
+                function updateTotalOnRowUpdate_FY(updateFrom, no_of_mes, updateFromRowID) {
                     
                     /// ----------------------- For Subset Group Total Starts --------------------------- 
                     var parentID = undefined;
@@ -3819,6 +3840,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 
                                 if(isNaN(d[j]) && d[j].includes("%")) {
 
+                                    console.log("---------",tbl.cell(rowIDTotal, i).data())
                                     var value = tbl.cell(rowIDTotal, gbl_finalPerCols_FY[i][0]).data()
                                     var val_minus_act = tbl.cell(rowIDTotal, i - no_of_per_cols).data()
 
@@ -3918,6 +3940,10 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             }
                         }
                         
+                        if(numericCols.includes(k)) {
+                            subsetSum = parseFloat(subsetSum).toFixed(no_of_decimalPlaces_K);
+                        }
+
                         count = nFormat.format(subsetSum);
 
                         if(numericCols.includes(k) && !isNaN(subsetSum)) {
@@ -3928,7 +3954,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             count = "-"
                         }
 
-                        tbl.cell(parseInt(parentID), k).data(count)
+                        var node = tbl.cell(parseInt(parentID), k).data(count).node()
+
+                        if(count >= 0 || count >= "0") {
+                            node.style.color = "#2D7230";
+                        } else {
+                            node.style.color = "#A92626";
+                        }
                     }
                     ///// -------------------- For Non % Cols Ends ------------------------------
                     ///// -------------------- For % Cols Starts --------------------------------
@@ -4092,7 +4124,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
-                        updateTotalOnRowUpdate(updateFrom, no_of_mes, ROW_ID);
+                        updateTotalOnRowUpdate_FY(updateFrom, no_of_mes, ROW_ID);
 
                     }
 
@@ -5294,7 +5326,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 var hMap = {};
                 var is_col_updated = false;
 
-                function updateTotalOnRowUpdate(updateFrom, changeLength, updateFromRowID) {
+                function updateTotalOnRowUpdate_QT(updateFrom, changeLength, updateFromRowID) {
                     
                     ///// ----------------------- For Subset Group Total
                     var parentID = undefined;
@@ -5528,7 +5560,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             count = "-"
                         }
  
-                        tbl.cell(parseInt(parentID), k).data(count)
+                        var node = tbl.cell(parseInt(parentID), k).data(count).node()
+
+                        if(count >= 0 || count >= "0") {
+                            node.style.color = "#2D7230";
+                        } else {
+                            node.style.color = "#A92626";
+                        }
                     }
                     ///// -------------------- For Non % Cols Ends ------------------------------
                     ///// -------------------- For % Cols Starts --------------------------------
@@ -5654,7 +5692,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
-                        updateTotalOnRowUpdate(updateFrom, changeLength, ROW_ID);
+                        updateTotalOnRowUpdate_QT(updateFrom, changeLength, ROW_ID);
                     }
 
                 }
@@ -6824,7 +6862,7 @@ var start = performance.now();
                 var hMap = {};
                 var is_col_updated = false;
                 
-                function updateTotalOnRowUpdate(updateFrom, changeLength, updateFromRowID) {
+                function updateTotalOnRowUpdate_MT(updateFrom, changeLength, updateFromRowID) {
 
 
                     /// ----------------------- For Subset Group Total Starts --------------------------- 
@@ -7060,7 +7098,13 @@ var start = performance.now();
                         //         count = "-"
                         //     }
     
-                        //     tbl.cell(parseInt(parentID), i).data(count)
+                        //     var node = tbl.cell(parseInt(parentID), i).data(count).node()
+
+                            // if(count >= 0 || count >= "0") {
+                            //     node.style.color = "#2D7230";
+                            // } else {
+                            //     node.style.color = "#A92626";
+                            // }
                         // }
                         ///// -------------------- For Non % Cols Ends ------------------------------
                         ///// -------------------- For % Cols Starts --------------------------------
@@ -7212,7 +7256,7 @@ var start = performance.now();
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
-                        updateTotalOnRowUpdate(updateFrom, changeLength, ROW_ID);
+                        updateTotalOnRowUpdate_MT(updateFrom, changeLength, ROW_ID);
                     }
                 }
 
@@ -8465,7 +8509,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 var fixRowsObj = {}, masterObj = {};
                 var is_col_updated = false;
 
-                function updateTotalOnRowUpdate(updateFrom, no_of_mes, updateFromRowID) {
+                function updateTotalOnRowUpdate_5Y(updateFrom, no_of_mes, updateFromRowID) {
                     
                     /// ----------------------- For Subset Group Total Starts --------------------------- 
                     var parentID = undefined;
@@ -8702,7 +8746,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             count = "-"
                         }
 
-                        tbl.cell(parseInt(parentID), k).data(count)
+                        var node = tbl.cell(parseInt(parentID), k).data(count).node()
+                        
+                        if(count >= 0 || count >= "0") {
+                            node.style.color = "#2D7230";
+                        } else {
+                            node.style.color = "#A92626";
+                        }
                     }
                     ///// -------------------- For Non % Cols Ends ------------------------------
                     ///// -------------------- For % Cols Starts --------------------------------
@@ -8863,7 +8913,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
-                        updateTotalOnRowUpdate(updateFrom, no_of_mes, ROW_ID);
+                        updateTotalOnRowUpdate_5Y(updateFrom, no_of_mes, ROW_ID);
                     }
 
                     // console.log(DO_FY)
