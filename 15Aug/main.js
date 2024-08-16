@@ -1185,14 +1185,14 @@ var start = performance.now();
                                 var cell_data = row[numCols_FY[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                         }
                                     } else {
@@ -1220,14 +1220,14 @@ var start = performance.now();
                                 var cell_data = row[vsPyCols_FY[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                         }
                                     } else {
@@ -1255,7 +1255,7 @@ var start = performance.now();
                                 var cell_data = row[perCols_FY[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
@@ -1366,9 +1366,9 @@ var start = performance.now();
 
                                 var cell_data = row[numCols_QT[a]];
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
-                                    if(isNaN(cell_data) && cell_data.includes(",") && cell_data != "-") {
+                                    if(isNaN(cell_data) && cell_data.includes(",")) {
                                         cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                     } else {
                                         cell_data = cell_data / 1000;
@@ -1389,9 +1389,9 @@ var start = performance.now();
                                 var cell_data = row[vsPyCols_QT[a]];
                                 // var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
-                                    if(isNaN(cell_data) && cell_data.includes(",") && cell_data != "-") {
+                                    if(isNaN(cell_data) && cell_data.includes(",")) {
                                         // if(cell_data.includes("%")) {
                                         //     cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                         //     isPerCell = true;
@@ -1424,14 +1424,14 @@ var start = performance.now();
                                 var cell_data = row[perCols_QT[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]).toFixed(this.no_of_decimalPlaces_M);
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M);
                                         }
                                     } else {
@@ -1535,14 +1535,14 @@ var start = performance.now();
                                 var cell_data = row[numCols_MT[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                         }
                                     } else {
@@ -1570,14 +1570,14 @@ var start = performance.now();
                                 var cell_data = row[varCols_MT[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                         }
                                     } else {
@@ -1609,7 +1609,7 @@ var start = performance.now();
                                 var cell_data = row[perCols_MT[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
@@ -1725,14 +1725,14 @@ var start = performance.now();
                                 var cell_data = row[numCols_5Y[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
                                             isPerCell = true;
                                         } 
-                                        else if(cell_data.includes(",") && cell_data != "-") {
+                                        else if(cell_data.includes(",")) {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
                                         }
                                     } else {
@@ -1752,14 +1752,14 @@ var start = performance.now();
                             for(var a = 0; a < vsPyCols_5Y.length; a++) {
 
                                 var cell_data = row[vsPyCols_5Y[a]];
-                                var isPerCell = false;
+                                // var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
                                             cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
-                                            isPerCell = true;
+                                            // isPerCell = true;
                                         } 
                                         else if(cell_data.includes(",") && cell_data != "-") {
                                             cell_data = parseFloat(cell_data.replace(/,{1,}/g,"")) / 1000;
@@ -1783,7 +1783,7 @@ var start = performance.now();
                                 var cell_data = row[perCols_5Y[a]];
                                 var isPerCell = false;
 
-                                if(cell_data != undefined) {
+                                if(cell_data != undefined && cell_data != "-") {
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
@@ -5087,8 +5087,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 targets:numCols_render,
                                 render: function (data, type) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(!isNaN(parseFloat(data.replace(/,{1,}/g,"")))) {
-                                        return nFormat.format(parseFloat(data.replace(/,{1,}/g,"")).toFixed(0))
+                                    if(!isNaN(parseFloat(data.toString().replace(/,{1,}/g,"")))) {
+                                        return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
                                 }
