@@ -5550,6 +5550,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             }
                         }
                          
+                        subsetSum = (Math.round(parseFloat(subsetSum) * 10) / 10).toString();
+
                         count = nFormat.format(subsetSum);
  
                         if(fyCols.includes(k) && !isNaN(subsetSum)) {
