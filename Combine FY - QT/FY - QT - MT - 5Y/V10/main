@@ -580,7 +580,7 @@ var DRP_DO_MT = {}
                             Vfinal = Vfinal.replace(/,{1,}/g,"")
                         }
 
-                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(this.no_of_decimalPlaces_K).toString()+"%"; //// CAGR sum
+                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(this.no_of_decimalPlaces_M).toString()+"%"; //// CAGR sum
                         indices[i] =  CAGR_Indices[0];
                         CAGR_Indices = CAGR_Indices.slice(1, );
                     }
@@ -8647,7 +8647,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                         Vfinal = Vfinal.replace(/,{1,}/g,"")
                                     }
 
-                                    sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(0).toString()+"%"; //// CAGR sum
+                                    sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
                                     indices[i] =  CAGR_Indices[0];
                                     CAGR_Indices = CAGR_Indices.slice(1, );
                                     break;
@@ -8870,7 +8870,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                     var d = tbl.cell(parseInt(parentID), updateFrom + no_of_mes - 1).data();
                     if(isNaN(d)) {
-                        d = parseFloat(d.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(0);
+                        d = parseFloat(d.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(1);
                     }
                     // count = nFormat.format(d);
 
