@@ -1,3 +1,32 @@
+	mes	var	%																				
+																							
+		BASE											SCENARIO 1										
+country	brand	2024	2025	2026	2027	2025	2026	2027	2025	2026	2027	cagr	2024	2025	2026	2027	2025	2026	2027	2025	2026	2027	cagr
+																							
+																							
+																							
+																							
+			BASE					SCENARIO 1															
+MES	country	brand	2024	2025	2026	2027	cagr	2024	2025	2026	2027	cagr											
+																							
+																							
+																							
+			BASE				SCENARIO 1																
+VAR	country	brand	2025	2026	2027	cagr	2025	2026	2027	cagr													
+																							
+																							
+																							
+			BASE				SCENARIO 1																
+PER	country	brand	2025	2026	2027	cagr	2025	2026	2027	cagr													
+
+
+
+
+
+
+
+
+
 var getScriptPromisify = src => {
     return new Promise(resolve => {
         $.getScript(src, resolve)
