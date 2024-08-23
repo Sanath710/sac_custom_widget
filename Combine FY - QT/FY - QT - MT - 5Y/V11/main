@@ -498,29 +498,37 @@ var currentVersion_5Y_FY = 1;
                                     }
                                     else if(callFrom == "5Y") {
 
-                                        var no_of_per_cols = 5
-                                        var value = this._dataTableObj.cell(rowIDTotal, indices[i] - 10).data()
-                                        var val_minus_act = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).data()
+                                        var no_of_per_cols = 4
 
-                                        if(isNaN(value)) {
-                                            value = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                                        }
-                                        if(isNaN(val_minus_act)){
-                                            val_minus_act = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                                        }
+                                        if(this._currentVersion == 1 || this._currentVersion == "1") {
 
-                                        var act1 = value - val_minus_act
+                                            var value = this._dataTableObj.cell(rowIDTotal, indices[i] - 10).data()
+                                            var val_minus_act = this._dataTableObj.cell(rowIDTotal, indices[i] - 9).data()
+    
+                                            if(isNaN(value)) {
+                                                value = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                            }
+                                            if(isNaN(val_minus_act)){
+                                                val_minus_act = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 9).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                            }
+    
+                                            var act1 = (val_minus_act / value) - 1
+    
+                                            if(value == 0 && act1 == 0) {
+                                                sum = "-"
+                                            } else if(value == 0) {
+                                                sum = "-100%"
+                                            } else if (act1 == 0) {
+                                                sum = "100%";
+                                            } else {
+                                                sum = (val_minus_act / act1 * 100).toString()+" %"
+                                            }
 
-                                        if(value == 0 && act1 == 0) {
-                                            sum = "-"
-                                        } else if(value == 0) {
-                                            sum = "-100%"
-                                        } else if (act1 == 0) {
-                                            sum = "100%";
                                         } else {
-                                            sum = (val_minus_act / act1 * 100).toString()+" %"
+
                                         }
 
+                                       
                                         // ---------------------- Coloring the cell Starts --------------------------
                                         var node1 = this._dataTableObj.cell(rowIDTotal, indices[i] - 10).node()
                                         var node2 = this._dataTableObj.cell(rowIDTotal, indices[i] - no_of_per_cols).node()
@@ -1079,29 +1087,33 @@ var currentVersion_5Y_FY = 1;
                                     if(d != undefined && isNaN(d)) {
                                         if(d.includes("%")) {
                                             // sum = "- %";
-                                            var value = this._dataTableObj.cell(key, indices[i] - 10).data()
-                                            var val_minus_act = this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data()
-                                            // var act1 = value - val_minus_act
-                                            // sum = (val_minus_act / act1).toString()+" %"
 
-                                            if(isNaN(value)) {
-                                                value = parseFloat(this._dataTableObj.cell(key, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                                            }
-                                            if(isNaN(val_minus_act)){
-                                                val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                                            }
-
-                                            var act1 = value - val_minus_act
-
-                                            if(value == 0 && act1 == 0) {
-                                                sum = "-"
-                                            } else if(value == 0) {
-                                                sum = "-100%"
-                                            } else if (act1 == 0) {
-                                                sum = "100%";
+                                            if(this._currentVersion == 1 || this._currentVersion == "1") {
+                                                var value = this._dataTableObj.cell(key, indices[i] - 10).data()
+                                                var val_minus_act = this._dataTableObj.cell(key, indices[i] - 9).data()
+    
+                                                if(isNaN(value)) {
+                                                    value = parseFloat(this._dataTableObj.cell(key, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                                }
+                                                if(isNaN(val_minus_act)){
+                                                    val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - 9).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                                }
+    
+                                                var act1 = value - val_minus_act
+    
+                                                if(value == 0 && act1 == 0) {
+                                                    sum = "-"
+                                                } else if(value == 0) {
+                                                    sum = "-100%"
+                                                } else if (act1 == 0) {
+                                                    sum = "100%";
+                                                } else {
+                                                    sum = (val_minus_act / act1 * 100).toString()+" %"
+                                                }
                                             } else {
-                                                sum = (val_minus_act / act1 * 100).toString()+" %"
+
                                             }
+                                         
 
                                         } else {
                                             if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
