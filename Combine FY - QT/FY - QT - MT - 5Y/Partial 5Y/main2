@@ -9640,8 +9640,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                 showTotalonRowUpdateFlag = true;
                 document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                
                 this.showTotal("5Y");
-                this.applyScaling_5Y("K")
+                this.applyScaling_5Y("K");
+                
+                if(this._currentScaling == "M") {
+                    DO_MT["Current_Scale"] = "M";
+                    this.applyScaling_MT("M")
+                }
                 // this.createDataObjects("5Y", false);
 
                 // Styling Block Ends here
