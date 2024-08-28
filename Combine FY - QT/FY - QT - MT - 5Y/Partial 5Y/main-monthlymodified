@@ -619,7 +619,16 @@ var currentVersion_5Y_FY = 1;
                             Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
                         }
 
-                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(this.no_of_decimalPlaces_M).toString()+"%"; //// CAGR sum
+                        if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                            sum = "-"
+                        } else if (Vbegin == 0 || Vbegin == "0") {
+                            sum = "-100%"
+                        } else if (Vfinal == 0 || Vfinal == "0") {
+                            sum = "100%"
+                        } else {
+                            sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(this.no_of_decimalPlaces_M).toString()+"%"; //// CAGR sum
+                        }
+
                         indices[i] =  CAGR_Indices[0];
                         CAGR_Indices = CAGR_Indices.slice(1, );
                     }
@@ -704,28 +713,28 @@ var currentVersion_5Y_FY = 1;
                 
                 ///// ------------------------ Hide Extra Cols STARTS -------------------------
                 if(callFrom == "MT") {
-                    // var varCols = this._dataTableObj.columns(".varCol")[0];
-                    // var perCols = this._dataTableObj.columns(".perColCSS")[0];
-                    // var hideColsOfIndex = varCols.concat(perCols);
-                    // this._dataTableObj.columns(hideColsOfIndex).visible(false);
+                    var varCols = this._dataTableObj.columns(".varCol")[0];
+                    var perCols = this._dataTableObj.columns(".perColCSS")[0];
+                    var hideColsOfIndex = varCols.concat(perCols);
+                    this._dataTableObj.columns(hideColsOfIndex).visible(false);
                 } 
                 else if(callFrom == "QT") {
                     var perCols = this._dataTableObj.columns(".perCols")[0];
-                    for(var inx = 0; inx < perCols.length; inx++) {
-                        this._dataTableObj.column(perCols[inx]).visible(false);
-                    }
+                    // for(var inx = 0; inx < perCols.length; inx++) {
+                        this._dataTableObj.columns(perCols).visible(false);
+                    // }
                 }
                 else if(callFrom == "FY") {
                     var perCols = this._dataTableObj.columns(".perCols")[0];
-                    for(var inx = 0; inx < perCols.length; inx++) {
-                        this._dataTableObj.column(perCols[inx]).visible(false);
-                    }
+                    // for(var inx = 0; inx < perCols.length; inx++) {
+                        this._dataTableObj.columns(perCols).visible(false);
+                    // }
                 }
                 else if(callFrom == "5Y") {
-                    // var varCols = this._dataTableObj.columns(".varCols")[0];
-                    // var perCols = this._dataTableObj.columns(".perCols")[0];
-                    // var hideColsOfIndex = varCols.concat(perCols);
-                    // this._dataTableObj.columns(hideColsOfIndex).visible(false);
+                    var varCols = this._dataTableObj.columns(".varCols")[0];
+                    var perCols = this._dataTableObj.columns(".perCols")[0];
+                    var hideColsOfIndex = varCols.concat(perCols);
+                    this._dataTableObj.columns(hideColsOfIndex).visible(false);
                 }
 
                 var end = performance.now();
@@ -1619,7 +1628,7 @@ var start = performance.now();
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
-                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            cell_data = parseFloat(cell_data.split("%")[0].toString().replace(/,{1,}/g,"")) / 1000;
                                             isPerCell = true;
                                         } 
                                         else if(cell_data.includes(",")) {
@@ -1654,7 +1663,7 @@ var start = performance.now();
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
-                                            cell_data = parseFloat(cell_data.split("%")[0]) / 1000;
+                                            cell_data = parseFloat(cell_data.split("%")[0].toString().replace(/,{1,}/g,"")) / 1000;
                                             isPerCell = true;
                                         } 
                                         else if(cell_data.includes(",")) {
@@ -1693,7 +1702,7 @@ var start = performance.now();
 
                                     if(isNaN(cell_data)) {
                                         if(cell_data.includes("%")) {
-                                            cell_data = parseFloat(cell_data.split("%")[0]).toFixed(this.no_of_decimalPlaces_M);
+                                            cell_data = parseFloat(cell_data.split("%")[0].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M);
                                             isPerCell = true;
                                         } 
                                         else if(cell_data.includes(",") && cell_data != "-") {
@@ -1760,7 +1769,7 @@ var start = performance.now();
                                     }
                                 }
                                 else if(percols.includes(rr)) {
-                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(0))) {
+                                    if(!isNaN(parseFloat(removedDecimalRow[rr].toString().split("%")[0].toString().replace(/,{1,}/g,"")).toFixed(0))) {
                                         removedDecimalRow[rr] = nFormat.format(parseFloat(removedDecimalRow[rr].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K)).toString()+"%";
                                     }
                                 }
@@ -8797,7 +8806,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                         Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
                                     }
 
-                                    sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                                    if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                                        sum = "-"
+                                    } else if (Vbegin == 0 || Vbegin == "0") {
+                                        sum = "-100%"
+                                    } else if (Vfinal == 0 || Vfinal == "0") {
+                                        sum = "100%"
+                                    } else {
+                                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                                    }
+
                                     indices[i] =  CAGR_Indices[0];
                                     CAGR_Indices = CAGR_Indices.slice(1, );
                                     break;
@@ -9165,7 +9183,19 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
                     }
 
-                    var d = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                    var d = undefined;
+
+                    if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                        d = "-"
+                    } else if (Vbegin == 0 || Vbegin == "0") {
+                        d = "-100%"
+                    } else if (Vfinal == 0 || Vfinal == "0") {
+                        d = "100%"
+                    } else {
+                        d = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                    }
+
+                    // var d = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
 
                     // var d = tbl.cell(parseInt(parentID), updateFrom + no_of_mes - 1).data();
                     // if(isNaN(d)) {
