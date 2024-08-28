@@ -7573,7 +7573,7 @@ var start = performance.now();
                                     } else if (!finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().includes("%")) {
                                         newArr.push(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K))
                                     } else {
-                                        newArr.push(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_K).toString()+"%")
+                                        newArr.push(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().split("%")[0].replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K).toString()+"%")
                                     }
                                 }
                                 DRP_DO_MT[k][key1] = newArr.slice();
