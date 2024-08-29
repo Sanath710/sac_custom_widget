@@ -166,8 +166,8 @@ var currentVersion_5Y_FY = 1;
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._dotsLoader.style.visibility = "visible";
@@ -619,14 +619,23 @@ var currentVersion_5Y_FY = 1;
                             Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
                         }
 
-                        if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                        if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
                             sum = "-"
-                        } else if (Vbegin == 0 || Vbegin == "0") {
-                            sum = "-100%"
-                        } else if (Vfinal == 0 || Vfinal == "0") {
-                            sum = "100%"
-                        } else {
-                            sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(this.no_of_decimalPlaces_M).toString()+"%"; //// CAGR sum
+                        } 
+                        else if (Vbegin == 0 || Vbegin == "0" || Vbegin == "-") {
+                            sum = "-100.0 %"
+                        } 
+                        else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
+                            sum = "100.0 %"
+                        } 
+                        else if (Vbegin < 0 || Vbegin < "0") {
+                            sum = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
+                        }
+                        else if (Vfinal < 0 || Vfinal < "0") {
+                            sum = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
+                        }
+                        else {
+                            sum = parseFloat((Math.pow((Vfinal/Vbegin), t) - 1) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
                         }
 
                         indices[i] =  CAGR_Indices[0];
@@ -1110,6 +1119,8 @@ var currentVersion_5Y_FY = 1;
                     }
 
                     groupRowMapping_5Y = lcl_groupRowMapping;
+
+                    var cagrColIndices = this._dataTableObj.columns(".cagrCol")[0];
                     // console.log("Row ID : Subset Group Mapping", lcl_groupRowMapping)
 
                     for(var [key, val] of Object.entries(lcl_groupRowMapping)) {
@@ -1120,24 +1131,56 @@ var currentVersion_5Y_FY = 1;
                                     var d = this._dataTableObj.cell(val[k], indices[i]).data();
                                     // console.log("----",d)
                                     if(d != undefined && isNaN(d)) {
-                                        if(d.includes("%")) {
-                                            // sum = "- %";
+                                        if(cagrColIndices.includes(indices[i])) {
 
-                                            // if(this._currentVersion == 1 || this._currentVersion == "1") {
+                                            var Vbegin= 0, Vfinal = 0, t = (1/4);  
+
+                                            Vbegin = this._dataTableObj.cell(key, indices[i] - 13).data()
+                                            Vfinal = this._dataTableObj.cell(key, indices[i] - 9).data()
+                                            
+                                            if(isNaN(Vbegin) && Vbegin.includes(",")) {
+                                                Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                            }
+                    
+                                            if(isNaN(Vfinal) && Vfinal.includes(",")) {
+                                                Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                            }
+                    
+                                            if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
+                                                sum = "-"
+                                            } 
+                                            else if (Vbegin == 0 || Vbegin == "0" || Vbegin == "-") {
+                                                sum = "-100.0 %"
+                                            } 
+                                            else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
+                                                sum = "100.0 %"
+                                            } 
+                                            else if (Vbegin < 0 || Vbegin < "0") {
+                                                sum = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
+                                            }
+                                            else if (Vfinal < 0 || Vfinal < "0") {
+                                                sum = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
+                                            }
+                                            else {
+                                                sum = parseFloat((Math.pow((Vfinal/Vbegin), t) - 1) * 100).toFixed(this.no_of_decimalPlaces_M).toString()+" %"; //// CAGR sum
+                                            }
+                                        }
+                                        else {
+                                            if(d.includes("%")) {
                                                 var value = this._dataTableObj.cell(key, indices[i] - 8).data()
                                                 var val_minus_act = this._dataTableObj.cell(key, indices[i] - 4).data() // variance
-    
+        
                                                 if(isNaN(value)) {
                                                     value = parseFloat(this._dataTableObj.cell(key, indices[i] - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                                                 }
                                                 if(isNaN(val_minus_act)){
                                                     val_minus_act = parseFloat(this._dataTableObj.cell(key, indices[i] - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                                                 }
-    
+        
                                                 var b = value - val_minus_act;
-
-                                                var act1 = (value / b) - 1;
     
+                                                var act1 = (value / b) - 1;
+        
                                                 if(value == 0 && act1 == 0) {
                                                     sum = "-"
                                                 } else if(value == 0) {
@@ -1147,43 +1190,10 @@ var currentVersion_5Y_FY = 1;
                                                 } else {
                                                     sum = (act1 * 100).toString()+"%"
                                                 }
-                                            // } 
-                                            // else {
-
-                                            //     var value = this._dataTableObj.cell(key, indices[i] - 8).data();
-                                            //     var val_minus_act_node = this._dataTableObj.cell(key, indices[i] - 4).data()
-                        
-                                            //     var value_node = this._dataTableObj.cell(key, indices[i] - 8).node();
-                                            //     var val_minus_act_node = this._dataTableObj.cell(key, indices[i] - 4).node()
-                        
-                        
-                                            //     if(isNaN(value)) {
-                                            //         value = parseFloat(this._dataTableObj.cell(key, indices[i] - 8).data().replace(/,{1,}/g,""))
-                                            //     }
-                                            //     if(isNaN(val_minus_act_node)) {
-                                            //         val_minus_act_node = parseFloat(this._dataTableObj.cell(key, indices[i] - 4).data().replace(/,{1,}/g,""))
-                                            //     }
-
-                                            //     var tempIntermediate = value - val_minus_act_node;
-                        
-                                            //     var act1 = (value / tempIntermediate) - 1;
-                        
-                                            //     if(value == 0 && act1 == 0) {
-                                            //         sum = "-"
-                                            //     } else if(value == 0) {
-                                            //         sum = "-100%"
-                                            //     } else if (act1 == 0) {
-                                            //         sum = "100%";
-                                            //     } else {
-                                            //         sum = (Math.round(parseFloat(act1 * 100) * 10) / 10).toString()+"%";
-                                            //     }
-
-                                            // }
-                                         
-
-                                        } else {
-                                            if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
-                                                sum += parseFloat(d.replace(/,{1,}/g,""))
+                                            } else {
+                                                if(!isNaN(parseFloat(d.replace(/,{1,}/g,""))))  {
+                                                    sum += parseFloat(d.replace(/,{1,}/g,""))
+                                                }
                                             }
                                         }
                                     } else {
@@ -2381,17 +2391,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         }
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
                         }
                     } 
                     else if(scene == "Var") {
@@ -2437,17 +2447,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         }
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                         }
 
                     }
@@ -2485,17 +2495,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             }
                         }
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                         }
                     }
                 } 
@@ -2687,15 +2697,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     if(hideCols[0] == "Num") {
                         this._stateShown = 'Num';
                         this.showPercentageWidVariance("Num");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                         }
                     } 
                     else if(hideCols[0] == "Var") {
                         this._stateShown = 'Var';
                         this.showPercentageWidVariance("Var");
-                        if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                        if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                         }
                     }
                     else if(hideCols[0] == "Per") {
@@ -2998,7 +3008,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                
                 // console.log(this._dataTableObj.column(2).data())
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -3055,37 +3065,37 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                
                 topHeader += `</tr>`;
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 
                 if(this._callFrom == "5Y") {
                     ///////
                     if(this._stateShown != "Per" && this._stateShown != "Var") {
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
                         }
                      } else {
                          ////// 
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                         if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                             document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                          }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                         if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                             document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                          }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                         if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                             document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                          }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                         if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                             document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                          }
                      }
                 }
@@ -3125,7 +3135,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         
                     for(var i = 0; i < valArr.length; i++) {
                         var selectorID = ".row_level_select_"+selector_ids[i];
-                        var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                        var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
                         if(selElement && selElement.selectedIndex != undefined) {
                             selElement.selectedIndex = valArr[i];
                             // console.log(selector_ids)
@@ -3256,6 +3266,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 changeCellColr.push(j);
                             }
                         }
+                    } else if(callFrom == "5Y") {
+
+                        vsPyCols = this._dataTableObj.columns(".varCols")[0];
+                        perCols = this._dataTableObj.columns(".perCols")[0];
+
+                        for(var j = num; j < num + this._measureOrder.length; j++) {
+                            if(vsPyCols.includes(j) || perCols.includes(j)) {
+                                changeCellColr.push(j);
+                            }
+                        }
                     }
                    
                 }
@@ -3273,7 +3293,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         
                     for(var i = 0; i < valArr.length; i++) {
                         var selectorID = ".row_level_select_"+selector_ids[i];
-                        var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                        var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
                         if(selElement && selElement.selectedIndex != undefined) {
                             selElement.selectedIndex = valArr[i];
                             // console.log(selector_ids)
@@ -3299,15 +3319,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     
                 }
 
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").selectedIndex = 2;
-                // console.log(document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").parentNode.parentNode.setAttribute("class","selected"));
-                // console.log(document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").parentNode.parentNode);
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").dispatchEvent(new Event("change"));
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").selectedIndex = 2;
+                // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").parentNode.parentNode.setAttribute("class","selected"));
+                // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").parentNode.parentNode);
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").dispatchEvent(new Event("change"));
             }
 
             applyStyling_FY() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -3891,7 +3911,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 }
                
                 // @--- uncomment below line
-                console.log(this._widgetID+"cw-combine-table")
+                console.log(this._widgetID+"v1-custom-table")
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -4630,11 +4650,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 if (this._rowCSS) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -4642,11 +4662,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 if (this._colCSS) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -4658,7 +4678,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 this._root.style.display = "block";
 
                 showTotalonRowUpdateFlag = true;
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 this.showTotal("FY");
                 this.applyScaling_FY("K")
                 if(this._currentScaling == "M") {
@@ -4688,8 +4708,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._table.style.visibility = "hidden";
@@ -4799,7 +4819,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
             applyStyling_QT() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -5445,9 +5465,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 topHeader += "</tr>";
 
                 // @--- uncomment below line
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-                if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 }
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -6203,11 +6223,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 if (this._rowCSS.length > 1) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -6215,22 +6235,22 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 if (this._colCSS.length > 1) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
                 }
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 // this._dotsLoader.style.visibility = "hidden";
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
 
-                // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
+                // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
                 // Styling Block Ends here
 
                 // isSelectionUpdatedByUser = true;
@@ -6248,7 +6268,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
             // ==========================================================================================================================
 
             applyStyling_MT() {
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -6467,7 +6487,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 `;
             }
 
-            setResultSet_MT(rs, col_to_row = -1, colspan_to_top_headers, lcl_no_of_decimalPlaces) {
+            setResultSet_MT(rs, col_to_row = -1, colspan_to_top_headers, currentScale) {
                 
                 var start = performance.now();
 
@@ -6481,8 +6501,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 this._resultSet = [];
@@ -6517,7 +6537,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 console.log("Dimensions", this._dimensions)
                 console.log("Exclude Headers",this._excludeHeaders)
 
-                no_of_decimalPlaces = lcl_no_of_decimalPlaces;
+                // no_of_decimalPlaces = lcl_no_of_decimalPlaces;
+                this._currentScaling = currentScale;
+
+                no_of_decimalPlaces_K = this.no_of_decimalPlaces_K;
+                no_of_decimalPlaces_M = this.no_of_decimalPlaces_M;
+
 
                 for(var i = 0; i < rs.length;) {
                     var tempArr = [], dims = new Set();
@@ -6988,7 +7013,7 @@ var start = performance.now();
                
 
                 // @--- uncomment below line
-                // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
                 // console.log(topHeader)
@@ -7394,12 +7419,15 @@ var start = performance.now();
 
                     var sliceLen = len + parseInt(state.id) + 1
                     
-                    if(DO_MT["Current_Scale"] == "K" || data[selOptID] == undefined) {
-
+                    if(DO_MT["Current_Scale"] == "K" && data[selOptID] == undefined) {
                         var changedData = DRP_DO_MT[identifer][state.getElementsByTagName('option')[state.options.selectedIndex].value];
                         tbl.row('.selected').data(row_updated_arr.slice(0, sliceLen).concat(changedData).concat(row_updated_arr.slice(sliceLen + changedData.length, )))
 
-                    } else {
+                    } else if(DO_MT["Current_Scale"] == "M" && data[selOptID] == undefined) {
+                        var changedData = DRP_DO_MT["ScaledData"][identifer][state.getElementsByTagName('option')[state.options.selectedIndex].value];
+                        tbl.row('.selected').data(row_updated_arr.slice(0, sliceLen).concat(changedData).concat(row_updated_arr.slice(sliceLen + changedData.length, )))
+                    }
+                    else {
 
                         var dataCopy  = Array.from(data[selOptID]);
 
@@ -7564,10 +7592,19 @@ var start = performance.now();
                             if(DRP_DO_MT[k] == undefined) {
                                 DRP_DO_MT[k] = {};
                             }
+
+                            if(DRP_DO_MT["ScaledData"] == undefined) {
+                                DRP_DO_MT["ScaledData"] = {};
+                            }
+
+                            if(DRP_DO_MT["ScaledData"][k] == undefined) {
+                                DRP_DO_MT["ScaledData"][k] = {};
+                            }
                             
                             if(key1 != undefined) {
-                                var newArr = [];
+                                var newArr = [], millionArr = [];
                                 for(var fr_val = 0; fr_val < finalRow.slice(sliceFinalStart, sliceFinalEnd).length; fr_val++) {
+                                    //// k
                                     if(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val] == "-") {
                                         newArr.push("-")
                                     } else if (!finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().includes("%")) {
@@ -7575,8 +7612,19 @@ var start = performance.now();
                                     } else {
                                         newArr.push(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().split("%")[0].replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_K).toString()+"%")
                                     }
+
+                                    //// million
+                                    if(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val] == "-") {
+                                        millionArr.push("-")
+                                    } else if (!finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().includes("%")) {
+                                        millionArr.push(parseFloat(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().replace(/,{1,}/g,"")) / 1000).toFixed(this.no_of_decimalPlaces_M))
+                                    } else {
+                                        millionArr.push(parseFloat(finalRow.slice(sliceFinalStart, sliceFinalEnd)[fr_val].toString().split("%")[0].replace(/,{1,}/g,"")).toFixed(this.no_of_decimalPlaces_M).toString()+"%")
+                                    }
                                 }
+
                                 DRP_DO_MT[k][key1] = newArr.slice();
+                                DRP_DO_MT["ScaledData"][k][key1] = millionArr.slice();
                             }
                             //////////////////////////////////////////
 
@@ -7881,11 +7929,11 @@ var start = performance.now();
                 if (this._rowCSS.length > 1) {
                     // console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -7893,17 +7941,17 @@ var start = performance.now();
                 if (this._colCSS.length > 1) {
                     // console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
                 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
                 }
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 
                 // Styling Block Ends here
                 // this._dotsLoader.style.visibility = "hidden";
@@ -7945,8 +7993,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._dotsLoader.style.visibility = "visible";
@@ -8072,7 +8120,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
             applyStyling_5Y() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -8658,7 +8706,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 }
                
                 // @--- uncomment below line
-                console.log(this._widgetID+"cw-combine-table")
+                console.log(this._widgetID+"v1-custom-table")
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -8806,14 +8854,23 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                         Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
                                     }
 
-                                    if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                                    if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
                                         sum = "-"
-                                    } else if (Vbegin == 0 || Vbegin == "0") {
-                                        sum = "-100%"
-                                    } else if (Vfinal == 0 || Vfinal == "0") {
-                                        sum = "100%"
-                                    } else {
-                                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                                    } 
+                                    else if (Vbegin == 0 || Vbegin == "0" || Vbegin == "-") {
+                                        sum = "-100.0 %"
+                                    } 
+                                    else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
+                                        sum = "100.0 %"
+                                    } 
+                                    else if (Vbegin < 0 || Vbegin < "0") {
+                                        sum = parseFloat(-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)).toFixed(1).toString()+" %"; //// CAGR sum
+                                    }
+                                    else if (Vfinal < 0 || Vfinal < "0") {
+                                        sum = parseFloat(-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)).toFixed(1).toString()+" %"; //// CAGR sum
+                                    }
+                                    else {
+                                        sum = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+" %"; //// CAGR sum
                                     }
 
                                     indices[i] =  CAGR_Indices[0];
@@ -9172,8 +9229,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                     var Vbegin= 0, Vfinal = 0, t = (1/4);  
 
-                    Vbegin = tbl.cell(rowIDTotal, updateFrom + no_of_mes - 14).data()
-                    Vfinal = tbl.cell(rowIDTotal, updateFrom + no_of_mes - 10).data()
+                    Vbegin = tbl.cell(parentID, updateFrom + no_of_mes - 14).data()
+                    Vfinal = tbl.cell(parentID, updateFrom + no_of_mes - 10).data()
                     
                     if(isNaN(Vbegin) && Vbegin.includes(",")) {
                         Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
@@ -9185,23 +9242,22 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                     var d = undefined;
 
-                    if((Vbegin == 0 || Vbegin == "0")|| (Vfinal == 0 || Vfinal == "0")) {
+                    if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
                         d = "-"
-                    } else if (Vbegin == 0 || Vbegin == "0") {
-                        d = "-100%"
-                    } else if (Vfinal == 0 || Vfinal == "0") {
-                        d = "100%"
-                    } else {
-                        d = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
+                    } else if (Vbegin == 0 || Vbegin == "0" || Vbegin == "-") {
+                        d = "-100.0 %"
+                    } else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
+                        d = "100.0 %"
+                    } 
+                    else if (Vbegin < 0 || Vbegin < "0") {
+                        d = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
                     }
-
-                    // var d = parseFloat(Math.pow((Vfinal/Vbegin), t) - 1).toFixed(1).toString()+"%"; //// CAGR sum
-
-                    // var d = tbl.cell(parseInt(parentID), updateFrom + no_of_mes - 1).data();
-                    // if(isNaN(d)) {
-                    //     d = parseFloat(d.replace(/,{1,}/g,"").replace(/%{1,}/g,"")).toFixed(1);
-                    // }
-                    // count = nFormat.format(d);
+                    else if (Vfinal < 0 || Vfinal < "0") {
+                        d = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                    }
+                    else {
+                        d = parseFloat((Math.pow((Vfinal/Vbegin), t) - 1) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                    }
 
                     var node = tbl.cell(parseInt(parentID), updateFrom + no_of_mes - 1).data(d).node()
 
@@ -9660,11 +9716,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 if (this._rowCSS) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -9672,11 +9728,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 if (this._colCSS) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -9688,14 +9744,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 this._root.style.display = "block";
 
                 showTotalonRowUpdateFlag = true;
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 this.showTotal("5Y");
                 this.applyScaling_5Y("K");
                 
                 if(this._currentScaling == "M") {
-                    DO_MT["Current_Scale"] = "M";
-                    this.applyScaling_MT("M")
+                    DO_5Y["Current_Scale"] = "M";
+                    this.applyScaling_5Y("M")
                 }
                 // this.createDataObjects("5Y", false);
 
@@ -9716,8 +9772,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._dotsLoader.style.visibility = "visible";
@@ -9819,7 +9875,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
             applyStyling_5Y_OLD() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -10380,7 +10436,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     }
                 }
                 tbl.row.add(showTotalRow).draw(false)
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > tbody > tr:nth-child(1) > td").style.display = "none";
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > tbody > tr:nth-child(1) > td").style.display = "none";
                 /////  ------------------------------------------------------------------
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
@@ -10424,10 +10480,10 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 }
                
                 // @--- uncomment below line
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-                console.log(this._widgetID+"cw-combine-table")
-                // if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
-                //     // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                console.log(this._widgetID+"v1-custom-table")
+                // if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                //     // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 // }
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
@@ -10441,7 +10497,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         .rows()
                         .nodes()
                         .each(row => row.classList.remove('selected'))
-                    // var rowList = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelectorAll("#example > tbody tr").remove('selected');
+                    // var rowList = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelectorAll("#example > tbody tr").remove('selected');
                     // console.log(rowList)
 
                     // console.log(classList, classList.length, "MAIN_____________")
@@ -10907,7 +10963,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         // console.log(">>>>>>><<<<<<<<<", caughtDropDownsAt);
                         var drpIndicesAt = Array.from(caughtDropDownsAt);
                         this.setSelectorsSelectedValue(dropdownIDs, drpIndicesAt)
-                // console.log("SELECT ELEMENT : ", document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30"))
+                // console.log("SELECT ELEMENT : ", document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30"))
                         fixRows = [];
                         this._nonNumericColumnIndices_UnitConversion.add(k+this._dimensions.length - 1)
                         // console.log(fixRows)
@@ -10929,11 +10985,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 if (this._rowCSS) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -10941,11 +10997,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 if (this._colCSS) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -10956,9 +11012,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
 
-                // document.querySelector("#__widget5 > cw-combine-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)")
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)").click();
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector("#__widget5 > v1-custom-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)")
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead > tr > th:nth-child(2)").click();
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 showTotalonRowUpdateFlag = true;
                 this.showTotal("5Y");
 
@@ -10966,5 +11022,5 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
             }
          
         }
-        customElements.define('cw-combine-table', CustomTable)
+        customElements.define('v1-custom-table', CustomTable)
     })()
