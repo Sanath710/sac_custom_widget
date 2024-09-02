@@ -512,51 +512,19 @@ var currentVersion_5Y_FY = 1;
                                                 val_minus_act = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                                             }
     
-                                            var b = value - val_minus_act;
+                                            var b = value - parseFloat(val_minus_act).toFixed(0);
 
                                             var act1 = (value / b) - 1
     
-                                            if(value == 0 && act1 == 0) {
+                                            if(value == 0 && b == 0) {
                                                 sum = "-"
                                             } else if(value == 0) {
                                                 sum = "-100%"
-                                            } else if (act1 == 0) {
+                                            } else if (b == 0) {
                                                 sum = "100%";
                                             } else {
                                                 sum = (act1 * 100).toString()+"%"
                                             }
-
-                                        // } else {
-
-                                        //     var value = this._dataTableObj.cell(rowIDTotal, indices[i] - 8).data();
-                                        //     var val_minus_act_node = this._dataTableObj.cell(rowIDTotal, indices[i] - 4).data()
-                    
-                                        //     var value_node = this._dataTableObj.cell(rowIDTotal, indices[i] - 8).node();
-                                        //     var val_minus_act_node = this._dataTableObj.cell(rowIDTotal, indices[i] - 4).node()
-                    
-                    
-                                        //     if(isNaN(value)) {
-                                        //         value = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 8).data().replace(/,{1,}/g,""))
-                                        //     }
-                                        //     if(isNaN(val_minus_act_node)) {
-                                        //         val_minus_act_node = parseFloat(this._dataTableObj.cell(rowIDTotal, indices[i] - 4).data().replace(/,{1,}/g,""))
-                                        //     }
-            
-                                        //     var tempIntermediate = value - val_minus_act_node;
-                    
-                                        //     var act1 = (value / tempIntermediate) - 1;
-                    
-                                        //     if(value == 0 && act1 == 0) {
-                                        //         sum = "-"
-                                        //     } else if(value == 0) {
-                                        //         sum = "-100%"
-                                        //     } else if (act1 == 0) {
-                                        //         sum = "100%";
-                                        //     } else {
-                                        //         sum = (Math.round(parseFloat(act1 * 100) * 10) / 10).toString()+"%";
-                                        //     }
-
-                                        // }
 
                                        
                                         // ---------------------- Coloring the cell Starts --------------------------
@@ -695,8 +663,6 @@ var currentVersion_5Y_FY = 1;
                         }
                     }
                     ////// ------------------ Number Formatting Ends ----------------------------
-
-                   
 
                     var node = this._dataTableObj.cell(rowIDTotal, indices[i].toString()).data(count).node()
 
@@ -1124,6 +1090,7 @@ var currentVersion_5Y_FY = 1;
                     // console.log("Row ID : Subset Group Mapping", lcl_groupRowMapping)
 
                     for(var [key, val] of Object.entries(lcl_groupRowMapping)) {
+                        var cagrFlagST = false;
                         for(var i = 0; i < indices.length; i++) {
                             var sum = 0;
                             if(indices[i] != -1) {
@@ -1132,6 +1099,8 @@ var currentVersion_5Y_FY = 1;
                                     // console.log("----",d)
                                     if(d != undefined && isNaN(d)) {
                                         if(cagrColIndices.includes(indices[i])) {
+
+                                            cagrFlagST = true;
 
                                             var Vbegin= 0, Vfinal = 0, t = (1/4);  
 
@@ -1236,6 +1205,11 @@ var currentVersion_5Y_FY = 1;
                                     count = "100%";
                                 } 
                             }
+
+                            if(cagrFlagST && sum == "NaN%") {
+                                count = "-";
+                            }
+
                             ////// ------------------ Number Formatting Ends ----------------------------
 
                             var node = this._dataTableObj.cell(key, indices[i]).data(count).node();
@@ -1876,7 +1850,7 @@ var start = performance.now();
 
                             ///// ===============================================
 
-                            ///// ------------ For per Cols Ends ----------------
+                            ///// ------------ For per Cols Starts ----------------
                             for(var a = 0; a < perCols_5Y.length; a++) {
 
                                 var cell_data = row[perCols_5Y[a]];
@@ -1896,17 +1870,17 @@ var start = performance.now();
                                         cell_data = cell_data;
                                     }
 
-                                    if(isPerCell) {
-                                        cell_data = nFormat.format(cell_data).toString() + "%";
-                                    } else {
+                                    // if(isPerCell) {
+                                    //     cell_data = nFormat.format(cell_data).toString() + "%";
+                                    // } else {
                                         cell_data = nFormat.format(parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M));
-                                    }
+                                    // }
 
                                     if(cell_data == "NaN%") {
-                                        cell_data = "- %"
+                                        cell_data = "-"
                                     }
 
-                                    row[perCols_5Y[a]] = parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M);
+                                    row[perCols_5Y[a]] = parseFloat(cell_data).toFixed(this.no_of_decimalPlaces_M).toString()+"%";
                                 
                                 }
 
@@ -8257,7 +8231,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     text-align:right!important;
                 }
 
-                #example .numericColsCSS {
+                #example .numericColsCSS, #example .cagrCol {
                     color:#212121!important;
                 }
     
@@ -8911,74 +8885,20 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                     val_minus_act = parseFloat(tbl.cell(rowIDTotal, indices[i] - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                                 }
     
-                                var b = value - val_minus_act;
+                                var b = value - parseFloat(val_minus_act).toFixed(0);
 
                                 var act1 = (value / b) - 1;
     
-                                if(value == 0 && act1 == 0) {
+                                if(value == 0 && b == 0) {
                                     sum = "-"
                                 } else if(value == 0) {
                                     sum = -100
-                                } else if (act1 == 0) {
+                                } else if (b == 0) {
                                     sum = 100;
                                 } else {
                                     sum = (act1 * 100)
                                 }
 
-                            // }
-                            // else {
-
-                            //     var value = tbl.cell(parentID, indices[i] - 8).data();
-                            //     var val_minus_act_node = tbl.cell(parentID, indices[i] - 4).data()
-        
-                            //     var value_node = tbl.cell(parentID, indices[i] - 8).node();
-                            //     var val_minus_act_node = tbl.cell(parentID, indices[i] - 4).node()
-        
-        
-                            //     if(isNaN(value)) {
-                            //         value = parseFloat(tbl.cell(parentID, indices[i] - 8).data().replace(/,{1,}/g,""))
-                            //     }
-                            //     if(isNaN(val_minus_act_node)) {
-                            //         val_minus_act_node = parseFloat(tbl.cell(parentID, indices[i] - 4).data().replace(/,{1,}/g,""))
-                            //     }
-
-                            //     var tempIntermediate = value - val_minus_act_node;
-        
-                            //     var act1 = (value / tempIntermediate) - 1;
-        
-                            //     if(value == 0 && act1 == 0) {
-                            //         sum = "-"
-                            //     } else if(value == 0) {
-                            //         sum = "-100%"
-                            //     } else if (act1 == 0) {
-                            //         sum = "100%";
-                            //     } else {
-                            //         sum = (Math.round(parseFloat(act1 * 100) * 10) / 10).toString() + "%";
-                            //     }
-    
-                            // }
-
-                            // var value = tbl.cell(rowIDTotal, indices[i] - 10).data()
-                            // var val_minus_act = tbl.cell(rowIDTotal, indices[i] - 5).data()
-
-                            // if(isNaN(value)) {
-                            //     value = parseFloat(tbl.cell(rowIDTotal, indices[i] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                            // }
-                            // if(isNaN(val_minus_act)){
-                            //     val_minus_act = parseFloat(tbl.cell(rowIDTotal, indices[i] - 5).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
-                            // }
-
-                            // var act1 = value - val_minus_act
-
-                            // if(value == 0 && act1 == 0) {
-                            //     sum = "-"
-                            // } else if(value == 0) {
-                            //     sum = "-100%"
-                            // } else if (act1 == 0) {
-                            //     sum = "100%";
-                            // } else {
-                            //     sum = (val_minus_act / act1 * 100).toString()+" %"
-                            // }
 
                         }
 
@@ -9097,7 +9017,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     }
                     ///// -------------------- For Non % Cols Ends ------------------------------
                     ///// -------------------- For % Cols Starts --------------------------------
-                    for(var k = updateFrom + no_of_mes - no_of_per_cols, idx = updateFrom; k < updateFrom + no_of_mes - 1; k++) {
+                    for(var k = updateFrom + no_of_mes - no_of_per_cols - 1, idx = updateFrom; k < updateFrom + no_of_mes - 1; k++) {
                         
                         var subsetSum = 0;
 
@@ -9117,15 +9037,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 val_minus_act = parseFloat(tbl.cell(parentID, idx + 5).data().replace(/,{1,}/g,""))
                             }
 
-                            var b = value - val_minus_act;
+                            var b = value - parseFloat(val_minus_act).toFixed(0);
     
                             var act1 = (value / b) - 1;
     
-                            if(value == 0 && act1 == 0) {
+                            if(value == 0 && b == 0) {
                                 subsetSum = "-"
                             } else if(value == 0) {
                                 subsetSum = -100
-                            } else if (act1 == 0) {
+                            } else if (b == 0) {
                                 subsetSum = 100;
                             } else {
                                 subsetSum = Math.round(parseFloat(act1 * 100) * 10) / 10;
@@ -9753,9 +9673,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 
                 if(this._currentScaling == "M") {
                     DO_5Y["Current_Scale"] = "M";
-                    this.applyScaling_5Y("M")
-                    this.showTotal("5Y");
+                    this.applyScaling_5Y("M");
+                // this.showTotal("5Y");
+
                 }
+
+
+                
                 // this.createDataObjects("5Y", false);
 
                 // Styling Block Ends here
