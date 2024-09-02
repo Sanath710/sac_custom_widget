@@ -11,7 +11,7 @@ var widget_ID_Name = {};
 var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {};
 var DRP_DO_MT = {}
 //// -------- Data Objects Ends -------------
-var currentVersion_5Y_FY = 1;
+var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
 
 
 ; (function () {
@@ -2700,6 +2700,32 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     else if(hideCols[0] == "Per") {
                         this._stateShown = 'Per';
                         this.showPercentageWidVariance("Per");
+                    }
+
+                    // Color Cagr
+                    let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
+                    var cagrRowIndices = this._dataTableObj.rows().indexes();
+                    stateShown5Y_FY = this._stateShown;
+
+                    if(hideCols[0] == "Var" || hideCols[0] == "Per") {
+                        for(var i = 0; i < cagrRowIndices.length; i++) {
+                            for(var j = 0; j < cagrCols.length; j++) {
+                                var nodeVal = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).data().toString().replace(/,{1,}/g,"").replace(/%{1,}/g,"");
+                                var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                if(nodeVal >= "0" || nodeVal > 0) {
+                                    node.style.color = "#2D7230";
+                                } else {
+                                    node.style.color = "#A92626";
+                                }
+                            }
+                        }
+                    } else {
+                        for(var i = 0; i < cagrRowIndices.length; i++) {
+                            for(var j = 0; j < cagrCols.length; j++) {
+                                var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                node.style.color = "#212121";
+                            }
+                        }
                     }
 
                 } 
@@ -8231,8 +8257,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     text-align:right!important;
                 }
 
-                #example .numericColsCSS, #example .cagrCol {
+                #example .numericColsCSS {
                     color:#212121!important;
+                }
+
+                #example .cagrCol {
+                    color:#212121;
                 }
     
                 /* ------------------------- ROW LEVEL SELECT ------------------------- */
@@ -9167,18 +9197,18 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
                         d = "-"
                     } else if (Vbegin == 0 || Vbegin == "0" || Vbegin == "-") {
-                        d = "-100.0 %"
+                        d = "-100.0%"
                     } else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
-                        d = "100.0 %"
+                        d = "100.0%"
                     } 
                     else if (Vbegin < 0 || Vbegin < "0") {
-                        d = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                        d = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+"%"; //// CAGR sum
                     }
                     else if (Vfinal < 0 || Vfinal < "0") {
-                        d = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                        d = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Vbegin), t) - 1)) * 100).toFixed(1).toString()+"%"; //// CAGR sum
                     }
                     else {
-                        d = parseFloat((Math.pow((Vfinal/Vbegin), t) - 1) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                        d = parseFloat((Math.pow((Vfinal/Vbegin), t) - 1) * 100).toFixed(1).toString()+"%"; //// CAGR sum
                     }
 
                     var node = tbl.cell(parseInt(parentID), updateFrom + no_of_mes - 1).data(d).node()
@@ -9189,6 +9219,31 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         node.style.color = "#A92626";
                     }
                     ///// -------------------- For CAGR Ends ----------------------------------
+
+                     // Color Cagr
+                     let cagrCols = tbl.columns(".cagrCol")[0];
+                     var cagrRowIndices = tbl.rows().indexes();
+ 
+                     if(stateShown5Y_FY == "Var" || stateShown5Y_FY == "Per") {
+                         for(var i = 0; i < cagrRowIndices.length; i++) {
+                             for(var j = 0; j < cagrCols.length; j++) {
+                                 var nodeVal = tbl.cell(cagrRowIndices[i], cagrCols[j]).data().toString().replace(/,{1,}/g,"").replace(/%{1,}/g,"");
+                                 var node = tbl.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                 if(nodeVal >= "0" || nodeVal > 0) {
+                                     node.style.color = "#2D7230";
+                                 } else {
+                                     node.style.color = "#A92626";
+                                 }
+                             }
+                         }
+                     } else {
+                         for(var i = 0; i < cagrRowIndices.length; i++) {
+                             for(var j = 0; j < cagrCols.length; j++) {
+                                 var node = tbl.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                 node.style.color = "#212121";
+                             }
+                         }
+                     }
 
 
                     //// =============================== Subset Group Total Update Ends ================================
