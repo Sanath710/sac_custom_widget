@@ -1150,11 +1150,11 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
     
                                                 var act1 = (value / b) - 1;
         
-                                                if(value == 0 && act1 == 0) {
+                                                if(value == 0 && b == 0) {
                                                     sum = "-"
                                                 } else if(value == 0) {
                                                     sum = "-100%"
-                                                } else if (act1 == 0) {
+                                                } else if (b == 0) {
                                                     sum = "100%";
                                                 } else {
                                                     sum = (act1 * 100).toString()+"%"
@@ -1201,7 +1201,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                             if(count == "NaN%") {
                                 if(value == 0) {
                                     count = "-100%"
-                                } else if (act1 == 0) {
+                                } else if (b == 0) {
                                     count = "100%";
                                 } 
                             }
@@ -8972,7 +8972,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         }
                         ////// ------------------ Number Formatting Ends ----------------------------
 
-                        var node = tbl.cell(rowIDTotal, i).data(count).node()
+                        var node = undefined;
+
+                        if(sum == "NaN") {
+                            node = tbl.cell(rowIDTotal, i).data("-").node()
+                        } else {
+                            node = tbl.cell(rowIDTotal, i).data(count).node()
+                        }
+                        
 
                         if(!numericCols.includes(i) && updateFrom != i) {
                             if(colorFlag) {
@@ -9081,66 +9088,6 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 subsetSum = Math.round(parseFloat(act1 * 100) * 10) / 10;
                             }
 
-                        // } else {
-
-                        //     var value = tbl.cell(parentID, idx + 1).data();
-                        //     var val_minus_act_node = tbl.cell(parentID, idx + 5).data()
-    
-                        //     var value_node = tbl.cell(parentID, idx + 1).node();
-                        //     var val_minus_act_node = tbl.cell(parentID, idx + 5).node()
-    
-    
-                        //     if(isNaN(value)) {
-                        //         value = parseFloat(tbl.cell(parentID, idx + 1).data().replace(/,{1,}/g,""))
-                        //     }
-                        //     if(isNaN(val_minus_act_node)) {
-                        //         val_minus_act_node = parseFloat(tbl.cell(parentID, idx + 5).data().replace(/,{1,}/g,""))
-                        //     }
-
-                        //     var tempIntermediate = value - val_minus_act_node;
-    
-                        //     var act1 = (value / tempIntermediate) - 1;
-    
-                        //     if(value == 0 && act1 == 0) {
-                        //         subsetSum = "-"
-                        //     } else if(value == 0) {
-                        //         subsetSum = "-100%"
-                        //     } else if (act1 == 0) {
-                        //         subsetSum = "100%";
-                        //     } else {
-                        //         subsetSum = (Math.round(parseFloat(act1 * 100) * 10) / 10).toString()+"%";
-                        //     }
-
-                        // }
-
-                        // var value = tbl.cell(parentID, idx).data();
-                        // var val_minus_act = tbl.cell(parentID, k - 5).data()
-
-                        // var value_node = tbl.cell(parentID, idx).node();
-                        // var val_minus_act_node = tbl.cell(parentID, k - 5).node()
-
-
-                        // if(isNaN(value)) {
-                        //     value = parseFloat(tbl.cell(parentID, idx).data().replace(/,{1,}/g,""))
-                        // }
-                        // if(isNaN(val_minus_act)) {
-                        //     val_minus_act = parseFloat(tbl.cell(parentID, k - no_of_per_cols).data().replace(/,{1,}/g,""))
-                        // }
-
-                        // var act1 = value - val_minus_act
-
-                        // if(value == 0 && act1 == 0) {
-                        //     subsetSum = "-"
-                        // } else if(value == 0) {
-                        //     subsetSum = -100
-                        // } else if (act1 == 0) {
-                        //     subsetSum = 100;
-                        // } else {
-                        //     subsetSum = Math.round(parseFloat(val_minus_act / act1 * 100) * 10) / 10;
-                        // }
-
-                       
-
                         ////////// Coloring Starts ------------- 
                         if(value >= 0 || value >= "0") {
                             value_node.style.color = "#2D7230";
@@ -9168,7 +9115,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                         idx++;
 
-                        var node = tbl.cell(parseInt(parentID), k).data(count.toString()+"%").node()
+                        var node = undefined;
+                        if(count == "-") {
+                            node = tbl.cell(parseInt(parentID), k).data(count.toString()).node()
+                        } else {
+                            node = tbl.cell(parseInt(parentID), k).data(count.toString()+"%").node()
+                        }
 
                         if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
