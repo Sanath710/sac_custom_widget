@@ -1,0 +1,17 @@
+IF([@VAR_AI_5Y_FY]="1",
+        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_PY],
+        IF([@VAR_AI_5Y_FY]="2",
+                ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_PY],
+                IF([@VAR_AI_5Y_FY]="3",
+                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_PY],
+                        IF([@VAR_AI_5Y_FY]="4",
+                                ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_PY],
+                                IF([@VAR_AI_5Y_FY]="5",
+                                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_PY],
+                                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_PY]
+                                )
+                        )
+                )
+        )
+)
+ 
