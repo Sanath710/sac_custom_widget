@@ -8,7 +8,7 @@ var load_libs_flag = false;
 var widget_ID_Name = {};
 
 //// -------- Data Objects Starts -----------
-var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {},  DO_5Y_QT = {};
+var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {}, DO_5Y_QT = {};
 var DRP_DO_MT = {}, DRP_DO_5Y_QT = {}
 //// -------- Data Objects Ends -------------
 var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
@@ -38,9 +38,9 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
 
         var total_cols = 0;
         var fixRowsObj = {};
-        var groupRowMapping = {}, groupRowMapping_QT = {}, groupRowMapping_MT = {}, groupRowMapping_5Y = {}, groupRowMapping_5Y_QT = {};
+        var groupRowMapping = {}, groupRowMapping_QT = {}, groupRowMapping_MT = {}, groupRowMapping_5Y = {},  groupRowMapping_5Y_QT = {};
         const masterRows = [];
-        var indices = [], indices_QT = [], indices_MT = [], indices_5Y_QT = [];
+        var indices = [], indices_QT = [], indices_MT = [],  indices_5Y_QT = [];
         var gbl_finalPerCols_FY = {}, gbl_finalPerCols_QT = {}, gbl_finalPerCols_MT = {};
         var no_of_decimalPlaces = 1, no_of_decimalPlaces_K = 0, no_of_decimalPlaces_M = 1;
         var stateShown = "Num";
@@ -183,7 +183,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
 
                 var headers = this._headers
                 // console.log(headers);
-                // console.log(this._dropdownsSelected)
+                console.log(this._dropdownsSelected)
 
                 var remove = headers["Exclude"].join(",")+",@MeasureDimension".split(",");
 
@@ -701,7 +701,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
                     }
-                    else if (callFrom == "5Y") {
+                     else if (callFrom == "5Y") {
                         if(numericCols.includes(i)) {
                             count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                         }
@@ -1205,11 +1205,11 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
     
                                                 var act1 = (value / b) - 1;
         
-                                                if(value == 0 && act1 == 0) {
+                                                if(value == 0 && b == 0) {
                                                     sum = "-"
                                                 } else if(value == 0) {
                                                     sum = "-100%"
-                                                } else if (act1 == 0) {
+                                                } else if (b == 0) {
                                                     sum = "100%";
                                                 } else {
                                                     sum = (act1 * 100).toString()+"%"
@@ -1256,7 +1256,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                             if(count == "NaN%") {
                                 if(value == 0) {
                                     count = "-100%"
-                                } else if (act1 == 0) {
+                                } else if (b == 0) {
                                     count = "100%";
                                 } 
                             }
@@ -1411,7 +1411,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                                 count = nFormat.format(sum) + "%";
                             }
 
-                            if(DO_QT["Current_Scale"] == "K") {
+                            if(DO_5Y_QT["Current_Scale"] == "K") {
                                 count = nFormat.format(Math.round(parseFloat(count.split(".")[0].toString().replace(/,{1,}/g,"")+"."+count.split(".")[1]))).split(".")[0];
                             }
 
@@ -3731,8 +3731,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     }
                 }
                 // QTR Case
-                else if(this._callFrom == "QT") {
-                // else if(this._colOrder.includes("Q1") || this._colOrder.includes("Q2") || this._colOrder.includes("Q3") || this._colOrder.includes("Q4")) {
+                else if(this._colOrder.includes("Q1") || this._colOrder.includes("Q2") || this._colOrder.includes("Q3") || this._colOrder.includes("Q4")) {
                     ////// Empty Case
                     topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
                     ////// Base Case
@@ -3892,10 +3891,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     this._dataTableObj.row(rowid).node().setAttribute("class","selected")
                         
                     for(var i = 0; i < valArr.length; i++) {
-
                         var selectorID = ".row_level_select_"+selector_ids[i];
                         var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
-
                         if(selElement && selElement.selectedIndex != undefined) {
                             selElement.selectedIndex = valArr[i];
                             // console.log(selector_ids)
@@ -4014,10 +4011,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
 
                 for(var i = 0; i < selector_ids.length; i++) {
-
                     var num = parseInt(selector_ids[i].split("_")[0]);
                     idArr.push(num);
-
                     if(callFrom == "FY") {
                         for(var j = num; j < num + this._measureOrder.length; j++) {
                             if(vsPyCols.includes(j) || perCols.includes(j)) {
@@ -9760,7 +9755,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         }
                         ////// ------------------ Number Formatting Ends ----------------------------
 
-                        var node = tbl.cell(rowIDTotal, i).data(count).node()
+                        var node = undefined;
+
+                        if(sum == "NaN") {
+                            node = tbl.cell(rowIDTotal, i).data("-").node()
+                        } else {
+                            node = tbl.cell(rowIDTotal, i).data(count).node()
+                        }
+                        
 
                         if(!numericCols.includes(i) && updateFrom != i) {
                             if(colorFlag) {
@@ -9868,7 +9870,6 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             } else {
                                 subsetSum = Math.round(parseFloat(act1 * 100) * 10) / 10;
                             }
-                       
 
                         ////////// Coloring Starts ------------- 
                         if(value >= 0 || value >= "0") {
@@ -9897,7 +9898,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                         idx++;
 
-                        var node = tbl.cell(parseInt(parentID), k).data(count.toString()+"%").node()
+                        var node = undefined;
+                        if(count == "-") {
+                            node = tbl.cell(parseInt(parentID), k).data(count.toString()).node()
+                        } else {
+                            node = tbl.cell(parseInt(parentID), k).data(count.toString()+"%").node()
+                        }
 
                         if(count >= 0 || count >= "0") {
                             node.style.color = "#2D7230";
