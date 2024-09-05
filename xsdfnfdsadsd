@@ -1,17 +1,103 @@
 IF([@VAR_AI_5Y_FY]="1",
-        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_PY],
-        IF([@VAR_AI_5Y_FY]="2",
-                ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_PY],
-                IF([@VAR_AI_5Y_FY]="3",
-                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_PY],
-                        IF([@VAR_AI_5Y_FY]="4",
-                                ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_PY],
-                                IF([@VAR_AI_5Y_FY]="5",
-                                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_PY],
-                                        ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_PY]
-                                )
-                        )
-                )
-        )
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY]
+                            )
+                    )
+            )
+    )
 )
- 
+
+IF([@VAR_AI_5Y_FY]="1",
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY1],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY1],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY1],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY1],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY1],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY1]
+                            )
+                    )
+            )
+    )
+)
+
+IF([@VAR_AI_5Y_FY]="1",
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY2],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY2],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY2],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY2],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY2],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY2]
+                            )
+                    )
+            )
+    )
+)
+
+
+IF([@VAR_AI_5Y_FY]="1",
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY3],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY3],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY3],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY3],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY3],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY3]
+                            )
+                    )
+            )
+    )
+)
+
+
+IF([@VAR_AI_5Y_FY]="1",
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY4],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY4],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY4],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY4],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY4],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY4]
+                            )
+                    )
+            )
+    )
+)
+
+IF([@VAR_AI_5Y_FY]="1",
+    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER1_CY5],
+    IF([@VAR_AI_5Y_FY]="2",
+            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER2_CY5],
+            IF([@VAR_AI_5Y_FY]="3",
+                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER3_CY5],
+                    IF([@VAR_AI_5Y_FY]="4",
+                            ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER4_CY5],
+                            IF([@VAR_AI_5Y_FY]="5",
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY5],
+                                    ["PLAI_V_TD_PRED_SALES_V_TD_SKU_GX_SMART_5Y_PIVOT_NEW":AI_PULSE_VER5_CY5]
+                            )
+                    )
+            )
+    )
+)
