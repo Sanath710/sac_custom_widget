@@ -6,12 +6,18 @@ var getScriptPromisify = src => {
 
 var load_libs_flag = false;
 var widget_ID_Name = {};
+var is_lib_loaded_exportToExcel = false;
 
 //// -------- Data Objects Starts -----------
 var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {}, DO_5Y_QT = {};
 var DRP_DO_MT = {}, DRP_DO_5Y_QT = {}
 //// -------- Data Objects Ends -------------
 var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
+
+//// -------- Export Data To Excel Top Header Starts -------------
+var topHeader_ExportToExcel_5Y_QT = [];
+//// -------- Export Data To Excel Top Header Ends ---------------
+
 
 
 ; (function () {
@@ -34,6 +40,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                 <tbody></tbody>
             </table>
           </div>
+          <div id="chart_div" style="width: 100%; height: 100%; display:none;" ></div>
         `
 
         var total_cols = 0;
@@ -53,6 +60,7 @@ var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
                 this._shadowRoot = this.attachShadow({ mode: 'open' })
                 this._shadowRoot.appendChild(prepared.content.cloneNode(true))
                 this._root = this._shadowRoot.getElementById('root')
+                this._exportToExcel_root = this._shadowRoot.getElementById('chart_div')
                 this._table = this._shadowRoot.getElementById('example')
                 // this._dotsLoader = this._shadowRoot.getElementById('loader');
                 this._props = {}
@@ -10957,7 +10965,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             // } 
                             // else {
                                 table_cols.push({
-                                    title: this._colOrder[j],
+                                    title: this._colOrder[j]  + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
                                     className:classname_col
                                 })
                             // }
@@ -10990,7 +10998,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 //     })
                                 // } else{
                                     table_cols.push({
-                                        title: this._colOrder[j],
+                                        title: this._colOrder[j] + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
                                         className:classname_col
                                     })
                                 // }
@@ -11221,16 +11229,31 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 
                 topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
 
+                for(var head = 0; head < this._colspan_EmptyCase; head++) {
+                    topHeader_ExportToExcel_5Y_QT.push("")
+                }
 
                 if(this._customTopHeader) {
                     for(var i = 0; i < this._customTopHeader.length; i++) { //-4 to neglect last two scenarios to be included as top-most header...
                         // Base Case/Scenario
                         if(i%2==0) {
-                            topHeader += `<th class='top-header baseCase' colspan='${this._colspan_BaseCase}'>${this._customTopHeader[i]}</th>`
+                            topHeader += `<th class='top-header baseCase' colspan='${this._colspan_BaseCase}'>${this._customTopHeader[i]}</th>`;
+
+                            topHeader_ExportToExcel_5Y_QT.push(this._customTopHeader[i])
+                            for(var head = 0; head < this._measureOrder.length * this._colOrder.length + 1; head++) {
+                                topHeader_ExportToExcel_5Y_QT.push("")
+                            }
+
                         } else {
                             // Rest Case/Scenario
                             topHeader += `<th class='top-header restCase' colspan='${this._colspan_RestCase}'>${this._customTopHeader[i]}</th>`;
+
+                            topHeader_ExportToExcel_5Y_QT.push(this._customTopHeader[i])
+                            for(var head = 0; head < this._measureOrder.length * this._colOrder.length; head++) {
+                                topHeader_ExportToExcel_5Y_QT.push("")
+                            }
                         }
+                       
                     }
                 } else {
                     for(var i = 0; i < topHeaderData.length - 4; i++) { //-4 to neglect last two scenarios to be included as top-most header...
@@ -12003,7 +12026,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     }
                     ////// ================================ Group by Row Ends ============================================
 
-                    console.log(finalRow.slice(0, this._hideExtraVisibleColumnFromIndex))
+                    // console.log(finalRow.slice(0, this._hideExtraVisibleColumnFromIndex))
                     tbl.row.add(finalRow.slice(0, this._hideExtraVisibleColumnFromIndex)).draw(false)
                     var rid = tbl.rows().indexes().toArray()[tbl.rows().indexes().toArray().length - 1];
 
@@ -12109,6 +12132,53 @@ var start = performance.now();
                     this.applyScaling_5Y_QT("M")
                 }
 
+            }
+
+            async exportToExcel(callFrom) {
+
+                if(!is_lib_loaded_exportToExcel) {
+
+                    await getScriptPromisify("https://www.amcharts.com/lib/4/core.js");
+                    await getScriptPromisify("https://www.amcharts.com/lib/4/charts.js");
+
+                    is_lib_loaded_exportToExcel = true;
+
+                }
+
+
+                var chart = am4core.create(this._exportToExcel_root, am4charts.XYChart);
+
+                chart.exporting.dataFields = topHeader_ExportToExcel_5Y_QT;
+
+                var data = [this._dataTableObj.columns().header().map(d => d.textContent).toArray()];
+
+                for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+                    data.push(this._dataTableObj.rows(i).data()[0])
+                }
+
+                // console.log(data)
+
+                var regex = '<option[^>]*selected="selected">(.*?)<\/option>';
+                var gxColIds = [55, 108, 161];
+
+                for(var i = 0; i < gxColIds.length; i++) {
+                    for(var j =0; j < this._dataTableObj.columns(gxColIds[i]).data()[0].length; j++) {
+                        var d = this._dataTableObj.columns(gxColIds[i]).data()[0][j];
+                        if(d.includes("<option")) {
+                            // console.log(data[i], data[j])
+                            data[j][gxColIds[i]] = d.match(regex)[1]
+                        }
+                    }
+                }
+
+                // var d = this._dataTableObj.columns(55).data()[0][2]
+                // console.log(d.match(regex)[1])
+
+                chart.data = data;
+
+
+                chart.exporting.export("xlsx");
+               
             }
          
         }
