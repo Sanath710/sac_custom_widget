@@ -1,0 +1,54 @@
+//////////////////////////////////////////////////////
+On Init
+
+var headerSeq_5Y_QT = {
+		"SCENARIO_ORDER":["BASE", "BASE-1", "BASE-2", "BASE-3", "BASE-4", "BASE-5"],
+		"FIXED_SCENARIO":["BASE"],
+		"COL_NAME_ORDER":["Q1","Q2","Q3","Q4"],
+		"@MeasureDimension":["_2023", "_2024", "_2025", "_2026", "_2027", "_2024_VAR", "_2025_VAR", "_2026_VAR", "_2027_VAR",  "_2024_PER", "_2025_PER", "_2026_PER", "_2027_PER"],
+		"FIXED_INDICES":["0","1","2","3"],
+		"DROPDOWN_INDICES":["9","15","21","27","33"],
+		"DROPDOWN_SELECTED":["BASE-2","BASE-3","BASE-4"], // Uppercase only
+		"no_of_decimal_K":["0"],
+		"no_of_decimal_M":["1"],
+		"Exclude":["COL_ORDER", "COL_NAME"] // Include Exclude at last only
+	};
+
+	var customHeaders_5Y_QT =  {
+		"DIMEN_NAME":["COUNTRY_CODE", "FRS_BRAND_CODE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "GX Date"], // in-order
+		"MES_NAME":["2023", "2024", "2025", "2026", "2027",  "2024_VAR", "2025_VAR", "2026_VAR", "2027_VAR", "2024_PER", "2025_PER", "2026_PER", "2027_PER"],
+		"SCENARIO_NAME":["Base", "Gx Date", "Gx Date", "Gx Date", "Gx Date", "Gx Date"],
+		"TOP_HEADER":["VAR_AI_RUN", "Scenario 1", "Scenario 2", "Scenario 3"]
+	};
+
+	var selectionColumnName_5Y_QT = "GX_Entry_Date";
+	var hideParticularCols_5Y_QT= [-1];
+
+	var table_styling_5Y_QT = ""; //font-size:14px;
+	var row_styling_5Y_QT = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+	var col_styling_5Y_QT = ""; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+	CW_CustomTable_5Y_QT.setExtraParams(headerSeq_5Y_QT, customHeaders_5Y_QT, selectionColumnName_5Y_QT, 214, hideParticularCols_5Y_QT);
+	CW_CustomTable_5Y_QT.applyStyling(table_styling_5Y_QT, row_styling_5Y_QT, col_styling_5Y_QT);
+
+
+var rs1 = Table_5Y_QTR.getDataSource().getResultSet();
+
+//	console.log(rs1);
+
+
+var topHeaders_Colspan1 = {"EmptyCase":"1","BaseCase":"21","RestCase":"21"};
+var currentScale = "M";
+CW_CustomTable_5Y_QT.setResultSet_5Y_QT(rs1, 0, topHeaders_Colspan1, currentScale);
+/////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////
+Show Scenario - (S1 - 55, S2 - 108, S3 - 161)
+
+var fixedCols = 55; 
+var no_of_measures = 16;
+
+CW_CustomTable_5Y_QT.showScenarios(fixedCols, this.getSelectedKeys(), this.getSelectedTexts(), no_of_measures);
+/////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////
