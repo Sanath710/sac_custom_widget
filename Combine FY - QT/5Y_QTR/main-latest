@@ -304,7 +304,7 @@ var topHeader_ExportToExcel_5Y_QT = [];
                 this._callFrom = callFrom;
                 this._fixedIndices = this._fixedIndices.concat(this._dropdownIndices);
 
-                var considerConditions = ["numericColsCSS", "numericColsCSS perColCSS", "varCol", "numericColsCSS numCol", "varCols", "perCols", "vsPy"]
+                var considerConditions = ["numericColsCSS", "numericColsCSS perColCSS", "varCol", "numericColsCSS numCol", "varCols", "perCols", "vsPy", "numericColsCSS rightBorder", "vsPy rightBorder", "perCols rightBorder"]
                 var CAGR_Indices = [];
                 var numericCols = [];
                 var fyCols = [], perCols = [], varCols_5Y = [], varCol_QT = [];
@@ -321,7 +321,7 @@ var topHeader_ExportToExcel_5Y_QT = [];
                         indices.push(-1);
                     }
                     ///// Numeric Col Indices
-                    if(this._tableColumnNames[i]["className"] == "numericColsCSS" || this._tableColumnNames[i]["className"] == "numericColsCSS numCol") {
+                    if(this._tableColumnNames[i]["className"] == "numericColsCSS" || this._tableColumnNames[i]["className"] == "numericColsCSS numCol" || this._tableColumnNames[i]["className"] == "numericColsCSS rightBorder") {
                         numericCols.push(i)
                     }
 
@@ -773,8 +773,8 @@ var topHeader_ExportToExcel_5Y_QT = [];
                     this._dataTableObj.columns(hideColsOfIndex).visible(false);
                 }
                 else if(callFrom == "5Y_QT") {
-                    var varCols = this._dataTableObj.columns(".vsPy")[0];
-                    var perCols = this._dataTableObj.columns(".perCols")[0];
+                    var varCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                    var perCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
                     var hideColsOfIndex = varCols.concat(perCols);
                     this._dataTableObj.columns(hideColsOfIndex).visible(false);
                 }
@@ -2177,9 +2177,9 @@ var start = performance.now();
                 else if(call_from == "5Y_QT") {
 
                     var dt_tbl_obj = this._dataTableObj;
-                    var numCols_5YQT = this._dataTableObj.columns('.numericColsCSS')[0];
-                    var vsPyCols_5YQT = this._dataTableObj.columns('.vsPy')[0];
-                    var perCols_5YQT = this._dataTableObj.columns('.perCols')[0];
+                    var numCols_5YQT =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                    var vsPyCols_5YQT = Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                    var perCols_5YQT = Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
 
                     if(is_scaled) {
 
@@ -2289,9 +2289,9 @@ var start = performance.now();
 
                     } else {
 
-                        var numcols = this._dataTableObj.columns('.numericColsCSS')[0];
-                        var varcols = this._dataTableObj.columns('.vsPy')[0];
-                        var percols = this._dataTableObj.columns('.perCols')[0];
+                        var numcols =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        var varcols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        var percols =  Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
                         
                         var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
 
@@ -3031,8 +3031,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
                     if(scene == "vsPy") {
                         
-                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
-                        var vsPyCols = this._dataTableObj.columns('.vsPy')[0];
+                        var numCols  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
                         selCol.push(2); // selection column base
 
@@ -3088,8 +3088,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     } 
                     else if(scene == "Per") {
 
-                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
-                        var perCols = this._dataTableObj.columns('.perCols')[0];
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0]);
+                        var perCols = this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0]);
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
                         selCol.push(2); // selection column base
         
@@ -3150,9 +3150,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     }
                     else if(scene == "Num") {
 
-                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
-                        var perCols = this._dataTableObj.columns('.perCols')[0];
-                        var vsPyCols = this._dataTableObj.columns('.vsPy')[0];
+                        var numCols  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        var perCols  =  Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                        var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
                         selCol.push(2); // selection column base
         
@@ -3636,15 +3636,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     let gxDates = this._dataTableObj.columns(".selColClass")[0];
 
                     if(this._stateShown == "Per") {
-                        showCols = this._dataTableObj.columns(".perCols")[0];
+                        showCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
                     } 
                     ///// --------------------- vsPy CASE -----------------------
                     else if(this._stateShown == "vsPy") { 
-                        showCols = this._dataTableObj.columns(".vsPy")[0];
+                        showCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
                     }
                     ///// --------------------- Num CASE -----------------------
                     else if(this._stateShown == "Num") { 
-                        showCols = this._dataTableObj.columns(".numericColsCSS")[0];
+                        showCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
                     }
 
                     // showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
@@ -3903,8 +3903,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 /////////////// For Color ---------------- 
                 var idArr = [], changeCellColr = [];
 
-                var vsPyCols = this._dataTableObj.columns(".vsPy")[0];
-                var perCols = this._dataTableObj.columns(".perCols")[0];
+                var vsPyCols   =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                var perCols    =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
                 var varCols_5Y = this._dataTableObj.columns(".varCols")[0];
 
                 for(var i = 0; i < selector_ids.length; i++) {
@@ -4086,8 +4086,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         }
                     } else if(callFrom == "5Y_QT") {
 
-                        vsPyCols = this._dataTableObj.columns(".vsPy")[0];
-                        perCols = this._dataTableObj.columns(".perCols")[0];
+                        vsPyCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        perCols  =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
 
                         num += 23;
 
@@ -10957,18 +10957,18 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             classname_col = "perCols";
                         }
                         for(var j = 0; j < this._colOrder.length; j++) {
-                            // if(this._colOrder[j] == "Q4") {
-                            //     table_cols.push({
-                            //         title: this._colOrder[j],
-                            //         className:classname_col+" rightBorder"
-                            //     })
-                            // } 
-                            // else {
+                            if(this._colOrder[j] == "Q4") {
+                                table_cols.push({
+                                    title: this._colOrder[j] + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
+                                    className:classname_col+" rightBorder"
+                                })
+                            } 
+                            else {
                                 table_cols.push({
                                     title: this._colOrder[j]  + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
                                     className:classname_col
                                 })
-                            // }
+                            }
                             k_cnt++;
                         }
                     }
@@ -10990,18 +10990,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 classname_col = "perCols";
                             }
                             for(var j = 0; j < this._colOrder.length; j++) {
-                                // if(this._colOrder[j] == "Q4") {
-                                //     table_cols.push({
-                                //         title: this._colOrder[j],
-                                //         className:classname_col,
-                                //         id:"rightBorder"
-                                //     })
-                                // } else{
+                                if(this._colOrder[j] == "Q4") {
+                                    table_cols.push({
+                                        title: this._colOrder[j] + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
+                                        className:classname_col+" rightBorder"
+                                    })
+                                } else{
                                     table_cols.push({
                                         title: this._colOrder[j] + " '" + this._customHeaderNames["MES_NAME"][k].substr(-2),
                                         className:classname_col
                                     })
-                                // }
+                                }
                                 k_cnt++;
 
                                 if(table_cols.length >= 214) {
@@ -11024,7 +11023,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                 //// ------------------------ var cols indices starts ---------------------------------
                 var perColIndices = new Set();
-                var considerCons = ["perCols", "vsPy"];
+                var considerCons = ["perCols", "vsPy", "vsPy rightBorder", "perCols rightBorder"];
                 for(var i = 0; i < this._tableColumnNames.length; i++) {
                     if(considerCons.includes(this._tableColumnNames[i]["className"])) {
                         perColIndices.add(i);
@@ -11044,7 +11043,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     else if (!this._fixedIndices.includes(i)) {
                         indices_QT.push(i);
                     }
-                    if(this._tableColumnNames[i].className == "numericColsCSS") {
+                    if(this._tableColumnNames[i].className == "numericColsCSS" || this._tableColumnNames[i].className == "numericColsCSS rightBorder") {
                         templateGroupTotal.push("");
                         numCols_render.push(i)
                     } else {
@@ -11326,7 +11325,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     var indices = [];
                     var numericCols = [];
                     var fyCols = [];
-                    let considerConditions = ["numericColsCSS", "perCols"];
+                    let considerConditions = ["numericColsCSS", "perCols", "numericColsCSS rightBorder", "perCols rightBorder"];
 
                     for(var i = 0; i < table_cols.length; i++) {
                         if(considerConditions.includes(table_cols[i]["className"])) {
@@ -11335,13 +11334,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             indices.push(-1);
                         }
                         ///// Numeric Col Indices
-                        if(table_cols[i]["className"] == "numericColsCSS" || table_cols[i]["className"] == "numericColsCSS numCol") {
+                        if(table_cols[i]["className"] == "numericColsCSS" || table_cols[i]["className"] == "numericColsCSS numCol" || table_cols[i]["className"] == "numericColsCSS rightBorder") {
                             numericCols.push(i)
                         }
 
-                        if(table_cols[i]["sTitle"] == "FY" && table_cols[i]["className"] == "numericColsCSS") {
-                            fyCols.push(i)
-                        }
+                        // if(table_cols[i]["sTitle"] == "FY" && table_cols[i]["className"] == "numericColsCSS") {
+                        //     fyCols.push(i)
+                        // }
                     }
                     var no_of_per_cols = 16;
 
@@ -11638,8 +11637,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     }
                     // console.log(state)
 
-                    let sid = state.classList[1].split("row_level_select_")[1];
-                    DO_5Y_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+                    // let sid = state.classList[1].split("row_level_select_")[1];
+                    // DO_5Y_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
 
                     var sliced = selOptVal.slice(2, ), data = {};
                     // console.log(sliced)
@@ -11861,6 +11860,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 }
                                 //////////////////////////////////////////
                                
+    
                             } else {
                                 // dropdown data
                             }
@@ -11970,16 +11970,20 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     var K_Data5YQT = finalRow.slice();
                     var M_Data5YQT = finalRow.slice();
 
-                    var numCols_5YQT = this._dataTableObj.columns('.numericColsCSS')[0];
-                    var vsPyCols_5YQT = this._dataTableObj.columns('.vsPy')[0];
-                    var perCols_5YQT = this._dataTableObj.columns('.perCols')[0];
+                    var numCols_5YQT  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                    var vsPyCols_5YQT =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                    var perCols_5YQT  =  Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
    
                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_M});
                     var nFormat_K = new Intl.NumberFormat('en-US', {minimumFractionDigits: this.no_of_decimalPlaces_K});
    
    
-                    for(var ss = 0; ss < M_Data5YQT.length; ss++) {
-                        if(numCols_5YQT.includes(ss) || vsPyCols_5YQT.includes(ss)) {
+                    var ss = 0;
+                    for(ss = 0; ss < M_Data5YQT.length; ss++) {
+                        if(ss == 216) {
+                            console.log(M_Data5YQT[ss])
+                        }
+                        if((numCols_5YQT.includes(ss) || vsPyCols_5YQT.includes(ss)) || !(M_Data5YQT[ss].includes("%") || K_Data5YQT[ss].includes("%"))) {
                             //////////
                             if(!isNaN(parseFloat(M_Data5YQT[ss].toString()))) {
                                 if(M_Data5YQT[ss].toString().includes(".")) {
@@ -11994,7 +11998,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                }
                            }
                         }
-                        else if(perCols_5YQT.includes(ss)) {
+                        else if(perCols_5YQT.includes(ss) || (M_Data5YQT[ss].includes("%") || K_Data5YQT[ss].includes("%"))) {
                             /////////
                             if(!isNaN(parseFloat(M_Data5YQT[ss].toString().split("%")[0]).toFixed(0))) {
                                 M_Data5YQT[ss] = nFormat.format(parseFloat(M_Data5YQT[ss].toString().split("%")[0]).toFixed(this.no_of_decimalPlaces_M)).toString()+"%";
@@ -12006,6 +12010,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                             }
                         }
                     }
+                    console.log("----", ss, M_Data5YQT.length)
                     finalRow = K_Data5YQT.slice()
                     fixRowsObj[k] = finalRow.slice()
                     // console.log(finalRow)
