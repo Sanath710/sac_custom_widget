@@ -12,3 +12,4 @@ IF(([#Col_PY]=0 AND [#Col_CY3]=0)OR(ISNULL([#Col_PY] ) AND ISNULL([#Col_CY3])),
                                         0.25)-1),
                                         POWER([#Col_CY3]/[#Col_PY],
                                         0.25)-1)))))
+
