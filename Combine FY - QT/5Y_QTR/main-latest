@@ -2599,7 +2599,39 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     this.createDataObjects("5Y_QT", true);
 
                     for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+
                         this._dataTableObj.row(i).data(DO_5Y_QT["ScaledData"][i].slice()).draw();
+
+                        ////////// DRP RE-SELECTION TO PRESERVE DECIMAL STARTS /////////////////////////
+                        if(DO_5Y_QT["DRP_SCALING"] && DO_5Y_QT["DRP_SCALING"][i] != undefined) {
+
+                            this._dataTableObj
+                            .rows()
+                            .nodes()
+                            .each(row => row.classList.remove('selected'));
+
+                            this._dataTableObj.row(i).node().setAttribute("class","selected")
+
+                            for(var j = 0; j < Object.keys(DO_5Y_QT["DRP_SCALING"][i]).length; j++) {
+                                
+                                var key_sel = Object.keys(DO_5Y_QT["DRP_SCALING"][i])[j];
+                                var selectorID = ".row_level_select_"+key_sel;
+                                var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    
+                                if(selElement && selElement.selectedIndex != undefined) {
+    
+                                    selElement.selectedIndex = DO_5Y_QT["DRP_SCALING"][i][key_sel];
+                                    selElement.dispatchEvent(new Event("change"));
+    
+                                    if(!(DO_5Y_QT["DRP_USR_TRIGGERED"] && DO_5Y_QT["DRP_USR_TRIGGERED"][i] != undefined && Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][i]).includes(key_sel))) {
+                                        selElement.style.border = "none";
+                                        selElement.style.backgroundColor = "#DCE6EF";
+                                    }
+                                }
+                            }
+                        }
+                        ////////// DRP RE-SELECTION TO PRESERVE DECIMAL ENDS ///////////////////////////
+                        
                     }
                 }
 
@@ -8210,8 +8242,8 @@ var start = performance.now();
                     }
                     // console.log(state)
 
-                    // let sid = state.classList[1].split("row_level_select_")[1];
-                    // DO_MT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+                    let sid = state.classList[1].split("row_level_select_")[1];
+                    DO_MT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
 
                     // @ ---
                     // var sliced = selOptVal.slice(no_of_dimens - no_of_excludes + no_of_mes, ), data = {};
@@ -11300,6 +11332,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                         DO_5Y_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
                     }
 
+                    console.log("OnClick Row", DO_5Y_QT)
+
                 })
 
                 
@@ -11637,8 +11671,18 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     }
                     // console.log(state)
 
-                    // let sid = state.classList[1].split("row_level_select_")[1];
-                    // DO_5Y_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+                    let sid = state.classList[1].split("row_level_select_")[1];
+                    DO_5Y_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+
+                    /////////////// DRP RE-SELECTION TO PRESERVE DECIMAL STARTS (APPLYSCALING) /////////////////////
+                    if(DO_5Y_QT["DRP_SCALING"] == undefined) {
+                        DO_5Y_QT["DRP_SCALING"] = {}
+                    }
+                    if(DO_5Y_QT["DRP_SCALING"][tbl.row('.selected').index()] == undefined) {
+                        DO_5Y_QT["DRP_SCALING"][tbl.row('.selected').index()] = {}
+                    }
+                    DO_5Y_QT["DRP_SCALING"][tbl.row('.selected').index()][sid] = selOptID;
+                    /////////////// DRP RE-SELECTION TO PRESERVE DECIMAL ENDS (APPLYSCALING) /////////////////////
 
                     var sliced = selOptVal.slice(2, ), data = {};
                     // console.log(sliced)
