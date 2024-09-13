@@ -1484,6 +1484,19 @@ var topHeader_ExportToExcel_5Y_QT = [];
                 var end = performance.now();
                 var time = end - start;
                 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total Brand Group took approx : ")
+
+                /////// color top-most total //////////
+                var data_total = this._dataTableObj.row(0).data()
+                for(var i = 0; i < data_total.length; i++) {
+                    var node =  this._dataTableObj.cell(0, i).node()
+                    if(!numericCols.includes(i)) {
+                        if(data_total[i] > 0 || data_total[i] > "0") {
+                            node.style.color = "#2D7230";
+                        } else {
+                            node.style.color = "#A92626";
+                        }
+                    }
+                }
             }
 
             createDataObjects(call_from, is_scaled) {
@@ -11209,9 +11222,11 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                 "createdCell": function (td, cellData, rowData, row, col) {
                                     if (cellData >= 0 || cellData >= "0") {
                                         $(td).css('color', '#2D7230')
+                                        console.log(cellData,"---");
                                     }
                                     else if (cellData < 0 || cellData < "0") {
                                         $(td).css('color', '#A92626')
+                                        console.log(cellData,"+++");
                                     }
                                 }
                             },
@@ -11460,7 +11475,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                                     data = parseFloat(tbl.cell(cell_rid, cell_cid).data());
                                 }
 
-                                if(data < 0) {
+                                if(data < 0 || data < "0") {
                                     flagColor = true;
                                 }
 
@@ -12087,7 +12102,7 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Creation -- Render_5YQT took approx : ") 
-var start = performance.now();
+// var start = performance.now();
 
                     /////// creating scaled data copy starts ------------------------ 
                     // var K_Data5YQT = finalRow.slice();
@@ -12138,10 +12153,10 @@ var start = performance.now();
                     fixRowsObj[k] = finalRow.slice()
                     // console.log(finalRow)
                     
-var end = performance.now();
-var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Scaling Table Row Merged Loop -- Render_5YQT took approx : ") 
-var start = performance.now();
+// var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Scaling Table Row Merged Loop -- Render_5YQT took approx : ") 
+// var start = performance.now();
 
                     // if(fixRowsObj["ScaledData"] == undefined) {
                     //     fixRowsObj["ScaledData"] = {}
@@ -12287,7 +12302,6 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Header -- Render_5YQT took approx : ") 
-var start = performance.now();
 
                 // isSelectionUpdatedByUser = true;
                 DO_5Y_QT["Current_Scale"] = this._currentScaling;
@@ -12295,12 +12309,6 @@ var start = performance.now();
                 this.showTotal("5Y_QT");
                 ///////////////////////////////////// RRRRRRRREEEEEEEEEEEEMMMMMMOOOOOOOOOOVVVVVVVVVVVVVVEEEEEEEEEEEEEEEEE
                 // this.applyScaling_5Y_QT("K")
-
-var end = performance.now();
-var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"K Scaling -- Render_5YQT took approx : ") 
-var start = performance.now();
-
                 // if(this._currentScaling == "M") {
                 //     DO_5Y_QT["Current_Scale"] = "M";
                 //     this.applyScaling_5Y_QT("M")
@@ -12332,6 +12340,26 @@ var start = performance.now();
                             }
                         }
                     }
+                }
+
+                ///////// Show State on RS Change ....... 
+                if(this._stateShown == "Num") {
+                    var varCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                    var perCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                    var hideColsOfIndex = varCols.concat(perCols);
+                    this._dataTableObj.columns(hideColsOfIndex).visible(false);
+                }
+                else if(this._stateShown == "Var") {
+                    var numCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                    var perCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                    var hideColsOfIndex = numCols.concat(perCols);
+                    this._dataTableObj.columns(hideColsOfIndex).visible(false);
+                } 
+                else {
+                    var numCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                    var varCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                    var hideColsOfIndex = varCols.concat(numCols);
+                    this._dataTableObj.columns(hideColsOfIndex).visible(false);
                 }
 
 var end = performance.now();
