@@ -1,0 +1,11 @@
+currentScale_and_show =  {
+		"CurrentScale":"M",
+		"Visible":RadioButtonGroup_6.getSelectedKey(), // columnvisibility radiobutton
+		"ShowScenario":CheckboxGroup_6.getSelectedKeys().join(",")+"_#_"+CheckboxGroup_6.getSelectedTexts().join(","), // show scenario radio button
+		"PreserveSelection":"TRUE" 
+	};
+CW_CustomTable_5Y_QT.setResultSet_5Y_QT(rs, 0, topHeaders_Colspan1, currentScale_and_show);
+
+
+
+NOTE ALSO CHANGE columnvisibility KEY AS ["Num", "Var", "Per"] RESPECTIVELY.....
