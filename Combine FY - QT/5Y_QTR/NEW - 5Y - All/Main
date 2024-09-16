@@ -9219,6 +9219,23 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
      
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                /*
                 #example .truncate {
                     max-width:130px;
                     padding-left: 2%;
@@ -9226,6 +9243,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
+                */
     
                 /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
     
@@ -11332,6 +11350,22 @@ console.log(DO_5Y, "DO_5Y")
                 #example > tbody > tr:nth-child(1) {
                     position:sticky!important;
                     top:80px!important;
+                }
+
+                #example > tbody > tr:not(.group) > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                #example > tbody > tr.group > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
                 }
 
                 `;
