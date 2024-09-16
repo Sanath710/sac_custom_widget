@@ -182,11 +182,6 @@
                     "name": "current_scale",
                     "description":"Current Scale",
                     "type": "any"
-                },
-                {
-                    "name": "currentVersion",
-                    "description":"Current Version",
-                    "type": "any"
                 }
             ]
         },
