@@ -12,7 +12,8 @@ var is_lib_loaded_exportToExcel = false;
 var DO_FY = {}, DO_QT = {}, DO_MT = {}, DO_5Y = {}, DO_5Y_QT = {};
 var DRP_DO_MT = {}, DRP_DO_5Y_QT = {};
 //// -------- Data Objects Ends -------------
-var currentVersion_5Y_FY = 1, stateShown5Y_FY = 'Num';
+var stateShown5Y_FY = 'Num';
+// var currentVersion_5Y_FY = 1;
 
 //// -------- Export Data To Excel Top Header Starts -------------
 var topHeader_ExportToExcel_5Y_QT = [];
@@ -8887,7 +8888,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
             // ---------------------------------------------------------- 5-Year -------------------------------------------------------
             // ==========================================================================================================================
 
-            setResultSet_5Y(rs, col_to_row = -1, colspan_to_top_headers, currentScale_and_Show, currentVersion) {
+            setResultSet_5Y(rs, col_to_row = -1, colspan_to_top_headers, currentScale_and_Show) {
 
                 // this.reinitialize_changedProperties_ClassVariables();
                 var start = performance.now();
@@ -8947,8 +8948,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 console.log("Dimensions", this._dimensions)
                 console.log("Exclude Headers",this._excludeHeaders)
 
-                this._currentVersion = currentVersion;
-                currentVersion_5Y_FY = currentVersion;
+                // this._currentVersion = currentVersion;
+                // currentVersion_5Y_FY = currentVersion;
 
                 this._currentScaling = currentScale_and_Show["CurrentScale"];
                 this._stateShown = currentScale_and_Show["Visible"];
