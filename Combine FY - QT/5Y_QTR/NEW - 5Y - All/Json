@@ -312,15 +312,6 @@
                 }
             ]
         },
-        "changeTableHeaderOnVersionChange":{
-            "parameters": [
-                {
-                    "name": "HeaderNames",
-                    "description":"Table Header Names (Array)",
-                    "type": "any"
-                }
-            ]
-        },
         "exportToExcel":{
             "parameters": [
                 {
