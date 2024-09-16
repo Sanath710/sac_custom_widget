@@ -2696,8 +2696,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
             showPercentageWidVariance(scene = null) {
 
-                if(this._callFrom == "MT") 
-                {
+                if(this._callFrom == "MT") {
+
                     if(scene == "Num") {
                         // var perCols = this._dataTableObj.columns('.perColCSS')[0];
                         var numCols = this._dataTableObj.columns('.numCol')[0];
@@ -2838,8 +2838,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         }
                     }
                 }
-                else if(this._callFrom == "5Y") 
-                {
+                else if(this._callFrom == "5Y") {
+
                     this._fixedCols = 17; 
                     var visibleCagrCols = new Set();
                     var cagrCols = this._dataTableObj.columns('.cagrCol')[0];
@@ -11362,7 +11362,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
                     var no_of_per_cols = 16;
                     var top_most_total_row_id = 0;
-                    var no_of_decimalPlaces = no_of_decimalPlaces_K;
+                    var no_of_decimalPlaces = parseInt(no_of_decimalPlaces_K[0]);
                     
                     var parentID = updateFromRowID;
 
@@ -11376,7 +11376,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
 
 
                     if(DO_5Y_QT["Current_Scale"] == "M") {
-                        no_of_decimalPlaces = no_of_decimalPlaces_M ;
+                        no_of_decimalPlaces = parseInt(no_of_decimalPlaces_M[0]);
                     }
     
                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
@@ -12481,8 +12481,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 var start = performance.now();
                 
                 ///////// Show State on RS Change .......
-                // this.columnVisibility([this._stateShown],[])
-                // this.showScenarios(55, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 16);
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(55, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 16);
 
 var end = performance.now();
 var time = end - start;
@@ -12499,6 +12499,7 @@ var start = performance.now();
 
                 var no_of_per_cols = 16;
                 var top_most_total_row_id = 0;
+                this._callFrom = "5Y_QT";
                 var no_of_decimalPlaces = this.no_of_decimalPlaces_K;
                 var subTotalRowIDs = Object.keys(DO_5Y_QT["Parent_Child_Indices"]);
                 var TOP_MOST_TOTAL_ROW = this._dataTableObj.rows(0).data().toArray()[0]
