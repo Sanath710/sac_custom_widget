@@ -9273,6 +9273,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 }
 
                 DO_5Y["Current_Scale"] =  this._currentScaling;
+                DO_5Y["Parent_Child_Indices"] = {}
 
                 if(this._varPreserveSelection == "FALSE") {
                     DO_5Y = {};
@@ -11344,6 +11345,8 @@ console.log(DO_5Y, "DO_5Y")
 
                 // DO_5Y_QT = {};
                 DO_5Y_QT["Current_Scale"] =  this._currentScaling;
+                DO_5Y_QT["Parent_Child_Indices"] = {}
+
 
                 if(this._varPreserveSelection == "FALSE") {
                     DO_5Y_QT = {};
