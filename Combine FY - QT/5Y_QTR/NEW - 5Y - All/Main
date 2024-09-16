@@ -8956,6 +8956,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"CSS Styling --
                 this._varPreserveSelection = currentScale_and_Show["PreserveSelection"];
                 this._shownScenarios_ID_RS = currentScale_and_Show["ShowScenario"].split("_#_")[0].split(",");
                 this._shownScenarios_Text_RS = currentScale_and_Show["ShowScenario"].split("_#_")[1].split(",");
+                this._versionChangeHeader = currentScale_and_Show["VersionChangeHeader"].split(",");
 
                 no_of_decimalPlaces_K = this.no_of_decimalPlaces_K;
                 no_of_decimalPlaces_M = this.no_of_decimalPlaces_M;
@@ -10980,7 +10981,9 @@ console.log(DO_5Y, "DO_5Y")
                 
                 // this.createDataObjects("5Y", false);
 
-                // Styling Block Ends here
+                if(this._versionChangeHeader.length > 0) {
+                    this.changeTableHeaderOnVersionChange(this._versionChangeHeader);
+                }
             }
 
             setResultSet_5Y_QT(rs, col_to_row = -1, colspan_to_top_headers, currentScale_and_Show) {
@@ -11045,6 +11048,7 @@ console.log(DO_5Y, "DO_5Y")
                 this._varPreserveSelection = currentScale_and_Show["PreserveSelection"];
                 this._shownScenarios_ID_RS = currentScale_and_Show["ShowScenario"].split("_#_")[0].split(",");
                 this._shownScenarios_Text_RS = currentScale_and_Show["ShowScenario"].split("_#_")[1].split(",");
+                this._versionChangeHeader = currentScale_and_Show["VersionChangeHeader"].split(",");
 
                 for(var i = 0; i < rs.length;) {
                     var tempArr = [], dims = new Set();
@@ -12862,7 +12866,11 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_5YQT took approx : ")             // }
 
 // console.log("DRP Master Object : ", DRP_DO_5Y_QT);
-console.log(DO_5Y_QT, "DO_5Y_QT")
+
+                if(this._versionChangeHeader.length > 0) {
+                    this.changeTableHeaderOnVersionChange(this._versionChangeHeader);
+                }
+                console.log(DO_5Y_QT, "DO_5Y_QT")
 
             }
 
@@ -13361,8 +13369,10 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total () 
 
             changeTableHeaderOnVersionChange(header_names) {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = header_names[0];
-    
+                if(this._versionChangeHeader[0] != undefined) {
+                    document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
+                }
+
             }
             // async exportToExcel(callFrom) {
 
