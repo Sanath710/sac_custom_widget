@@ -4542,6 +4542,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
                 #example .truncate {
+                    padding: 0.7% !important;
                     max-width:130px;
                     padding-left: 2%;
                     white-space: nowrap;
@@ -8147,6 +8148,7 @@ var start = performance.now();
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
                 #example .truncate {
+                    padding: 0.7% !important;
                     max-width:130px;
                     white-space: nowrap;
                     overflow: hidden;
