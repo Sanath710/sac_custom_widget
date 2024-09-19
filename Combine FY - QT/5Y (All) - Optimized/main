@@ -15210,7 +15210,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
                 if(this._callFrom == "QT") {
                     if(this._versionChangeHeader[0] != undefined) {
                         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").innerHTML = this._versionChangeHeader[0];
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(6)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(7)").innerHTML = this._versionChangeHeader[0];
                         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(9)").innerHTML = this._versionChangeHeader[0];
                     }
                 } else {
