@@ -14912,13 +14912,17 @@ var start = performance.now();
     
                     /// ------------------- For Color Top-Most Total Starts --------------------------
     
+                    var loopCells = varCols_5Y.concat(perCols_5Y);
+
                     for(var i = 2; i < TOP_MOST_TOTAL_ROW.length; i++) {
     
-                        var node =  this._dataTableObj.cell(0, i).node()
+                        var data =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).data()
+                        var node =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).node()
+                        // var node =  this.loopCells.cell(0, i).node()
     
-                        if(!numCols_5Y.includes(i) && node != undefined) {
+                        if(node != undefined) {
     
-                            if(TOP_MOST_TOTAL_ROW[i] > 0 || TOP_MOST_TOTAL_ROW[i] > "0") {
+                            if(data > 0 || data> "0") {
                                 node.style.color = "#2D7230";
                             } else {
                                 node.style.color = "#A92626";
@@ -15109,14 +15113,17 @@ var start = performance.now();
                 this._dataTableObj.row(top_most_total_row_id).data(TOP_MOST_TOTAL_ROW).draw(false)
 
                 ///// ------------------- For Color Top-Most Total Starts --------------------------
+                var loopCells = varCols_5YQT.concat(perCols_5YQT);
 
-                for(var i = 2; i < TOP_MOST_TOTAL_ROW.length; i++) {
+                for(var i = 2; i < loopCells.length; i++) {
 
-                    var node =  this._dataTableObj.cell(0, i).node()
+                    // var node =  this._dataTableObj.cell(0, i).node()
+                    var data =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).data()
+                    var node =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).node()
+          
+                    if(node != undefined) {
 
-                    if(!numCols_5YQT.includes(i) && node != undefined) {
-
-                        if(TOP_MOST_TOTAL_ROW[i] > 0 || TOP_MOST_TOTAL_ROW[i] > "0") {
+                        if(data > 0 || data > "0") {
                             node.style.color = "#2D7230";
                         } else {
                             node.style.color = "#A92626";
