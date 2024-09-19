@@ -3135,6 +3135,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         var numCols  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
                         var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
                         selCol.push(2); // selection column base
 
                         const filteredArray = vsPyCols.filter(value => this._visibleCols.includes(value));
@@ -3160,18 +3162,26 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                     //     i = j-1;
                                     // }
                                     ////// --------------------------------------------------
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
                                 }
                             } else {
                                 if(vsPyCols.includes(i)) {
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
                                 }
                             }
                         }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
 
                         ////// 
                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
@@ -3192,6 +3202,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         var numCols = this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0]);
                         var perCols = this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0]);
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
                         selCol.push(2); // selection column base
         
                         var filteredArray = perCols.filter(value => this._visibleCols.includes(value));
@@ -3222,18 +3234,25 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                     //     i = j-1;
                                     // }
                                     ////// --------------------------------------------------
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
                                 }
                             } else {
                                 if(perCols.includes(i)) {
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
                                 }
                             }
                         }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
@@ -3255,6 +3274,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         var perCols  =  Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
                         var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
                         var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
                         selCol.push(2); // selection column base
         
                         var filteredArray = numCols.filter(value => this._visibleCols.includes(value));
@@ -3280,18 +3301,25 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                     //     i = j-1;
                                     // }
                                     ////// --------------------------------------------------
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
                                 }
                             } else {
                                 if(numCols.includes(i)) {
-                                    this._dataTableObj.column(i).visible(true);
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
                                 } else {
-                                    this._dataTableObj.column(i).visible(false);
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
                                 }
                             }
                         }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
