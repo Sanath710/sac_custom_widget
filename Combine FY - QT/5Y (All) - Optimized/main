@@ -11553,7 +11553,7 @@ var start = performance.now();
                    
                     let sid = state.classList[1].split("row_level_select_")[1];
                     DO_5Y["DRP"][tbl.row('.selected').index()][sid] = selOptID;
-                    console.log(DO_5Y, "PRESERVE--------")
+                    // console.log(DO_5Y, "PRESERVE--------")
                    
 
                     // console.log(state)
@@ -12252,7 +12252,229 @@ console.log(DO_5Y, "DO_5Y")
             applyStyling_5YQT() {
 
                 document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
-                #example .top-header,.scenarios{text-align:center;font-weight:700}#example td,#example th{text-wrap:nowrap;align-content:center}#example td,option{background-color:#fff}#example td,#example>thead>tr:nth-child(2){height:48px}tbody,td,tfoot,th,thead,tr{border:0;border-color:inherit}#example th,option{border-bottom:1px solid #cbcbcb;color:#000}#example .rightBorder{border-right:1px solid #cbcbcb}#example select{padding-top:0;background-color:#dce6ef;outline:0}select:focus>option:checked{background:#0460a9;color:#fff}#example th{background-color:#f2f2f2;font-family:Arial;font-size:14px}#example .top-header{text-align:center;height:32px;max-height:32px;font-family:Arial;color:#000;font-size:14px;padding-top:0!important;padding-bottom:0!important}#example .row_level_select,.scenarios{font-family:Arial;font-size:14px;height:30px;cursor:pointer}#example>thead>tr:first-child>th:nth-child(1){background-color:#f2f2f2!important}#example>thead>tr:first-child>th:nth-child(2n){background-color:#e0e0e0}#example>thead>tr:first-child>th:nth-child(odd){background-color:#bdbdbd}.scenarios{background-color:inherit;color:#000;border:none}#example .group>td{height:32px;padding:0 10px!important;align-content:center;font-weight:700;color:#212121;font-family:Arial;background-color:#e0e0e0!important}#example td{border-bottom:1px solid #cbcbcb!important;font-family:Arial;font-size:14px}#example .numericColsCSS,#example .perCols,#example .vsPy{text-align:right!important}#example .numericColsCSS{color:#212121!important}#example .row_level_select{background-color:#dce6ef;border-radius:4px;border:none;outline:0}#example>thead{position:sticky;top:0!important;border-bottom:1px solid #cbcbcb;background-color:#ff0}#example{border-collapse:separate;width:100%!important}.mt-2{margin-top:0!important}#example>thead>tr:nth-child(2)>th.truncate.dt-orderable-none.dt-type-numeric{text-overflow:unset!important}#example_wrapper>div.dt-layout-row.dt-layout-table>div{padding:0!important}#example>tbody>tr:nth-child(2)>td.truncate,#example>tbody>tr>td.truncate,#example>thead>tr:first-child>th:nth-child(1),#example>thead>tr:nth-child(2)>th.truncate.dt-orderable-none{position:sticky;left:0}#example>tbody>tr>td:not(.truncate),td.truncate{mix-blend-mode:hue;scroll-behavior:smooth}#example>tbody>tr:first-child{font-weight:700;position:sticky!important;top:80px!important}#example>tbody>tr:not(.group)>td.truncate{max-width:50%;padding-left:.7%!important;white-space:nowrap;overflow:hidden}#example>tbody>tr.group>td.truncate{max-width:50%;padding-left:.3%!important;white-space:nowrap;overflow:hidden}
+                tbody, td, tfoot, th, thead, tr {
+                    border-color: inherit;
+                    border-style: none;
+                    border-width: 0;
+                }
+
+                #example .rightBorder {
+                    border-right:1px solid #CBCBCB;
+                }
+
+    
+                /* ------------------------- CUSTOM STYLING --------------------------------- */
+               
+                #example select {
+                    padding-top:0%;
+                    background-color:#DCE6EF;
+                    outline:none;
+                }
+    
+                option {
+                    background-color:white;
+                    border-bottom:1px solid #CBCBCB;
+                    color:black;
+                }
+                
+                select:focus>option:checked {
+                    background:#0460A9;
+                    color:white;
+                    /* selected */
+                }
+    
+                #example th {
+                    text-wrap: nowrap;
+                    border-bottom: 1px solid #CBCBCB;
+                    background-color:#F2F2F2;
+                    align-content: center;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                }
+    
+                /* ------------------------- TOP MOST - HEADER ROW ------------------------- */
+    
+                #example .top-header {
+                    height:32px;
+                    max-height:32px;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                    font-weight:bold;
+                    text-align: center;
+                    padding-top:0%!important;
+                    padding-bottom:0%!important;
+                }
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(1) {
+                    background-color:#F2F2F2!important;
+                }
+    
+                /* ------------------------- BASE CASE ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(2n) {
+                    background-color:#E0E0E0;
+                }
+    
+                /* ------------------------- REST CASE ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(2n+1) {
+                    background-color:#BDBDBD;
+                }
+    
+                /* ------------------------- 2nd MOST HEADER ------------------------- */
+                
+                #example > thead > tr:nth-child(2) {
+                    height:48px; 
+                }
+    
+                /* ------------------------- SCENARIO SELECT ELEMENTS HEADER ------------------------- */
+    
+                .scenarios {
+                    background-color:inherit;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                    text-align:center;
+                    font-weight:bold;
+                    height:30px;
+                    border:none;
+                    cursor: pointer;
+                }
+    
+                /* ------------------------- GROUPED ROW ------------------------- */
+    
+                #example .group > td {
+                    height:32px;
+                    padding: 0px 10px!important;
+                    align-content: center;
+                    font-weight:bold;
+                    color: #212121;
+                    font-family: Arial;
+                    background-color:#E0E0E0!important;
+                }
+    
+                /* ------------------------- NORMAL ROW ------------------------- */
+    
+                #example td {
+                    text-wrap:nowrap;
+                    background-color:white;
+                    height:48px;
+                    border-bottom:1px solid #CBCBCB!important;
+                    font-family: Arial;
+                    font-size:14px;
+                    align-content: center;
+                }
+    
+                #example .numericColsCSS, #example .vsPy, #example .perCols {
+                    text-align:right!important;
+                }
+    
+                #example .numericColsCSS {
+                    color:#212121!important;
+                }
+
+                /* ------------------------- ROW LEVEL SELECT ------------------------- */
+    
+                #example .row_level_select {
+                    font-family: Arial;
+                    font-size: 14px;
+                    height: 30px;
+                    background-color: #DCE6EF;
+                    border-radius:4px;
+                    border:none;
+                    outline:none;
+                    cursor: pointer;
+                }
+     
+                /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
+    
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+    
+                /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
+    
+                #example > thead {
+                    position: sticky;
+                    top:0%!important;
+                    border-bottom: 1px solid #CBCBCB;
+                    background-color: yellow;
+                }
+    
+                #example {
+                    border-collapse: separate;
+                    width:100%!important;
+                }
+    
+                .mt-2 {
+                    margin-top: 0% !important;
+                }
+    
+                #example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none.dt-type-numeric {
+                    text-overflow:unset!important;
+                }
+    
+                /* ------------------------- REMOVE TOP MOST PADDING ------------------------- */
+    
+                #example_wrapper > div.dt-layout-row.dt-layout-table > div {
+                    padding:0%!important;
+                }
+
+                /* ------------------------- TOTAL TOP-MOST ROW ------------------------------ */
+
+                #example > tbody > tr:nth-child(1) {
+                    font-weight:bold;
+                }
+    
+                /* --------------------------- FREEZE 1ST COLUMN ---------------------------- */
+
+                #example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none, #example > thead > tr:nth-child(1) > th:nth-child(1),
+                #example > tbody > tr:nth-child(2) > td.truncate, #example > tbody > tr > td.truncate
+                {
+                    position:sticky;
+                    left:0px;
+                }
+
+                td.truncate, #example > tbody > tr > td:not(.truncate) {
+                    mix-blend-mode: hue;
+                    scroll-behavior: smooth;
+                }
+
+                #example > tbody > tr:nth-child(1) {
+                    position:sticky!important;
+                    top:80px!important;
+                }
+
+                #example > tbody > tr:not(.group) > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                #example > tbody > tr.group > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
                 `;
             }
 
@@ -13187,7 +13409,7 @@ console.log(DO_5Y, "DO_5Y")
 
                     let sid = state.classList[1].split("row_level_select_")[1];
                     DO_5Y_QT["DRP"][tbl.row('.selected').index()][sid] = selOptID;
-                    console.log(DO_5Y_QT, "PRESERVE--------")
+                    // console.log(DO_5Y_QT, "PRESERVE--------")
 
                     /////////////// DRP RE-SELECTION TO PRESERVE DECIMAL STARTS (APPLYSCALING) /////////////////////
                     // if(DO_5Y_QT["DRP_SCALING"] == undefined) {
@@ -13332,7 +13554,7 @@ console.log(DO_5Y, "DO_5Y")
 
                 console.log("---",structuredClone(masterObj))
 
-var start = performance.now();
+// var start = performance.now();
 
                 // Final Row Assignment
                 var lastRowId = undefined;
@@ -13433,9 +13655,9 @@ var start = performance.now();
 
                     finalRow.pop()
 
-var end = performance.now();
-var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"DO_DRP_5Y (K/M) data preparation + Final Row Assignment Loop -- Render_5YQT took approx : ") 
+// var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Final Row Assignment Loop") 
 var start = performance.now();
 
                     // console.log("--------->>>>>>>", finalRow)
@@ -13535,7 +13757,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Creation -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Creation") 
 // var start = performance.now();
 
                     /////// creating scaled data copy starts ------------------------ 
@@ -13695,7 +13917,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Crea
                 }
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Default Dropdown Selection -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Default Dropdown Selection") 
 var start = performance.now();
 
                 // Styling Block Starts
@@ -13703,7 +13925,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Styling -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Styling") 
 var start = performance.now();
 
                 if (this._tableCSS.length > 1) {
@@ -13732,7 +13954,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side") 
 var start = performance.now();
 
                 const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
@@ -13751,7 +13973,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Header -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Header") 
 
                 // isSelectionUpdatedByUser = true;
                 DO_5Y_QT["Current_Scale"] = this._currentScaling;
@@ -13797,7 +14019,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection") 
 var start = performance.now();
                 
                 ///////// Show State on RS Change .......
@@ -13806,7 +14028,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_5YQT took approx : ")             // }
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide")             // }
 
 // console.log("DRP Master Object : ", DRP_DO_5Y_QT);
 
@@ -14910,7 +15132,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total () -- Render_5YQT took approx : ") 
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()") 
 
             }
 
