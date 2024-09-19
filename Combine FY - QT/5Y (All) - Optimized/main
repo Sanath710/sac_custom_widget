@@ -4541,14 +4541,32 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
      
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                /*
                 #example .truncate {
                     padding: 0.7% !important;
-                    max-width:130px;
+                    max-width:50%;
                     padding-left: 2%;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
+                */
     
                 /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
     
@@ -6357,13 +6375,31 @@ var start = performance.now();
      
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                /*
                 #example .truncate {
                     max-width:50%;
                     padding-left: 2%;
                     white-space: nowrap;
                     overflow: hidden;
-                    /* text-overflow: ellipsis; */
+                    text-overflow: ellipsis;
                 }
+                */
     
                 /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
     
@@ -8147,6 +8183,23 @@ var start = performance.now();
      
                 /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
     
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                /*
                 #example .truncate {
                     padding: 0.7% !important;
                     max-width:130px;
@@ -8154,6 +8207,7 @@ var start = performance.now();
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
+                */
                 
                 /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
     
