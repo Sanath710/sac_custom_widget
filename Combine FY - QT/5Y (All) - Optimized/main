@@ -3528,610 +3528,617 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
             columnVisibility(hideCols, showCols) {
 
-                if(this._callFrom == "MT") {
-                    if(hideCols[0] == "Num") {
-                        this._stateShown = 'Num';
-                        this.showPercentageWidVariance("Num");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                if(this._resultSet != undefined) {
+
+                    if(this._callFrom == "MT") {
+                        if(hideCols[0] == "Num") {
+                            this._stateShown = 'Num';
+                            this.showPercentageWidVariance("Num");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
+                        } 
+                        else if(hideCols[0] == "Var") {
+                            this._stateShown = 'Var';
+                            this.showPercentageWidVariance("Var");
+                            if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
                         }
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
+                        }
+    
                     } 
-                    else if(hideCols[0] == "Var") {
-                        this._stateShown = 'Var';
-                        this.showPercentageWidVariance("Var");
-                        if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    else if (this._callFrom == "5Y") {
+                        if(hideCols[0] == "Num") {
+                            this._stateShown = 'Num';
+                            this.showPercentageWidVariance("Num");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
+                        } 
+                        else if(hideCols[0] == "Var") {
+                            this._stateShown = 'Var';
+                            this.showPercentageWidVariance("Var");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
                         }
-                    }
-                    else if(hideCols[0] == "Per") {
-                        this._stateShown = 'Per';
-                        this.showPercentageWidVariance("Per");
-                    }
-
-                } 
-                else if (this._callFrom == "5Y") {
-                    if(hideCols[0] == "Num") {
-                        this._stateShown = 'Num';
-                        this.showPercentageWidVariance("Num");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
                         }
-                    } 
-                    else if(hideCols[0] == "Var") {
-                        this._stateShown = 'Var';
-                        this.showPercentageWidVariance("Var");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
-                        }
-                    }
-                    else if(hideCols[0] == "Per") {
-                        this._stateShown = 'Per';
-                        this.showPercentageWidVariance("Per");
-                    }
-
-                    // Color Cagr
-                    let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
-                    var cagrRowIndices = this._dataTableObj.rows().indexes();
-                    stateShown5Y_FY = this._stateShown;
-
-                    if(hideCols[0] == "Var" || hideCols[0] == "Per") {
-                        for(var i = 0; i < cagrRowIndices.length; i++) {
-                            for(var j = 0; j < cagrCols.length; j++) {
-                                var nodeVal = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).data().toString().replace(/,{1,}/g,"").replace(/%{1,}/g,"");
-                                var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
-                                if(nodeVal >= "0" || nodeVal > 0) {
-                                    node.style.color = "#2D7230";
-                                } else {
-                                    node.style.color = "#A92626";
+    
+                        // Color Cagr
+                        let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
+                        var cagrRowIndices = this._dataTableObj.rows().indexes();
+                        stateShown5Y_FY = this._stateShown;
+    
+                        if(hideCols[0] == "Var" || hideCols[0] == "Per") {
+                            for(var i = 0; i < cagrRowIndices.length; i++) {
+                                for(var j = 0; j < cagrCols.length; j++) {
+                                    var nodeVal = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).data().toString().replace(/,{1,}/g,"").replace(/%{1,}/g,"");
+                                    var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                    if(nodeVal >= "0" || nodeVal > 0) {
+                                        node.style.color = "#2D7230";
+                                    } else {
+                                        node.style.color = "#A92626";
+                                    }
+                                }
+                            }
+                        } else {
+                            for(var i = 0; i < cagrRowIndices.length; i++) {
+                                for(var j = 0; j < cagrCols.length; j++) {
+                                    var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                                    node.style.color = "#212121";
                                 }
                             }
                         }
-                    } else {
-                        for(var i = 0; i < cagrRowIndices.length; i++) {
-                            for(var j = 0; j < cagrCols.length; j++) {
-                                var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
-                                node.style.color = "#212121";
+    
+                    } 
+                    else if (this._callFrom == "5Y_QT") {
+                        if(hideCols[0] == "Var") {
+                            this._stateShown = 'vsPy';
+                            this.showPercentageWidVariance("vsPy");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
+                        } 
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
+                        }
+                        else if(hideCols[0] == "Num") {
+                            this._stateShown = 'Num';
+                            this.showPercentageWidVariance("Num");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         }
                     }
-
-                } 
-                else if (this._callFrom == "5Y_QT") {
-                    if(hideCols[0] == "Var") {
-                        this._stateShown = 'vsPy';
-                        this.showPercentageWidVariance("vsPy");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
-                        }
-                    } 
-                    else if(hideCols[0] == "Per") {
-                        this._stateShown = 'Per';
-                        this.showPercentageWidVariance("Per");
-                    }
-                    else if(hideCols[0] == "Num") {
-                        this._stateShown = 'Num';
-                        this.showPercentageWidVariance("Num");
-                        if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    else if (this._callFrom == "QT") {
+                        if(hideCols[0] == "vsPy") {
+                            this._stateShown = 'vsPy';
+                            this.showPercentageWidVariance("vsPy");
+                        } 
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
                         }
                     }
-                }
-                else if (this._callFrom == "QT") {
-                    if(hideCols[0] == "vsPy") {
-                        this._stateShown = 'vsPy';
-                        this.showPercentageWidVariance("vsPy");
-                    } 
-                    else if(hideCols[0] == "Per") {
-                        this._stateShown = 'Per';
-                        this.showPercentageWidVariance("Per");
-                    }
-                }
-                else if (this._callFrom == "FY") {
-                    if(hideCols[0] == "vsPy") {
-                        this._stateShown = 'vsPy';
-                        this.showPercentageWidVariance("vsPy");
-                    } 
-                    else if(hideCols[0] == "Per") {
-                        this._stateShown = 'Per';
-                        this.showPercentageWidVariance("Per");
-                    }
-                }
-                ///// ------------------------- For Non - MT  ------------------------------
-                else {
-                    if(hideCols[0] != -1) {
-                        for(var i = 0; i < hideCols.length; i++) {
-                            // console.log(hideCols[i])
-                            this._dataTableObj.column(hideCols[i]).visible(false);
+                    else if (this._callFrom == "FY") {
+                        if(hideCols[0] == "vsPy") {
+                            this._stateShown = 'vsPy';
+                            this.showPercentageWidVariance("vsPy");
+                        } 
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
                         }
                     }
-    
-                    if(showCols[0] != -1) {
-                        for(var i = 0; i < showCols.length; i++) {
-                            this._dataTableObj.column(showCols[i]).visible(true);
+                    ///// ------------------------- For Non - MT  ------------------------------
+                    else {
+                        if(hideCols[0] != -1) {
+                            for(var i = 0; i < hideCols.length; i++) {
+                                // console.log(hideCols[i])
+                                this._dataTableObj.column(hideCols[i]).visible(false);
+                            }
+                        }
+        
+                        if(showCols[0] != -1) {
+                            for(var i = 0; i < showCols.length; i++) {
+                                this._dataTableObj.column(showCols[i]).visible(true);
+                            }
                         }
                     }
+                    stateShown =  this._stateShown;
                 }
-                stateShown =  this._stateShown;
+              
             }
 
             showScenarios(fixedCols, col_start_indices, top_header_names_to_show, no_of_succeeding_measures) {
 
-                var colIndices = col_start_indices;
-                var no_of_succeeding = no_of_succeeding_measures;
-                var headerNames_to_show = this._fixedScenario.slice();
-                headerNames_to_show = headerNames_to_show.concat(top_header_names_to_show);
-                this._headerNames_to_show =headerNames_to_show;
-                var fixedCols = fixedCols;
-                this._fixedCols = fixedCols;
-                var visibleCols = [];
-                this._colIndices = colIndices.slice();
-                this._no_of_succeeding = no_of_succeeding;
-
-
-                if(this._callFrom == "MT") {
-
-                    let showCols = [];
-                    let gxDates = this._dataTableObj.columns(".selColClass")[0];
-
-                    if(this._stateShown == "Per") {
-                        showCols = this._dataTableObj.columns(".perColCSS")[0];
-                    } else if(this._stateShown == "Var") {
-                        showCols = this._dataTableObj.columns(".varCol")[0];
-                    } else {
-                        showCols = this._dataTableObj.columns(".numCol")[0];
-                    }
-                    this._gxDatesFiltered = [];
-
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
-                        for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
-                            visibleCols.push(j)
-                        }
-                    }
-
-                    var visiCols = [];
-
-                    ///// For Hiding Columns form Indices
-                    for(var i = fixedCols; i < this._tableColumnNames.length; i++) {
-                        if(i < this._hideExtraVisibleColumnFromIndex) 
-                        {
-                            if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
-                                if(gxDates.includes(i)) {
-                                    this._gxDatesFiltered.push(i)
-                                }
-                                this._dataTableObj.column(i).visible(true);
-                                visiCols.push(i)
-                            } else {
-                                this._dataTableObj.column(i).visible(false);
-                            }
-                        } 
-                        else {
-                            this._dataTableObj.column(i).visible(false);
-                        }
-                       
-                    }
-
-                    this._visibleCols = visiCols.slice();
-
-                } 
-                else if(this._callFrom == "5Y") {
-
-                    let showCols = [];
-                    let gxDates = this._dataTableObj.columns(".selColClass")[0];
-                    let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
-
-                    if(this._stateShown == "Per") {
-                        showCols = this._dataTableObj.columns(".perCols")[0];
-                    } else if(this._stateShown == "Var") {
-                        showCols = this._dataTableObj.columns(".varCols")[0];
-                    } else {
-                        showCols = this._dataTableObj.columns(".numericColsCSS")[0];
-                    }
-                    this._gxDatesFiltered = [];
-
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
-                        for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
-                            
-                            visibleCols.push(j)
-                            
-                            if(cagrCols.includes(j)) {
-                                showCols.push(j);
-                            }
-
-                        }
-                    }
-
-                    this._visibleCols = visibleCols.slice();
-
-                    ///// For Hiding Columns form Indices
-                    for(var i = 17; i < this._tableColumnNames.length; i++) {
-                        if(i < this._hideExtraVisibleColumnFromIndex) 
-                        {
-                            if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
-                                if(gxDates.includes(i)) {
-                                    this._gxDatesFiltered.push(i)
-                                }
-                                this._dataTableObj.column(i).visible(true);
-                            } else {
-                                this._dataTableObj.column(i).visible(false);
-                            }
-                        } 
-                        else {
-                            this._dataTableObj.column(i).visible(false);
-                        }
-                       
-                    }
+                if(this._resultSet != undefined) {
                     
-                }
-                else if (this._callFrom == "QT") {
+                    var colIndices = col_start_indices;
+                    var no_of_succeeding = no_of_succeeding_measures;
+                    var headerNames_to_show = this._fixedScenario.slice();
+                    headerNames_to_show = headerNames_to_show.concat(top_header_names_to_show);
+                    this._headerNames_to_show =headerNames_to_show;
+                    var fixedCols = fixedCols;
+                    this._fixedCols = fixedCols;
+                    var visibleCols = [];
+                    this._colIndices = colIndices.slice();
+                    this._no_of_succeeding = no_of_succeeding;
 
-                    let showCols = [];
-                    let gxDates = this._dataTableObj.columns(".selColClass")[0];
 
-                    if(this._stateShown == "Per") {
-                        showCols = this._dataTableObj.columns(".perCols")[0];
-                    } 
-                    ///// --------------------- vsPy CASE -----------------------
-                    else { 
-                        showCols = this._dataTableObj.columns(".vsPy")[0];
-                    }
+                    if(this._callFrom == "MT") {
 
-                    showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
 
-                    this._gxDatesFiltered = [];
-
-                    ////// BASE CASE --------------------------
-                    for(var i = 8; i < 18; i++) {
-                        visibleCols.push(i)
-                    }
-                    ////// ------------------------------------
-
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
-                        for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
-                            visibleCols.push(j)
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perColCSS")[0];
+                        } else if(this._stateShown == "Var") {
+                            showCols = this._dataTableObj.columns(".varCol")[0];
+                        } else {
+                            showCols = this._dataTableObj.columns(".numCol")[0];
                         }
-                    }
+                        this._gxDatesFiltered = [];
 
-                    this._visibleCols = visibleCols.slice();
-
-                    ///// For Hiding Columns form Indices
-                    for(var i = 8; i < this._tableColumnNames.length; i++) {
-                        if(i < this._hideExtraVisibleColumnFromIndex) 
-                        {
-                            if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
-                                if(gxDates.includes(i)) {
-                                    this._gxDatesFiltered.push(i)
-                                }
-                                this._dataTableObj.column(i).visible(true);
-                            } else {
-                                this._dataTableObj.column(i).visible(false);
-                            }
-                        } 
-                        else {
-                            this._dataTableObj.column(i).visible(false);
-                        }
-                    }
-
-                }
-                else if (this._callFrom == "FY") {
-
-                    let showCols = [];
-                    let gxDates = this._dataTableObj.columns(".selColClass")[0];
-
-                    if(this._stateShown == "Per") {
-                        showCols = this._dataTableObj.columns(".perCols")[0];
-                    } 
-                    ///// --------------------- vsPy CASE -----------------------
-                    else { 
-                        showCols = this._dataTableObj.columns(".vsPy")[0];
-                    }
-
-                    showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
-
-                    this._gxDatesFiltered = [];
-
-                    ////// BASE CASE --------------------------
-                    for(var i = 5; i < 10; i++) {
-                        visibleCols.push(i)
-                    }
-                    ////// ------------------------------------
-
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
-                        for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
-                            if(!visibleCols.includes(j)) {
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
                                 visibleCols.push(j)
                             }
                         }
-                    }
 
-                    this._visibleCols = Array.from(new Set(visibleCols.slice()));
+                        var visiCols = [];
 
-                    ///// For Hiding Columns form Indices
-                    for(var i = 8; i < this._tableColumnNames.length; i++) {
-                        if(i <= this._hideExtraVisibleColumnFromIndex) 
-                        {
-                            if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
-                                if(gxDates.includes(i)) {
-                                    this._gxDatesFiltered.push(i)
-                                }
-                                if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                        ///// For Hiding Columns form Indices
+                        for(var i = fixedCols; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
                                     this._dataTableObj.column(i).visible(true);
+                                    visiCols.push(i)
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
                                 }
-                            } else {
+                            } 
+                            else {
                                 this._dataTableObj.column(i).visible(false);
                             }
-                        } 
-                        else {
-                            this._dataTableObj.column(i).visible(false);
-                        }
-                    }
-
-                }
-                else if (this._callFrom == "5Y_QT") {
-
-                    let showCols = [];
-                    let gxDates = this._dataTableObj.columns(".selColClass")[0];
-
-                    if(this._stateShown == "Per") {
-                        showCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
-                    } 
-                    ///// --------------------- vsPy CASE -----------------------
-                    else if(this._stateShown == "vsPy") { 
-                        showCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
-                    }
-                    ///// --------------------- Num CASE -----------------------
-                    else if(this._stateShown == "Num") { 
-                        showCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
-                    }
-
-                    // showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
-
-                    this._gxDatesFiltered = [];
-
-                    ////// BASE CASE --------------------------
-                    for(var i = 3; i < 55; i++) {
-                        if(this._stateShown == "Per" && showCols.includes(i)) {
-                            visibleCols.push(i)
-                        } else if(this._stateShown == "Num" && showCols.includes(i))  {
-                            visibleCols.push(i)
-                        } else if (this._stateShown == "vsPy" && showCols.includes(i)) {
-                            visibleCols.push(i)
-                        }
-                    }
-                    ////// ------------------------------------
-
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
                         
-                        for(var j = parseInt(colIndices[i]); j < parseInt(colIndices[i]) + (this._measureOrder.length * 3) + this._measureOrder.length + 1; j++) {
-                            
-                            // if(this._stateShown == "Per" && showCols.includes(j)) {
-                            //     visibleCols.push(j)
-                            // } else if(this._stateShown == "Num" && showCols.includes(j))  {
-                            //     visibleCols.push(j)
-                            // } else if (this._stateShown == "vsPy" && showCols.includes(j)) {
-                                visibleCols.push(j)
-                            // }
-
-                            // if(gxDates.includes(j)) {
-                            //     visibleCols.push(j)
-                            //     this._gxDatesFiltered.push(j)
-                            // }
                         }
 
-                    }
+                        this._visibleCols = visiCols.slice();
 
-                    this._visibleCols = visibleCols.slice();
+                    } 
+                    else if(this._callFrom == "5Y") {
 
-                    ///// For Hiding Columns form Indices
-                    for(var i = 3; i < this._tableColumnNames.length; i++) {
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+                        let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
 
-                        if(i < this._hideExtraVisibleColumnFromIndex + 53) 
-                        {
-                            if(visibleCols.includes(i)) {
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
+                        } else if(this._stateShown == "Var") {
+                            showCols = this._dataTableObj.columns(".varCols")[0];
+                        } else {
+                            showCols = this._dataTableObj.columns(".numericColsCSS")[0];
+                        }
+                        this._gxDatesFiltered = [];
 
-                                if(this._stateShown == "Per" && showCols.includes(i)) 
-                                {
-                                    this._dataTableObj.column(i).visible(true);
-                                } 
-                                else if(this._stateShown == "Num" && showCols.includes(i))  
-                                {
-                                    this._dataTableObj.column(i).visible(true);
-                                } 
-                                else if (this._stateShown == "vsPy" && showCols.includes(i)) 
-                                {
-                                    this._dataTableObj.column(i).visible(true);
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                
+                                visibleCols.push(j)
+                                
+                                if(cagrCols.includes(j)) {
+                                    showCols.push(j);
                                 }
 
-                                if(gxDates.includes(i)) {
-                                    this._gxDatesFiltered.push(i)
-                                    this._dataTableObj.column(i).visible(true);
-                                }
+                            }
+                        }
 
-                            } else {
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 17; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    this._dataTableObj.column(i).visible(true);
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
                                 this._dataTableObj.column(i).visible(false);
                             }
+                        
+                        }
+                        
+                    }
+                    else if (this._callFrom == "QT") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
                         } 
-                        else {
-                            this._dataTableObj.column(i).visible(false);
+                        ///// --------------------- vsPy CASE -----------------------
+                        else { 
+                            showCols = this._dataTableObj.columns(".vsPy")[0];
+                        }
+
+                        showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 8; i < 18; i++) {
+                            visibleCols.push(i)
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                visibleCols.push(j)
+                            }
+                        }
+
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 8; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    this._dataTableObj.column(i).visible(true);
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
                         }
 
                     }
+                    else if (this._callFrom == "FY") {
 
-                }
-                else {
-                    ////// Fixed cols i.e base case
-                    for(var i = 0; i <= fixedCols; i++) {
-                        visibleCols.push(i);
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
+                        } 
+                        ///// --------------------- vsPy CASE -----------------------
+                        else { 
+                            showCols = this._dataTableObj.columns(".vsPy")[0];
+                        }
+
+                        showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 5; i < 10; i++) {
+                            visibleCols.push(i)
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                if(!visibleCols.includes(j)) {
+                                    visibleCols.push(j)
+                                }
+                            }
+                        }
+
+                        this._visibleCols = Array.from(new Set(visibleCols.slice()));
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 8; i < this._tableColumnNames.length; i++) {
+                            if(i <= this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        }
+
                     }
+                    else if (this._callFrom == "5Y_QT") {
 
-                    ////// For showing Columns from indices
-                    for(var i = 0; i < colIndices.length; i++) {
-                        for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
-                            // console.log(j, "->", parseInt(colIndices[i])+no_of_succeeding)
-                            this._dataTableObj.column(j).visible(true);
-                            visibleCols.push(j)
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                        } 
+                        ///// --------------------- vsPy CASE -----------------------
+                        else if(this._stateShown == "vsPy") { 
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        }
+                        ///// --------------------- Num CASE -----------------------
+                        else if(this._stateShown == "Num") { 
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        }
+
+                        // showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 3; i < 55; i++) {
+                            if(this._stateShown == "Per" && showCols.includes(i)) {
+                                visibleCols.push(i)
+                            } else if(this._stateShown == "Num" && showCols.includes(i))  {
+                                visibleCols.push(i)
+                            } else if (this._stateShown == "vsPy" && showCols.includes(i)) {
+                                visibleCols.push(i)
+                            }
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            
+                            for(var j = parseInt(colIndices[i]); j < parseInt(colIndices[i]) + (this._measureOrder.length * 3) + this._measureOrder.length + 1; j++) {
+                                
+                                // if(this._stateShown == "Per" && showCols.includes(j)) {
+                                //     visibleCols.push(j)
+                                // } else if(this._stateShown == "Num" && showCols.includes(j))  {
+                                //     visibleCols.push(j)
+                                // } else if (this._stateShown == "vsPy" && showCols.includes(j)) {
+                                    visibleCols.push(j)
+                                // }
+
+                                // if(gxDates.includes(j)) {
+                                //     visibleCols.push(j)
+                                //     this._gxDatesFiltered.push(j)
+                                // }
+                            }
+
+                        }
+
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 3; i < this._tableColumnNames.length; i++) {
+
+                            if(i < this._hideExtraVisibleColumnFromIndex + 53) 
+                            {
+                                if(visibleCols.includes(i)) {
+
+                                    if(this._stateShown == "Per" && showCols.includes(i)) 
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    } 
+                                    else if(this._stateShown == "Num" && showCols.includes(i))  
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    } 
+                                    else if (this._stateShown == "vsPy" && showCols.includes(i)) 
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+
+                        }
+
+                    }
+                    else {
+                        ////// Fixed cols i.e base case
+                        for(var i = 0; i <= fixedCols; i++) {
+                            visibleCols.push(i);
+                        }
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                // console.log(j, "->", parseInt(colIndices[i])+no_of_succeeding)
+                                this._dataTableObj.column(j).visible(true);
+                                visibleCols.push(j)
+                            }
+                        }
+
+                        ////// For Hiding Columns from indices (Pre-Decided)
+                        for(var i = 0; i < this._tableColumnNames.length; i++) {
+                            if(!visibleCols.includes(i)) {
+                                this._dataTableObj.column(i).visible(false);
+                            }
                         }
                     }
+                
+                    // console.log(this._dataTableObj.column(2).data())
 
-                    ////// For Hiding Columns from indices (Pre-Decided)
-                    for(var i = 0; i < this._tableColumnNames.length; i++) {
-                        if(!visibleCols.includes(i)) {
-                            this._dataTableObj.column(i).visible(false);
+                    const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+
+                    for(var i = 0; i < list.children.length - 1; i++) {
+                        list.removeChild(list.children[i]);
+                    }
+
+                    var topHeader = "<tr role='row'>";
+
+                    // Monthly Case
+                    if(this._callFrom == "MT") {
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
                         }
                     }
-                }
-               
-                // console.log(this._dataTableObj.column(2).data())
-
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
-
-                for(var i = 0; i < list.children.length - 1; i++) {
-                    list.removeChild(list.children[i]);
-                }
-
-                var topHeader = "<tr role='row'>";
-
-                // Monthly Case
-                if(this._callFrom == "MT") {
-                    ////// Empty Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
-                    ////// Base Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
-                    ////// Rest Case
-                    for(var i = 0; i < top_header_names_to_show.length; i++) {
-                        topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
-                    }
-                }
-                // QTR Case
-                else if(this._callFrom == "QT") {
-                // else if(this._colOrder.includes("Q1") || this._colOrder.includes("Q2") || this._colOrder.includes("Q3") || this._colOrder.includes("Q4")) {
-                    ////// Empty Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
-                    ////// Base Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
-                    topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[1].replace(" ","")}' >${this._customTopHeader[1]}</th>`
-                    ////// Rest Case
-                    for(var i = 0; i < top_header_names_to_show.length; i++) {
-                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                    // QTR Case
+                    else if(this._callFrom == "QT") {
+                    // else if(this._colOrder.includes("Q1") || this._colOrder.includes("Q2") || this._colOrder.includes("Q3") || this._colOrder.includes("Q4")) {
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
                         topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[1].replace(" ","")}' >${this._customTopHeader[1]}</th>`
-                    }
-                } 
-                else if(this._callFrom == "5Y") {
-                    ////// Empty Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
-                    ////// Base Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
-                    ////// Rest Case
-                    for(var i = 0; i < top_header_names_to_show.length; i++) {
-                        topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
-                    }
-                }
-                else if(this._callFrom == "5Y_QT") {
-
-                    if(this._stateShown == "Num") {
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[1].replace(" ","")}' >${this._customTopHeader[1]}</th>`
+                        }
+                    } 
+                    else if(this._callFrom == "5Y") {
                         ////// Empty Case
                         topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
                         ////// Base Case
-                        topHeader += `<th class='top-header' colspan='21' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
                         ////// Rest Case
                         for(var i = 0; i < top_header_names_to_show.length; i++) {
-                            topHeader += `<th class='top-header' colspan='21' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
                         }
-                    } else {
+                    }
+                    else if(this._callFrom == "5Y_QT") {
+
+                        if(this._stateShown == "Num") {
+                            ////// Empty Case
+                            topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                            ////// Base Case
+                            topHeader += `<th class='top-header' colspan='21' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                            ////// Rest Case
+                            for(var i = 0; i < top_header_names_to_show.length; i++) {
+                                topHeader += `<th class='top-header' colspan='21' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            }
+                        } else {
+                            ////// Empty Case
+                            topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                            ////// Base Case
+                            topHeader += `<th class='top-header' colspan='17' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                            ////// Rest Case
+                            for(var i = 0; i < top_header_names_to_show.length; i++) {
+                                topHeader += `<th class='top-header' colspan='17' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            }
+                        }
+                    }
+                    // Full Year Case
+                    else { 
                         ////// Empty Case
                         topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
                         ////// Base Case
-                        topHeader += `<th class='top-header' colspan='17' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
                         ////// Rest Case
                         for(var i = 0; i < top_header_names_to_show.length; i++) {
-                            topHeader += `<th class='top-header' colspan='17' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
                         }
                     }
-                }
-                // Full Year Case
-                else { 
-                    ////// Empty Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
-                    ////// Base Case
-                    topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
-                    ////// Rest Case
-                    for(var i = 0; i < top_header_names_to_show.length; i++) {
-                        topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+
+                
+                    topHeader += `</tr>`;
+
+                    document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+
+                    if(this._callFrom == "5Y") {
+                        ///////
+                        if(this._stateShown != "Per" && this._stateShown != "Var") {
+                            ////// 
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                            }
+                        } else {
+                            ////// 
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                            }
+                        }
                     }
-                }
-
-               
-                topHeader += `</tr>`;
-
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-
-                if(this._callFrom == "5Y") {
-                    ///////
-                    if(this._stateShown != "Per" && this._stateShown != "Var") {
-                        ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
-                        }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
-                        }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
-                        }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
-                        }
-                     } else {
-                         ////// 
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
-                         }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
-                         }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
-                         }
-                         if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                             document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
-                         }
-                     }
-                }
-                else if(this._callFrom == "5Y_QT") {
-                    ///////
-                    // if(this._stateShown != "Per" && this._stateShown != "Var") {
-                    //     ////// 
-                    //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                    //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
-                    //     }
-                    //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                    //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
-                    //     }
-                    //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                    //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
-                    //     }
-                    //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                    //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
-                    //     }
-                    //  } else {
-                    //      ////// 
-                    //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                    //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
-                    //      }
-                    //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                    //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
-                    //      }
-                    //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                    //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
-                    //      }
-                    //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                    //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
-                    //      }
-                    //  }
+                    else if(this._callFrom == "5Y_QT") {
+                        ///////
+                        // if(this._stateShown != "Per" && this._stateShown != "Var") {
+                        //     ////// 
+                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        //     }
+                        //  } else {
+                        //      ////// 
+                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        //      }
+                        //  }
+                    }
                 }
                 
             }
@@ -15200,11 +15207,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
             }
 
             changeTableHeaderOnVersionChange(header_names) {
-
-                if(this._versionChangeHeader[0] != undefined) {
-                    document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
+                if(this._callFrom == "QT") {
+                    if(this._versionChangeHeader[0] != undefined) {
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(6)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(9)").innerHTML = this._versionChangeHeader[0];
+                    }
+                } else {
+                    if(this._versionChangeHeader[0] != undefined) {
+                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
+                    }
                 }
-
             }
             // async exportToExcel(callFrom) {
 
