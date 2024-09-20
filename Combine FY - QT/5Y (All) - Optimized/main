@@ -9618,7 +9618,7 @@ var start = performance.now();
                     // var len = finalRow.slice().length;
                     // var temp = finalRow.slice();
                     // finalRow.push("--Variance--")
-                    finalRow = finalRow.slice(0, table_cols.length);
+                    // finalRow = finalRow.slice(0, table_cols.length);
                     // fixRowsObj[k] = finalRow.slice()
 
 
