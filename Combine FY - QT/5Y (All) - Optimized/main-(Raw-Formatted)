@@ -19,9 +19,12 @@ var stateShown5Y_FY = 'Num';
 var topHeader_ExportToExcel_5Y_QT = [];
 //// -------- Export Data To Excel Top Header Ends ---------------
 
+function getRawValue(cell_data) {
+    var regex = "<span style='display:non;'>(.*?)<\/span>";
+    return parseFloat(cell_data.match(regex)[1])
+}
 
-
-; (function () {
+(function () {
 
         const prepared = document.createElement('template')
         prepared.innerHTML = `
@@ -12269,7 +12272,7 @@ console.log(DO_5Y, "DO_5Y")
                             if(v.includes("+")) {
                                 v = v.split("+")[1];
                             }
-                            tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                            tempArr.push(v.toString()+" <span style='display:non;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                         } else {
                             while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
                                 tempArr.push("-")
@@ -12285,7 +12288,7 @@ console.log(DO_5Y, "DO_5Y")
                                 if(v.includes("+")) {
                                     v = v.split("+")[1];
                                 }
-                                tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                                tempArr.push(v.toString()+" <span style='display:non;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                             }
                         }
                         i++;
@@ -12998,12 +13001,13 @@ console.log(DO_5Y, "DO_5Y")
                         /// For Numeric & Variance
                         for(var f = updateFrom; f < updateFrom + changeLength - no_of_per_cols; f++) {
                             
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0;
                             var sliceLen_Start = DO_5Y_QT["Parent_Child_Indices"][parentID][0];
                             var columnarData = tbl.column(f).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y_QT["Parent_Child_Indices"][parentID].length)
                             
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
@@ -13017,7 +13021,9 @@ console.log(DO_5Y, "DO_5Y")
                             var CHILD_PREVIOUS_VALUE = parseFloat(tbl.cell(parentID, f).data().toString().replace(/,{1,}/g,""))
 
                             // subset child update
-                            var node = tbl.cell(parentID, f).data(subsetTotal).node()
+                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
+                            console.log(tbl.cell(parentID, f).data());
+
 
                             var TOTAL_PREVIOUS_VALUE = parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,""))
 
@@ -13058,14 +13064,14 @@ console.log(DO_5Y, "DO_5Y")
 
                             var subsetTotal = 0;
 
-                            var value = tbl.cell(parentID, idx_parent_1).data()
-                            var val_minus_act = tbl.cell(parentID, idx_parent_2).data()
+                            var value = getRawValue(tbl.cell(parentID, idx_parent_1).data())
+                            var val_minus_act = getRawValue(tbl.cell(parentID, idx_parent_2).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(parentID, idx_parent_1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = getRawValue(parseFloat(tbl.cell(parentID, idx_parent_1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(parentID, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = getRawValue(parseFloat(tbl.cell(parentID, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -15057,7 +15063,7 @@ var start = performance.now();
                         });
                         
                         // console.log(this._dataTableObj.column(numCols_5YQT[f - 1]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y_QT["Parent_Child_Indices"][currentSubTotalRowID].length))
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
                         // console.log(this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(),"----")
                         
                         ////// ---------------------- Coloring the cell Starts --------------------------
@@ -15093,7 +15099,7 @@ var start = performance.now();
                             }
                         });
 
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5YQT[f]).data(nFormat.format(subsetTotal)+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5YQT[f]).data(nFormat.format(subsetTotal)+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
 
                         ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -15241,7 +15247,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
             }
 
             getRawValue(cell_data) {
-                var regex = "<span style='display:none;'>(.*?)<\/span>";
+                var regex = "<span style='display:non;'>(.*?)<\/span>";
                 return parseFloat(cell_data.match(regex)[1])
             }
             // async exportToExcel(callFrom) {
