@@ -20,7 +20,7 @@ var topHeader_ExportToExcel_5Y_QT = [];
 //// -------- Export Data To Excel Top Header Ends ---------------
 
 function getRawValue(cell_data) {
-    var regex = "<span style='display:non;'>(.*?)<\/span>";
+    var regex = "<span style='display:none;'>(.*?)<\/span>";
     return parseFloat(cell_data.match(regex)[1])
 }
 
@@ -12272,7 +12272,7 @@ console.log(DO_5Y, "DO_5Y")
                             if(v.includes("+")) {
                                 v = v.split("+")[1];
                             }
-                            tempArr.push(v.toString()+" <span style='display:non;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                            tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                         } else {
                             while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
                                 tempArr.push("-")
@@ -12288,7 +12288,7 @@ console.log(DO_5Y, "DO_5Y")
                                 if(v.includes("+")) {
                                     v = v.split("+")[1];
                                 }
-                                tempArr.push(v.toString()+" <span style='display:non;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                                tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                             }
                         }
                         i++;
@@ -13021,7 +13021,7 @@ console.log(DO_5Y, "DO_5Y")
                             var CHILD_PREVIOUS_VALUE = parseFloat(tbl.cell(parentID, f).data().toString().replace(/,{1,}/g,""))
 
                             // subset child update
-                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
+                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                             console.log(tbl.cell(parentID, f).data());
 
 
@@ -15063,7 +15063,7 @@ var start = performance.now();
                         });
                         
                         // console.log(this._dataTableObj.column(numCols_5YQT[f - 1]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y_QT["Parent_Child_Indices"][currentSubTotalRowID].length))
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                         // console.log(this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(),"----")
                         
                         ////// ---------------------- Coloring the cell Starts --------------------------
@@ -15099,7 +15099,7 @@ var start = performance.now();
                             }
                         });
 
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5YQT[f]).data(nFormat.format(subsetTotal)+" <span style='display:non;'>"+unformattedSubsetTotal+"</span>").node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5YQT[f]).data(nFormat.format(subsetTotal)+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                         ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -15247,7 +15247,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
             }
 
             getRawValue(cell_data) {
-                var regex = "<span style='display:non;'>(.*?)<\/span>";
+                var regex = "<span style='display:none;'>(.*?)<\/span>";
                 return parseFloat(cell_data.match(regex)[1])
             }
             // async exportToExcel(callFrom) {
