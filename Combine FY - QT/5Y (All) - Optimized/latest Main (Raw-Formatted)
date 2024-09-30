@@ -13155,14 +13155,14 @@ console.log(DO_5Y, "DO_5Y")
 
                             //////--------  Top-Most Total % Update Starts -----------------------
 
-                            var value = tbl.cell(top_most_total_row_id, idx_parent_1).data()
-                            var val_minus_act = tbl.cell(top_most_total_row_id, idx_parent_2).data()
+                            var value = getRawValue(tbl.cell(top_most_total_row_id, idx_parent_1).data())
+                            var val_minus_act = getRawValue(tbl.cell(top_most_total_row_id, idx_parent_2).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(top_most_total_row_id, idx_parent_1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, idx_parent_1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(top_most_total_row_id, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
