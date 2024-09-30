@@ -4,7 +4,6 @@ var getScriptPromisify = src => {
     })
 }
 
-
 var load_libs_flag = false;
 var widget_ID_Name = {};
 var is_lib_loaded_exportToExcel = false;
