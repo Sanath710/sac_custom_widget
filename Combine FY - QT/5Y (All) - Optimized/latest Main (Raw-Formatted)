@@ -4759,7 +4759,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                  //// ------------------------ var cols indices starts ---------------------------------
                  var colorColIndices = new Set();
                  var considerCons = ["perCols", "vsPy"];
-                 var numColsForDecimal = [];
+                 var numColsForDecimal = [], varColForDecimal = [];
 
                  var alignCols = ["numericColsCSS", "perCols", "vsPy"]
                  var alignRight = new Set();
@@ -4772,6 +4772,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                      }
                      if(this._tableColumnNames[i]["className"] == "numericColsCSS") {
                         numColsForDecimal.push(i);
+                     }
+                     if(this._tableColumnNames[i]["className"] == "vsPy") {
+                        varColForDecimal.push(i);
                      }
                  }
                  //// ------------------------ var cols indices ends -----------------------------------
@@ -4859,6 +4862,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                         data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0);
                                     }
                                     return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
+                                    // return data
+                                },
+                            },
+                            {
+                                targets:varColForDecimal,
+                                render: function ( data, type, row ) {
+                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                                    if(data != undefined && !isNaN(data)) {
+                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces);
+                                    }
+                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
                                     // return data
                                 },
                             },
@@ -10625,7 +10639,7 @@ var start = performance.now();
                  //// ------------------------ var cols indices starts ---------------------------------
                  var colorColIndices = new Set();
                  var considerCons = ["perCols", "varCols"];
-                 var numColsForDecimal = [];
+                 var numColsForDecimal = [], varColForDecimal = [];
 
                  var alignCols = ["numericColsCSS", "perCols", "varCols"]
                  var alignRight = new Set();
@@ -10638,6 +10652,9 @@ var start = performance.now();
                      }
                      if(this._tableColumnNames[i]["className"] == "numericColsCSS") {
                         numColsForDecimal.push(i);
+                     }
+                     if(this._tableColumnNames[i]["className"] == "varCols") {
+                        varColForDecimal.push(i);
                      }
                  }
                  //// ------------------------ var cols indices ends -----------------------------------
@@ -10725,6 +10742,17 @@ var start = performance.now();
                                         data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0);
                                     }
                                     return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
+                                    // return data
+                                },
+                            },
+                            {
+                                targets:varColForDecimal,
+                                render: function ( data, type, row ) {
+                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                                    if(data != undefined && !isNaN(data)) {
+                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces);
+                                    }
+                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
                                     // return data
                                 },
                             },
