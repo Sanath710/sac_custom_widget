@@ -4,6 +4,7 @@ var getScriptPromisify = src => {
     })
 }
 
+
 var load_libs_flag = false;
 var widget_ID_Name = {};
 var is_lib_loaded_exportToExcel = false;
@@ -4858,21 +4859,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 render: function ( data, type, row ) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                                     if(data != undefined && !isNaN(data)) {
-                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0);
+                                        data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
-                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
-                                    // return data
-                                },
-                            },
-                            {
-                                targets:varColForDecimal,
-                                render: function ( data, type, row ) {
-                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
-                                    if(data != undefined && !isNaN(data)) {
-                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces);
-                                    }
-                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
-                                    // return data
+                                    return data
                                 },
                             },
                             {
@@ -5056,6 +5045,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     // console.log(typeof(e.target.classList), Object.keys(e.target.classList), e)
                     if(e.target.classList && e.target.classList[0] == "row_level_select") {
                         var sid = e.target.classList[1].split("row_level_select_")[1];
+                        console.log(e.target)
+                        console.log(e.target.options.selectedIndex)
                         DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
                     }
 
@@ -5603,12 +5594,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     var updateFrom = sliceLen;  
 
                     if(showTotalonRowUpdateFlag) {
-
+                        DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
+                        // console.log("DO------",DO_FY)
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
                         updateTotalOnRowUpdate_FY(updateFrom, no_of_mes, ROW_ID);
-
                     }
 
                     // console.log(DO_FY)
@@ -10738,21 +10729,9 @@ var start = performance.now();
                                 render: function ( data, type, row ) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                                     if(data != undefined && !isNaN(data)) {
-                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0);
+                                        data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
-                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
-                                    // return data
-                                },
-                            },
-                            {
-                                targets:varColForDecimal,
-                                render: function ( data, type, row ) {
-                                    var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
-                                    if(data != undefined && !isNaN(data)) {
-                                        data =  parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces);
-                                    }
-                                    return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
-                                    // return data
+                                    return data
                                 },
                             },
                             {
