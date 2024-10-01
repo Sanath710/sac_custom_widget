@@ -5928,18 +5928,24 @@ var start = performance.now();
                         }
 
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_FY["DRP"]).length; rowid++) {
-                                if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
-                                    DO_FY["DRP_USR_TRIGGERED"] = {}
-                                }
-                                if(DO_FY["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
-                                    DO_FY["DRP_USR_TRIGGERED"]["Added"] = []
-                                }
-                                if(DO_FY["DRP_USR_TRIGGERED"] && Object.keys(DO_FY["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_FY["DRP"])[rowid])) {
-                                    for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; selID++) {
-                                        var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
+                            if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
+                                DO_FY["DRP_USR_TRIGGERED"] = {}
+                            }
+                            if(DO_FY["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                                DO_FY["DRP_USR_TRIGGERED"]["Added"] = []
+                            }
+                            for(var rowid = 0; rowid < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; rowid++) {
+                                
+                                if(DO_FY["DRP_USR_TRIGGERED"] && Object.keys(DO_FY["DRP"]).includes(Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid])) {
+                                    
+                                    var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
+
+                                    for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                         if(tbl_row_id && tbl_row_id != "Added") {
+
                                             var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+
                                             if(select_element_id && Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
                                                 if(!DO_FY["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_FY["DRP"][tbl_row_id] && DO_FY["DRP"][tbl_row_id][select_element_id]) {
                                                     DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_FY["DRP"][tbl_row_id][select_element_id]
@@ -5947,8 +5953,11 @@ var start = performance.now();
                                                 }
                                             }
                                         }
+
                                     }
+
                                 }
+
                             }
                         }
 
@@ -6046,14 +6055,16 @@ var start = performance.now();
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_FY["DRP_USR_TRIGGERED"]) {
-                    for(var rowid = 0; rowid < Object.keys(DO_FY).length; rowid++) {
+                    for(var rowid = 0; rowid < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; rowid++) {
 
-                        if(Object.keys(DO_FY["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_FY["DRP"])[rowid])) {
+                        if(Object.keys(DO_FY["DRP"]).includes(Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid])) {
 
-                            for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; selID++) {
+                            var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
 
-                                var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
+                            for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                 if(tbl_row_id && tbl_row_id != "Added") {
+
                                     var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
                                     var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
@@ -7511,6 +7522,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                     + 1;  // to avoid selection column in count
 
                     if(showTotalonRowUpdateFlag) {
+                        DO_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
@@ -7868,24 +7880,33 @@ var start = performance.now();
                         }
 
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_QT).length; rowid++) {
-                                if(DO_QT["DRP_USR_TRIGGERED"] == undefined) {
-                                    DO_QT["DRP_USR_TRIGGERED"] = {}
-                                }
-                                if(DO_QT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
-                                    DO_QT["DRP_USR_TRIGGERED"]["Added"] = []
-                                }
-                                if(DO_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_QT["DRP"])[rowid])) {
-                                    for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; selID++) {
-                                        var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
+
+                            if(DO_QT["DRP_USR_TRIGGERED"] == undefined) {
+                                DO_QT["DRP_USR_TRIGGERED"] = {}
+                            }
+                            if(DO_QT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                                DO_QT["DRP_USR_TRIGGERED"]["Added"] = []
+                            }
+
+                            for(var rowid = 0; rowid < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; rowid++) {
+                               
+                                if(DO_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_QT["DRP"]).includes(Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid])) {
+                                    
+                                    var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
+
+                                    for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                         if(tbl_row_id && tbl_row_id != "Added") {
+                                            
                                             var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            
                                             if(select_element_id && Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
                                                 if(!DO_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_QT["DRP"][tbl_row_id] && DO_QT["DRP"][tbl_row_id][select_element_id]) {
                                                     DO_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_QT["DRP"][tbl_row_id][select_element_id]
                                                     DO_QT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
                                                 }
                                             }
+
                                         }
                                     }
                                 }
@@ -7985,13 +8006,14 @@ var start = performance.now();
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_QT["DRP_USR_TRIGGERED"]) {
-                    for(var rowid = 0; rowid < Object.keys(DO_QT).length; rowid++) {
 
-                        if(Object.keys(DO_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_QT["DRP"])[rowid])) {
+                    for(var rowid = 0; rowid < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; rowid++) {
+
+                        if(Object.keys(DO_QT["DRP"]).includes(Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid])) {
+                            
+                            var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
 
                             for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; selID++) {
-
-                                var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
                                 if(tbl_row_id && tbl_row_id != "Added") {
                                     var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
@@ -9434,6 +9456,7 @@ var start = performance.now();
                     var updateFrom = sliceLen;
                  
                     if(showTotalonRowUpdateFlag) {
+                        DO_MT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
@@ -9902,18 +9925,24 @@ var start = performance.now();
                         }
 
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_MT).length; rowid++) {
-                                if(DO_MT["DRP_USR_TRIGGERED"] == undefined) {
-                                    DO_MT["DRP_USR_TRIGGERED"] = {}
-                                }
-                                if(DO_MT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
-                                    DO_MT["DRP_USR_TRIGGERED"]["Added"] = []
-                                }
-                                if(DO_MT["DRP_USR_TRIGGERED"] && Object.keys(DO_MT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_MT["DRP"])[rowid])) {
-                                    for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; selID++) {
-                                        var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
+                            if(DO_MT["DRP_USR_TRIGGERED"] == undefined) {
+                                DO_MT["DRP_USR_TRIGGERED"] = {}
+                            }
+                            if(DO_MT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                                DO_MT["DRP_USR_TRIGGERED"]["Added"] = []
+                            }
+                            for(var rowid = 0; rowid < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; rowid++) {
+                                
+                                if(DO_MT["DRP_USR_TRIGGERED"] && Object.keys(DO_MT["DRP"]).includes(Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid])) {
+
+                                    var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
+
+                                    for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                         if(tbl_row_id && tbl_row_id != "Added") {
+
                                             var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            
                                             if(select_element_id && Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
                                                 if(!DO_MT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_MT["DRP"][tbl_row_id] && DO_MT["DRP"][tbl_row_id][select_element_id]) {
                                                     DO_MT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_MT["DRP"][tbl_row_id][select_element_id]
@@ -10019,13 +10048,14 @@ var start = performance.now();
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_MT["DRP_USR_TRIGGERED"]) {
-                    for(var rowid = 0; rowid < Object.keys(DO_MT).length; rowid++) {
+                    for(var rowid = 0; rowid < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; rowid++) {
 
-                        if(Object.keys(DO_MT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_MT["DRP"])[rowid])) {
+                        if(Object.keys(DO_MT["DRP"]).includes(Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid])) {
 
-                            for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; selID++) {
+                            var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
 
-                                var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
+                            for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                 if(tbl_row_id && tbl_row_id != "Added") {
                                     var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
@@ -11685,6 +11715,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     var updateFrom = sliceLen;
 
                     if(showTotalonRowUpdateFlag) {
+                        DO_5Y["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
@@ -12047,18 +12078,24 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                         }
 
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_5Y).length; rowid++) {
-                                if(DO_5Y["DRP_USR_TRIGGERED"] == undefined) {
-                                    DO_5Y["DRP_USR_TRIGGERED"] = {}
-                                }
-                                if(DO_5Y["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
-                                    DO_5Y["DRP_USR_TRIGGERED"]["Added"] = []
-                                }
-                                if(DO_5Y["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y["DRP"])[rowid])) {
-                                    for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; selID++) {
-                                        var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
+                            if(DO_5Y["DRP_USR_TRIGGERED"] == undefined) {
+                                DO_5Y["DRP_USR_TRIGGERED"] = {}
+                            }
+                            if(DO_5Y["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                                DO_5Y["DRP_USR_TRIGGERED"]["Added"] = []
+                            }
+                            for(var rowid = 0; rowid < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; rowid++) {
+                               
+                                if(DO_5Y["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y["DRP"]).includes(Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid])) {
+
+                                    var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
+
+                                    for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                         if(tbl_row_id && tbl_row_id != "Added") {
+
                                             var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            
                                             if(select_element_id && Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
                                                 if(!DO_5Y["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_5Y["DRP"][tbl_row_id] && DO_5Y["DRP"][tbl_row_id][select_element_id]) {
                                                     DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y["DRP"][tbl_row_id][select_element_id]
@@ -12157,14 +12194,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- R
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_5Y["DRP_USR_TRIGGERED"]) {
-                    for(var rowid = 0; rowid < Object.keys(DO_5Y).length; rowid++) {
+                    for(var rowid = 0; rowid < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; rowid++) {
 
-                        if(Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y["DRP"])[rowid])) {
+                        if(Object.keys(DO_5Y["DRP"]).includes(Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid])) {
 
-                            for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; selID++) {
+                            var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
 
-                                var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
+                            for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                 if(tbl_row_id && tbl_row_id != "Added") {
+
                                     var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
                                     var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
@@ -13573,6 +13612,7 @@ console.log(DO_5Y, "DO_5Y")
                                     + 1;  // to avoid selection column in count
 
                     if(showTotalonRowUpdateFlag) {
+                        DO_5Y_QT["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
@@ -13969,18 +14009,24 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Crea
                         } 
                         
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_5Y_QT).length; rowid++) {
-                                if(DO_5Y_QT["DRP_USR_TRIGGERED"] == undefined) {
-                                    DO_5Y_QT["DRP_USR_TRIGGERED"] = {}
-                                }
-                                if(DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
-                                    DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"] = []
-                                }
-                                if(DO_5Y_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y_QT["DRP"])[rowid])) {
-                                    for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; selID++) {
-                                        var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
+                            if(DO_5Y_QT["DRP_USR_TRIGGERED"] == undefined) {
+                                DO_5Y_QT["DRP_USR_TRIGGERED"] = {}
+                            }
+                            if(DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                                DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"] = []
+                            }
+                            for(var rowid = 0; rowid < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; rowid++) {
+                                
+                                if(DO_5Y_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y_QT["DRP"]).includes(Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid])) {
+
+                                    var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
+
+                                    for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                         if(tbl_row_id && tbl_row_id != "Added") {
+
                                             var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            
                                             if(select_element_id && Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
                                                 if(!DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) &&  DO_5Y_QT["DRP"][tbl_row_id] && DO_5Y_QT["DRP"][tbl_row_id][select_element_id]) {
                                                     DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y_QT["DRP"][tbl_row_id][select_element_id]
@@ -14089,14 +14135,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide")
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_5Y_QT["DRP_USR_TRIGGERED"]) {
-                    for(var rowid = 0; rowid < Object.keys(DO_5Y_QT).length; rowid++) {
+                    for(var rowid = 0; rowid < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; rowid++) {
 
                         if(Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y_QT["DRP"])[rowid])) {
 
-                            for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; selID++) {
+                            var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
 
-                                var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
+                            for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
                                 if(tbl_row_id && tbl_row_id != "Added") {
+                                    
                                     var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
                                     var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
