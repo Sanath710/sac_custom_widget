@@ -5528,6 +5528,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
                     let sid = state.classList[1].split("row_level_select_")[1];
                     DO_FY["DRP"][tbl.row('.selected').index()][sid] = selOptID;
+                  
                     // if(DO_FY["OriginalData"] == undefined || DO_FY["ScaledData"] == undefined) {
                     //     selOptVal = fixRowsObj[identifer];
                     // } else {
@@ -5584,7 +5585,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     var updateFrom = sliceLen;  
 
                     if(showTotalonRowUpdateFlag) {
-
+                        DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = selOptID;
                         state.style.backgroundColor="#C4DBEE";
                         state.style.border = "2px solid #0460A9";
                         state.style.color="#2C2C2C";
@@ -5927,7 +5928,7 @@ var start = performance.now();
                         }
 
                         if(this._varPreserveSelection == "TRUE"){
-                            for(var rowid = 0; rowid < Object.keys(DO_FY).length; rowid++) {
+                            for(var rowid = 0; rowid < Object.keys(DO_FY["DRP"]).length; rowid++) {
                                 if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
                                     DO_FY["DRP_USR_TRIGGERED"] = {}
                                 }
@@ -5937,11 +5938,13 @@ var start = performance.now();
                                 if(DO_FY["DRP_USR_TRIGGERED"] && Object.keys(DO_FY["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_FY["DRP"])[rowid])) {
                                     for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; selID++) {
                                         var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
-                                        var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                        if(Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
-                                            if(!DO_FY["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id)) {
-                                                DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_FY["DRP"][tbl_row_id][select_element_id]
-                                                DO_FY["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                        if(tbl_row_id && tbl_row_id != "Added") {
+                                            var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            if(select_element_id && Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                                                if(!DO_FY["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_FY["DRP"][tbl_row_id] && DO_FY["DRP"][tbl_row_id][select_element_id]) {
+                                                    DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_FY["DRP"][tbl_row_id][select_element_id]
+                                                    DO_FY["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                                }
                                             }
                                         }
                                     }
@@ -6029,7 +6032,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
                 DO_FY["Current_Scale"] = this._currentScaling;
                 
                 this.showTotal_FY();
-                
+            
+var start = performance.now();
+
+                ///////// Show State on RS Change .......
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
+ 
+ var end = performance.now();
+ var time = end - start;
+ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_FY took approx : ")     
+
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_FY["DRP_USR_TRIGGERED"]) {
@@ -6040,22 +6053,23 @@ var start = performance.now();
                             for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; selID++) {
 
                                 var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
-                                var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                var selectorID = ".row_level_select_"+select_element_id;
-                                var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
+                                if(tbl_row_id && tbl_row_id != "Added") {
+                                    var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                    var selectorID = ".row_level_select_"+select_element_id;
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
-                                this._dataTableObj
-                                .rows()
-                                .nodes()
-                                .each(row => row.classList.remove('selected'));
+                                    this._dataTableObj
+                                    .rows()
+                                    .nodes()
+                                    .each(row => row.classList.remove('selected'));
 
-                                this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+                                    this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
 
-                                if(selElement && selElement.selectedIndex != undefined) {
-                                    selElement.selectedIndex = DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
-                                    selElement.dispatchEvent(new Event("change"));
+                                    if(selElement && selElement.selectedIndex != undefined) {
+                                        selElement.selectedIndex = DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+                                        selElement.dispatchEvent(new Event("change"));
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -6064,15 +6078,7 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_FY took approx : ") 
-var start = performance.now();
-
-                ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
- 
- var end = performance.now();
- var time = end - start;
- console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_FY took approx : ")             // }
+        // }
  
  console.log(DO_FY, "DO_FY")
                  // this.applyScaling_5Y("K");
@@ -7872,11 +7878,13 @@ var start = performance.now();
                                 if(DO_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_QT["DRP"])[rowid])) {
                                     for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; selID++) {
                                         var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
-                                        var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                        if(Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
-                                            if(!DO_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id)) {
-                                                DO_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_QT["DRP"][tbl_row_id][select_element_id]
-                                                DO_QT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                        if(tbl_row_id && tbl_row_id != "Added") {
+                                            var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            if(select_element_id && Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                                                if(!DO_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_QT["DRP"][tbl_row_id] && DO_QT["DRP"][tbl_row_id][select_element_id]) {
+                                                    DO_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_QT["DRP"][tbl_row_id][select_element_id]
+                                                    DO_QT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                                }
                                             }
                                         }
                                     }
@@ -7964,7 +7972,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
                 DO_QT["Current_Scale"] = this._currentScaling;
                 
                 this.showTotal_QT();
-                
+          
+var start = performance.now();
+
+                ///////// Show State on RS Change .......
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(13, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 15);
+ 
+ var end = performance.now();
+ var time = end - start;
+ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_QT took approx : ")             // }
 var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_QT["DRP_USR_TRIGGERED"]) {
@@ -7975,22 +7992,23 @@ var start = performance.now();
                             for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; selID++) {
 
                                 var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
-                                var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                var selectorID = ".row_level_select_"+select_element_id;
-                                var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
+                                if(tbl_row_id && tbl_row_id != "Added") {
+                                    var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                    var selectorID = ".row_level_select_"+select_element_id;
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
-                                this._dataTableObj
-                                .rows()
-                                .nodes()
-                                .each(row => row.classList.remove('selected'));
+                                    this._dataTableObj
+                                    .rows()
+                                    .nodes()
+                                    .each(row => row.classList.remove('selected'));
 
-                                this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+                                    this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
 
-                                if(selElement && selElement.selectedIndex != undefined) {
-                                    selElement.selectedIndex = DO_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
-                                    selElement.dispatchEvent(new Event("change"));
+                                    if(selElement && selElement.selectedIndex != undefined) {
+                                        selElement.selectedIndex = DO_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+                                        selElement.dispatchEvent(new Event("change"));
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -7999,15 +8017,7 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_QT took approx : ") 
-var start = performance.now();
 
-                ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(13, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 15);
- 
- var end = performance.now();
- var time = end - start;
- console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_QT took approx : ")             // }
  
  console.log(DO_QT, "DO_QT")
                  // this.applyScaling_5Y("K");
@@ -9902,11 +9912,13 @@ var start = performance.now();
                                 if(DO_MT["DRP_USR_TRIGGERED"] && Object.keys(DO_MT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_MT["DRP"])[rowid])) {
                                     for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; selID++) {
                                         var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
-                                        var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                        if(Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
-                                            if(!DO_MT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id)) {
-                                                DO_MT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_MT["DRP"][tbl_row_id][select_element_id]
-                                                DO_MT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                        if(tbl_row_id && tbl_row_id != "Added") {
+                                            var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            if(select_element_id && Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                                                if(!DO_MT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_MT["DRP"][tbl_row_id] && DO_MT["DRP"][tbl_row_id][select_element_id]) {
+                                                    DO_MT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_MT["DRP"][tbl_row_id][select_element_id]
+                                                    DO_MT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                                }
                                             }
                                         }
                                     }
@@ -9997,6 +10009,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
 
 var start = performance.now();
 
+                ///////// Show State on RS Change .......
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(42, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 39);
+ 
+ var end = performance.now();
+ var time = end - start;
+ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_MT took approx : ")             // }
+var start = performance.now();
+
                 if(this._varPreserveSelection == "TRUE" && DO_MT["DRP_USR_TRIGGERED"]) {
                     for(var rowid = 0; rowid < Object.keys(DO_MT).length; rowid++) {
 
@@ -10005,22 +10026,23 @@ var start = performance.now();
                             for(var selID = 0; selID < Object.keys(DO_MT["DRP_USR_TRIGGERED"]).length; selID++) {
 
                                 var tbl_row_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"])[rowid];
-                                var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                var selectorID = ".row_level_select_"+select_element_id;
-                                var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
-
-                                this._dataTableObj
-                                .rows()
-                                .nodes()
-                                .each(row => row.classList.remove('selected'));
-
-                                this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
-
-                                if(selElement && selElement.selectedIndex != undefined) {
-                                    selElement.selectedIndex = DO_MT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
-                                    selElement.dispatchEvent(new Event("change"));
+                                if(tbl_row_id && tbl_row_id != "Added") {
+                                    var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                    var selectorID = ".row_level_select_"+select_element_id;
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
+    
+                                    this._dataTableObj
+                                    .rows()
+                                    .nodes()
+                                    .each(row => row.classList.remove('selected'));
+    
+                                    this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+    
+                                    if(selElement && selElement.selectedIndex != undefined) {
+                                        selElement.selectedIndex = DO_MT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+                                        selElement.dispatchEvent(new Event("change"));
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -10029,15 +10051,7 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_MT took approx : ") 
-var start = performance.now();
 
-                ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(42, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 39);
- 
- var end = performance.now();
- var time = end - start;
- console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_MT took approx : ")             // }
  
  console.log(DO_MT, "DO_MT")
                  // this.applyScaling_5Y("K");
@@ -12043,11 +12057,13 @@ var start = performance.now();
                                 if(DO_5Y["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y["DRP"])[rowid])) {
                                     for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; selID++) {
                                         var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
-                                        var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                        if(Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
-                                            if(!DO_5Y["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id)) {
-                                                DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y["DRP"][tbl_row_id][select_element_id]
-                                                DO_5Y["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                        if(tbl_row_id && tbl_row_id != "Added") {
+                                            var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            if(select_element_id && Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                                                if(!DO_5Y["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_5Y["DRP"][tbl_row_id] && DO_5Y["DRP"][tbl_row_id][select_element_id]) {
+                                                    DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y["DRP"][tbl_row_id][select_element_id]
+                                                    DO_5Y["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                                }
                                             }
                                         }
                                     }
@@ -12129,6 +12145,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
 
                 this.showTotal_5Y();
 
+var start = performance.now();
+                ///////// Show State on RS Change .......
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(62, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 14);
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_5Y took approx : ")             // }
 
 var start = performance.now();
 
@@ -12140,22 +12164,23 @@ var start = performance.now();
                             for(var selID = 0; selID < Object.keys(DO_5Y["DRP_USR_TRIGGERED"]).length; selID++) {
 
                                 var tbl_row_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"])[rowid];
-                                var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                var selectorID = ".row_level_select_"+select_element_id;
-                                var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
+                                if(tbl_row_id && tbl_row_id != "Added") {
+                                    var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                    var selectorID = ".row_level_select_"+select_element_id;
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
-                                this._dataTableObj
-                                .rows()
-                                .nodes()
-                                .each(row => row.classList.remove('selected'));
-            
-                                this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+                                    this._dataTableObj
+                                    .rows()
+                                    .nodes()
+                                    .each(row => row.classList.remove('selected'));
+                
+                                    this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
 
-                                if(selElement && selElement.selectedIndex != undefined) {
-                                    selElement.selectedIndex = DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
-                                    selElement.dispatchEvent(new Event("change"));
+                                    if(selElement && selElement.selectedIndex != undefined) {
+                                        selElement.selectedIndex = DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+                                        selElement.dispatchEvent(new Event("change"));
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -12164,14 +12189,6 @@ var start = performance.now();
 var end = performance.now();
 var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_5Y took approx : ") 
-var start = performance.now();
-                ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(62, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 14);
-
-var end = performance.now();
-var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_5Y took approx : ")             // }
 
 console.log(DO_5Y, "DO_5Y")
                 // this.applyScaling_5Y("K");
@@ -13962,11 +13979,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table Row Crea
                                 if(DO_5Y_QT["DRP_USR_TRIGGERED"] && Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).includes(Object.keys(DO_5Y_QT["DRP"])[rowid])) {
                                     for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; selID++) {
                                         var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
-                                        var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                        if(Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
-                                            if(!DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id)) {
-                                                DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y_QT["DRP"][tbl_row_id][select_element_id]
-                                                DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                        if(tbl_row_id && tbl_row_id != "Added") {
+                                            var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                            if(select_element_id && Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                                                if(!DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) &&  DO_5Y_QT["DRP"][tbl_row_id] && DO_5Y_QT["DRP"][tbl_row_id][select_element_id]) {
+                                                    DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_5Y_QT["DRP"][tbl_row_id][select_element_id]
+                                                    DO_5Y_QT["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                                                }
                                             }
                                         }
                                     }
@@ -14059,6 +14078,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
                 //     this.applyScaling_5Y_QT("M")
                 // }
 var start = performance.now();
+                
+                ///////// Show State on RS Change .......
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(55, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 16);
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide")    
+var start = performance.now();
 
                 if(this._varPreserveSelection == "TRUE" && DO_5Y_QT["DRP_USR_TRIGGERED"]) {
                     for(var rowid = 0; rowid < Object.keys(DO_5Y_QT).length; rowid++) {
@@ -14068,22 +14096,23 @@ var start = performance.now();
                             for(var selID = 0; selID < Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"]).length; selID++) {
 
                                 var tbl_row_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"])[rowid];
-                                var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
-                                var selectorID = ".row_level_select_"+select_element_id;
-                                var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
+                                if(tbl_row_id && tbl_row_id != "Added") {
+                                    var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+                                    var selectorID = ".row_level_select_"+select_element_id;
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
-                                this._dataTableObj
-                                .rows()
-                                .nodes()
-                                .each(row => row.classList.remove('selected'));
-            
-                                this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+                                    this._dataTableObj
+                                    .rows()
+                                    .nodes()
+                                    .each(row => row.classList.remove('selected'));
+                
+                                    this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
 
-                                if(selElement && selElement.selectedIndex != undefined) {
-                                    selElement.selectedIndex = DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
-                                    selElement.dispatchEvent(new Event("change"));
+                                    if(selElement && selElement.selectedIndex != undefined) {
+                                        selElement.selectedIndex = DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+                                        selElement.dispatchEvent(new Event("change"));
+                                    }
                                 }
-
                             }
                         }
                     }
@@ -14091,16 +14120,7 @@ var start = performance.now();
 
 var end = performance.now();
 var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection") 
-var start = performance.now();
-                
-                ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(55, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 16);
-
-var end = performance.now();
-var time = end - start;
-console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide")             // }
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection")          // }
 
 // console.log("DRP Master Object : ", DRP_DO_5Y_QT);
 
