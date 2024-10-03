@@ -1,0 +1,76 @@
+Create the package of the application which needs to be Moved in Q/P
+CD created / use created CD
+	- Change CD Name/ID
+	- Description
+	- Change Manager: Girish Lakhani
+	- IT Approver: Maruti Vara Prasad Madireddi (Example)
+	- Expert: Girish Lakhani
+ 	- Reviewer: Prashant Rangasubhe (Example)
+	- Process Owner: Sebastian Tobon Mesa
+	-
+	**Go to Action:- 
+		- Change the Status of CD to "In Development"
+		- Change Description of Change in "Text" - (you will find it on top)
+		- Check the changes
+		- Change the status of CD from "In development" to "Request Technical Review"
+		- Save Changes
+
+\
+\\ Procedure for mail.
+- Get Application reviewed by the reviewer
+- then send the mail as shown below to transport package to Q
+
+-------------------------------------------------------QA ----------------------------------------------
+
+Hi Prashant,
+
+Please review and approve technical review for CD1400105477. If everything is fine, then please import below package to QA system. 
+
+Package name : CD1400105477_C_APP_2024.8.14_SANA_SF_Export
+
+Please let us know if you have any questions. 
+
+Description of change:
+
+Sales Forecasting :-
+- Export button enable issue
+
+Thanks,
+Girish
+
+
+- After getting the package move in Q. 
+-  review to testing
+- Change the status of CD from "Request Technical Review" to "Apply to Quality system
+- Change the status of CD from "Apply to Quality system" to "request for implementation approval"
+- current status of CD will be implementation approval
+- send the mail shown below for approval 
+-----------------------------------------------Implementation approval------------------------------------------------------------------------
+
+Implementation approval - 1400105477
+
+Hi Sebastian, Maruti,
+
+Could you please provide Implementation Approval for CD1400105477?
+
+This is including Sales Forecasting application (Export button enable issue).
+
+Thanks,
+Girish
+
+- After getting Approval 
+- send the mail shown below for movement in PROD
+
+----------------------------------------------------PROD--------------------------------------------
+
+Hi Prashant,
+
+Could you please import following Package into PRD system?
+
+Package : CD1400105477_C_APP_2024.8.14_SANA_SF_Export
+
+We have received all necessary approvals in CD, let us know if you have any questions.
+
+Thanks,
+Girish
+
