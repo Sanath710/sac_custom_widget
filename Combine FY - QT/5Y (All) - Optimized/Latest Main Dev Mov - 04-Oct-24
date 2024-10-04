@@ -10569,6 +10569,41 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     position:sticky!important;
                     top:80px!important;
                 }
+
+                /* --------------------------- FREEZE 1st COLUMN ---------------------------- */
+
+                #example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none, #example > thead > tr:nth-child(1) > th:nth-child(1),
+                #example > tbody > tr:nth-child(2) > td.truncate, #example > tbody > tr > td.truncate
+                {
+                    position:sticky;
+                    left:0px;
+                }
+
+                td.truncate, #example > tbody > tr > td:not(.truncate) {
+                    mix-blend-mode: hue;
+                    scroll-behavior: smooth;
+                }
+
+                #example > tbody > tr:nth-child(1) {
+                    position:sticky!important;
+                    top:80px!important;
+                }
+
+                #example > tbody > tr:not(.group) > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                #example > tbody > tr.group > td.truncate {
+                    max-width: 50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
                 
                 `;
             }
