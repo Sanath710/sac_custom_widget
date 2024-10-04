@@ -15375,7 +15375,7 @@ var start = performance.now();
                 ///// ------------------- For Color Top-Most Total Starts --------------------------
                 var loopCells = varCols_5YQT.concat(perCols_5YQT);
 
-                for(var i = 2; i < loopCells.length; i++) {
+                for(var i = 0; i < loopCells.length; i++) {
 
                     // var node =  this._dataTableObj.cell(0, i).node()
                     var data =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).data()
