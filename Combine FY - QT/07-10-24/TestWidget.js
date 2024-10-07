@@ -8087,7 +8087,7 @@ var start = performance.now();
                             
                             var tbl_row_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"])[rowid];
 
-                            for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"]).length; selID++) {
+                            for(var selID = 0; selID < Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
                                 if(tbl_row_id && tbl_row_id != "Added") {
                                     var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
