@@ -257,7 +257,7 @@ function getRawValue(cell_data) {
                                 }
                                 tempArr.push(v)
                             } else {
-                                tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
+                                tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                             }
                         } else {
                             while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
@@ -276,7 +276,7 @@ function getRawValue(cell_data) {
                                     }
                                     tempArr.push(parseFloat(v))
                                 } else {
-                                    tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
+                                    tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                                 }
                             }
                         }
@@ -5099,13 +5099,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         /// For Numeric & Variance
                         for(var f = updateFrom; f < updateFrom + no_of_per_cols + 1; f++) {
                             
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0, cnt = 0;
                             var sliceLen_Start = DO_FY["Parent_Child_Indices"][parentID][0];
                             var columnarData = tbl.column(f).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_FY["Parent_Child_Indices"][parentID].length)
                             
-                            var cnt = 0;
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
@@ -5116,6 +5116,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 } else {
                                     node.style.color = "#A92626";
                                 }
+                                cnt++;
                             });
                             
                             //// Avoiding Numeric Columns for Adding Decimal
@@ -5127,13 +5128,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
 
                             var CHILD_PREVIOUS_VALUE = parseFloat(tbl.cell(parentID, f).data().toString().replace(/,{1,}/g,""))
+                            var CHILD_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(parentID, f).data()).toString().replace(/,{1,}/g,""))
 
                             // subset child update
-                            var node = tbl.cell(parentID, f).data(subsetTotal).node()
+                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                             var TOTAL_PREVIOUS_VALUE = parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,""))
+                            var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 1) {
@@ -5143,7 +5147,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             finalVal = nFormat.format(finalVal)
 
                             // top-most total update
-                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal).node()
+                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal.toString()+" <span style='display:none;'>"+finalVal__RAW+"</span>").node()
 
                             ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -5155,6 +5159,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 } else {
                                     node.style.color = "#A92626";
                                 }
+
+                                //// child row 
+                                var data =  tbl.cell(updateFromRowID, f).data()
+                                var node = tbl.cell(updateFromRowID, f).node()
+   
+                                if(data >= 0 || data >= "0") {
+                                    node.style.color = "#2D7230";
+                                } else {
+                                    node.style.color = "#A92626";
+                                }
+                                //// child row ends
 
                                 if(finalVal >= 0 || finalVal >= "0") {
                                     node1.style.color = "#2D7230";
@@ -5172,14 +5187,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
                             var subsetTotal = 0;
 
-                            var value = tbl.cell(parentID, f - (idx + 4)).data()
-                            var val_minus_act = tbl.cell(parentID, f - no_of_per_cols).data()
+                            var value = getRawValue(tbl.cell(parentID, f - (idx + 4)).data())
+                            var val_minus_act = getRawValue(tbl.cell(parentID, f - no_of_per_cols).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(parentID, f - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(parentID, f - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -5219,14 +5234,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
                             var subsetTotal = 0;
 
-                            var value = tbl.cell(top_most_total_row_id, f - (idx + 4)).data()
-                            var val_minus_act = tbl.cell(top_most_total_row_id, f - no_of_per_cols).data()
+                            var value = getRawValue(tbl.cell(top_most_total_row_id, f - (idx + 4)).data())
+                            var val_minus_act = getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data())
         
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(top_most_total_row_id, f - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
         
                             var act1 = value - val_minus_act
@@ -6243,7 +6258,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             if(v.includes("+")) {
                                 v = v.split("+")[1];
                             }
-                            tempArr.push(v)
+                            tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                         } else {
                             while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
                                 tempArr.push("-")
@@ -6259,7 +6274,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 if(v.includes("+")) {
                                     v = v.split("+")[1];
                                 }
-                                tempArr.push(v)
+                                tempArr.push(v.toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                             }
                         }
                         i++;
@@ -7044,13 +7059,13 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                         /// For Numeric & Variance
                         for(var f = updateFrom; f < updateFrom + 10; f++) {
                             
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0, cnt = 0;
                             var sliceLen_Start = DO_QT["Parent_Child_Indices"][parentID][0];
                             var columnarData = tbl.column(f).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_QT["Parent_Child_Indices"][parentID].length)
                             
-                            var cnt = 0;
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
@@ -7061,6 +7076,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 } else {
                                     node.style.color = "#A92626";
                                 }
+                                cnt++;
                             });
                             
                             //// Avoiding Numeric Columns for Adding Decimal
@@ -7069,13 +7085,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             }
 
                             var CHILD_PREVIOUS_VALUE = parseFloat(tbl.cell(parentID, f).data().toString().replace(/,{1,}/g,""))
+                            var CHILD_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(parentID, f).data()).toString().replace(/,{1,}/g,""))
 
                             // subset child update
-                            var node = tbl.cell(parentID, f).data(subsetTotal).node()
+                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                             var TOTAL_PREVIOUS_VALUE = parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,""))
+                            var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 5) {
@@ -7083,7 +7102,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             }
 
                             // top-most total update
-                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal).node()
+                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal.toString()+" <span style='display:none;'>"+finalVal__RAW+"</span>").node()
 
                             ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -7124,14 +7143,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                             var subsetTotal = 0;
 
-                            var value = tbl.cell(parentID, f - 10).data()
-                            var val_minus_act = tbl.cell(parentID, f - no_of_per_cols).data()
+                            var value = getRawValue(tbl.cell(parentID, f - 10).data())
+                            var val_minus_act = getRawValue(tbl.cell(parentID, f - no_of_per_cols).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(parentID, f - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(parentID, f - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -7170,14 +7189,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                             //////--------  Top-Most Total % Update Starts -----------------------
 
-                            var value = tbl.cell(top_most_total_row_id, f - 10).data()
-                            var val_minus_act = tbl.cell(top_most_total_row_id, f - no_of_per_cols).data()
+                            var value = getRawValue(tbl.cell(top_most_total_row_id, f - 10).data())
+                            var val_minus_act = getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(top_most_total_row_id, f - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -9060,7 +9079,7 @@ var start = performance.now();
                                 var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
     
                                 finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                                var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
+                                var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
     
                                 //// Avoiding Numeric Columns for Adding Decimal
                                 if(!flag) {
@@ -10292,7 +10311,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 }
                                 tempArr.push(v)
                             } else {
-                                tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
+                                tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                             }
                         } else {
                             while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
@@ -10312,7 +10331,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                     }
                                     tempArr.push(parseFloat(v))
                                 } else {
-                                    tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces))
+                                    tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
                                 }
                             }
                         }
@@ -11097,15 +11116,24 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                         /// For Numeric & Variance
                         for(var f = updateFrom; f < updateFrom + (no_of_per_cols * 2) + 1; f++) {
                             
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0, cnt = 0;
                             var sliceLen_Start = DO_5Y["Parent_Child_Indices"][parentID][0];
                             var columnarData = tbl.column(f).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y["Parent_Child_Indices"][parentID].length)
                             
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
+
+                                var node = tbl.cell(Object.values(DO_5Y["Parent_Child_Indices"][parentID])[cnt], f).node()
+                                if(v >= 0 || v >= "0") {
+                                    node.style.color = "#2D7230";
+                                } else {
+                                    node.style.color = "#A92626";
+                                }
+                                cnt++;
                             });
                             
                             //// Avoiding Numeric Columns for Adding Decimal
@@ -11116,13 +11144,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             subsetTotal = nFormat.format(subsetTotal)
 
                             var CHILD_PREVIOUS_VALUE = parseFloat(tbl.cell(parentID, f).data().toString().replace(/,{1,}/g,""))
+                            var CHILD_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(parentID, f).data()).toString().replace(/,{1,}/g,""))
 
                             // subset child update
-                            var node = tbl.cell(parentID, f).data(subsetTotal).node()
+                            var node = tbl.cell(parentID, f).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                             var TOTAL_PREVIOUS_VALUE = parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,""))
+                            var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 5) {
@@ -11132,7 +11163,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             finalVal = nFormat.format(finalVal)
                             
                             // top-most total update
-                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal).node()
+                            var node1 = tbl.cell(top_most_total_row_id, f).data(finalVal.toString()+" <span style='display:none;'>"+finalVal__RAW+"</span>").node()
 
                             ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -11161,14 +11192,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                             var subsetTotal = 0;
 
-                            var value = tbl.cell(parentID, f - 8).data()
-                            var val_minus_act = tbl.cell(parentID, f - 4).data()
+                            var value = getRawValue(tbl.cell(parentID, f - 8).data())
+                            var val_minus_act = getRawValue(tbl.cell(parentID, f - 4).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(parentID, f - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(parentID, f - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(parentID, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -11197,14 +11228,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                             //////--------  Top-Most Total % Update Starts -----------------------
 
-                            var value = tbl.cell(top_most_total_row_id, f - 8).data()
-                            var val_minus_act = tbl.cell(top_most_total_row_id, f - 4).data()
+                            var value = getRawValue(tbl.cell(top_most_total_row_id, f - 8).data())
+                            var val_minus_act = getRawValue(tbl.cell(top_most_total_row_id, f - 4).data())
 
                             if(isNaN(value)) {
-                                value = parseFloat(tbl.cell(top_most_total_row_id, f - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(tbl.cell(top_most_total_row_id, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
                             var act1 = value - val_minus_act
@@ -11243,15 +11274,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     var CAGR_INDEX = updateFrom + no_of_mes - 1;
                     var Vbegin= 0, Vfinal = 0, t = (1/4);
 
-                    Vbegin = tbl.cell(parentID, CAGR_INDEX - 13).data()
-                    Vfinal = tbl.cell(parentID, CAGR_INDEX - 9).data()
+                    Vbegin = getRawValue(tbl.cell(parentID, CAGR_INDEX - 13).data())
+                    Vfinal = getRawValue(tbl.cell(parentID, CAGR_INDEX - 9).data())
 
                     if(isNaN(Vbegin) &&  Vbegin.includes(",")) {
-                        Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                        Vbegin = getRawValue(Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                     }
 
                     if(isNaN(Vfinal) &&  Vfinal.includes(",")) {
-                        Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                        Vfinal = getRawValue(Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                     }
 
                     if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
@@ -11263,6 +11294,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
                         subsetTotal = "100.0 %"
                     } 
+                    else if ((Vbegin < 0 || Vbegin < "0") && (Vfinal < 0 || Vfinal < "0")) {
+                        subsetTotal = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                    }
                     else if (Vbegin < 0 || Vbegin < "0") {
                         subsetTotal = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
                     }
@@ -11289,15 +11323,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     var subsetTotal = 0;
                     var Vbegin= 0, Vfinal = 0, t = (1/4);
 
-                    Vbegin = tbl.cell(top_most_total_row_id, CAGR_INDEX - 13).data()
-                    Vfinal = tbl.cell(top_most_total_row_id, CAGR_INDEX - 9).data()
+                    Vbegin = getRawValue(tbl.cell(top_most_total_row_id, CAGR_INDEX - 13).data())
+                    Vfinal = getRawValue(tbl.cell(top_most_total_row_id, CAGR_INDEX - 9).data())
 
                     if(isNaN(Vbegin) &&  Vbegin.includes(",")) {
-                        Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                        Vbegin = getRawValue(Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                     }
 
                     if(isNaN(Vfinal) &&  Vfinal.includes(",")) {
-                        Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                        Vfinal = getRawValue(Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                     }
 
                     if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
@@ -11309,6 +11343,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
                         subsetTotal = "100.0 %"
                     } 
+                    else if ((Vbegin < 0 || Vbegin < "0") && (Vfinal < 0 || Vfinal < "0")) {
+                        subsetTotal = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                    }
                     else if (Vbegin < 0 || Vbegin < "0") {
                         subsetTotal = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
                     }
@@ -13224,7 +13261,7 @@ console.log(DO_5Y, "DO_5Y")
                             var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
                             // console.log(parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,"")));
 
                             //// Avoiding Numeric Columns for Adding Decimal
@@ -13245,6 +13282,17 @@ console.log(DO_5Y, "DO_5Y")
                                 } else {
                                     node.style.color = "#A92626";
                                 }
+
+                                //// child row 
+                                var data =  tbl.cell(updateFromRowID, f).data()
+                                var node = tbl.cell(updateFromRowID, f).node()
+ 
+                                if(data >= 0 || data >= "0") {
+                                    node.style.color = "#2D7230";
+                                } else {
+                                    node.style.color = "#A92626";
+                                }
+                                //// child row ends
 
                                 if(finalVal >= 0 || finalVal >= "0") {
                                     node1.style.color = "#2D7230";
@@ -13289,6 +13337,15 @@ console.log(DO_5Y, "DO_5Y")
                             ////// ---------------------- Coloring the cell Starts --------------------------
 
                             if(subsetTotal >= 0 || subsetTotal >= "0") {
+                                node.style.color = "#2D7230";
+                            } else {
+                                node.style.color = "#A92626";
+                            }
+
+                            var d =  tbl.cell(updateFromRowID, f).data()
+                            var node = tbl.cell(updateFromRowID, f).node()
+
+                            if(d >= 0 || d >= "0") {
                                 node.style.color = "#2D7230";
                             } else {
                                 node.style.color = "#A92626";
@@ -14355,18 +14412,19 @@ var start = performance.now();
                     //// For Numeric 
                     for(var f = 0; f < numCols_FY.length; f++) {
                                         
-                        var subsetTotal = 0;
+                        var subsetTotal = 0, unformattedSubsetTotal = 0;
                         var sliceLen_Start = DO_FY["Parent_Child_Indices"][currentSubTotalRowID][0];
                         var columnarData = this._dataTableObj.column(numCols_FY[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_FY["Parent_Child_Indices"][currentSubTotalRowID].length)
                                    
                         columnarData.forEach(v => {
                             if(v.toString() != "-" && v != "") {
+                                unformattedSubsetTotal += getRawValue(v)
                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                 subsetTotal += v;
                             }
                         });
 
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_FY[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(0)).split(".")[0]).node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_FY[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(0)).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                                         
                         ////// ---------------------- Coloring the cell Starts --------------------------
                 
@@ -14382,25 +14440,31 @@ var start = performance.now();
                         if(TOP_MOST_TOTAL_ROW[numCols_FY[f]] == "") {
                             TOP_MOST_TOTAL_ROW[numCols_FY[f]] = 0
                         }
+
+                        var val = TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")
+                        if(val.toString().includes("span")) {
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        }
             
-                        TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).split(".")[0]
+                        TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                     }
 
                      /// For Variance
                      for(var f = 0; f < varCols_FY.length; f++) {
                         
-                        var subsetTotal = 0;
+                        var subsetTotal = 0, unformattedSubsetTotal = 0;
                         var sliceLen_Start = DO_FY["Parent_Child_Indices"][currentSubTotalRowID][0];
                         var columnarData = this._dataTableObj.column(varCols_FY[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_FY["Parent_Child_Indices"][currentSubTotalRowID].length)
                         
                         columnarData.forEach(v => {
                             if(v.toString() != "-" && v != "") {
+                                unformattedSubsetTotal += getRawValue(v)
                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                 subsetTotal += v;
                             }
                         });
 
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_FY[f]).data(nFormat.format(subsetTotal)).node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_FY[f]).data(nFormat.format(subsetTotal)+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                         ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -14415,8 +14479,13 @@ var start = performance.now();
                         if(TOP_MOST_TOTAL_ROW[varCols_FY[f]] == "") {
                             TOP_MOST_TOTAL_ROW[varCols_FY[f]] = 0
                         }
+
+                        var val = TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")
+                        if(val.toString().includes("span")) {
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        }
                         
-                        TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)
+                        TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                     }
 
                     /// For Percentage
@@ -14424,14 +14493,14 @@ var start = performance.now();
 
                         var subsetTotal = 0;
     
-                        var value = this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data()
-                        var val_minus_act = this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data()
+                        var value = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data())
+                        var val_minus_act = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data())
     
                         if(isNaN(value)) {
-                            value = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            value = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
                         if(isNaN(val_minus_act)){
-                            val_minus_act = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
                         var act1 = value - val_minus_act
@@ -14461,14 +14530,14 @@ var start = performance.now();
 
                         var subsetTotal = 0;
 
-                        var value = this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data()
-                        var val_minus_act = this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data()
+                        var value = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data())
+                        var val_minus_act = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data())
     
                         if(isNaN(value)) {
-                            value = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            value = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
                         if(isNaN(val_minus_act)){
-                            val_minus_act = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
                         var act1 = value - val_minus_act
@@ -14499,6 +14568,8 @@ var start = performance.now();
 
                 // console.log("TOP_MOST_TOTAL_ROW ---", TOP_MOST_TOTAL_ROW)
                 this._dataTableObj.row(top_most_total_row_id).data(TOP_MOST_TOTAL_ROW).draw(false)
+
+                console.log("-----------------------------------",TOP_MOST_TOTAL_ROW)
 
                 ///// ------------------- For Color Top-Most Total Starts --------------------------
         
@@ -14561,18 +14632,19 @@ var start = performance.now();
                     //// For Numeric 
                     for(var f = 0; f < numCols_QT.length; f++) {
                                         
-                        var subsetTotal = 0;
+                        var subsetTotal = 0, unformattedSubsetTotal = 0;
                         var sliceLen_Start = DO_QT["Parent_Child_Indices"][currentSubTotalRowID][0];
                         var columnarData = this._dataTableObj.column(numCols_QT[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_QT["Parent_Child_Indices"][currentSubTotalRowID].length)
                                         
                         columnarData.forEach(v => {
                             if(v.toString() != "-" && v != "") {
+                                unformattedSubsetTotal += getRawValue(v)
                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                 subsetTotal += v;
                             }
                         });
                                         
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_QT[f]).data(parseFloat(subsetTotal).toFixed(0)).node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_QT[f]).data(parseFloat(subsetTotal).toFixed(0).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                                         
                         ////// ---------------------- Coloring the cell Starts --------------------------
                 
@@ -14589,24 +14661,31 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[numCols_QT[f]] = 0
                         }
                 
-                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] += subsetTotal
+                        var val = TOP_MOST_TOTAL_ROW[numCols_QT[f]].toString().replace(/,{1,}/g,"")
+                        if(val.toString().includes("span")) {
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        }
+
+                        // TOP_MOST_TOTAL_ROW[numCols_QT[f]] += subsetTotal
+                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                     }
 
                     /// For Variance
                     for(var f = 0; f < varCols_QT.length; f++) {
                             
-                        var subsetTotal = 0;
+                        var subsetTotal = 0, unformattedSubsetTotal = 0;
                         var sliceLen_Start = DO_QT["Parent_Child_Indices"][currentSubTotalRowID][0];
                         var columnarData = this._dataTableObj.column(varCols_QT[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_QT["Parent_Child_Indices"][currentSubTotalRowID].length)
                         
                         columnarData.forEach(v => {
                             if(v.toString() != "-" && v != "") {
+                                unformattedSubsetTotal += getRawValue(v)
                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                 subsetTotal += v;
                             }
                         });
 
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_QT[f]).data(nFormat.format(subsetTotal)).node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_QT[f]).data(nFormat.format(subsetTotal)+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
 
                         ////// ---------------------- Coloring the cell Starts --------------------------
 
@@ -14621,8 +14700,13 @@ var start = performance.now();
                         if(TOP_MOST_TOTAL_ROW[varCols_QT[f]] == "") {
                             TOP_MOST_TOTAL_ROW[varCols_QT[f]] = 0
                         }
+
+                        var val = TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")
+                        if(val.toString().includes("span")) {
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        }
                         
-                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)
+                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                     }
 
                       /// For Percentage
@@ -14630,14 +14714,14 @@ var start = performance.now();
 
                         var subsetTotal = 0;
     
-                        var value = this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - 10).data()
-                        var val_minus_act = this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - no_of_per_cols).data()
+                        var value = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - 10).data())
+                        var val_minus_act = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - no_of_per_cols).data())
     
                         if(isNaN(value)) {
-                            value = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            value = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
                         if(isNaN(val_minus_act)){
-                            val_minus_act = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
                         var act1 = value - val_minus_act
@@ -14668,14 +14752,14 @@ var start = performance.now();
 
                         var subsetTotal = 0;
 
-                        var value = this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - 10).data()
-                        var val_minus_act = this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - no_of_per_cols).data()
+                        var value = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - 10).data())
+                        var val_minus_act = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - no_of_per_cols).data())
      
                         if(isNaN(value)) {
-                            value = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            value = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - 10).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
                         if(isNaN(val_minus_act)){
-                            val_minus_act = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                            val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
      
                         var act1 = value - val_minus_act
@@ -14701,6 +14785,8 @@ var start = performance.now();
 
                 // console.log("TOP_MOST_TOTAL_ROW ---", TOP_MOST_TOTAL_ROW)
                 this._dataTableObj.row(top_most_total_row_id).data(TOP_MOST_TOTAL_ROW).draw(false)
+
+                console.log("-----------------------------------",TOP_MOST_TOTAL_ROW)
 
                 ///// ------------------- For Color Top-Most Total Starts --------------------------
      
@@ -14981,18 +15067,19 @@ var start = performance.now();
                         //// For Numeric 
                         for(var f = 0; f < numCols_5Y.length; f++) {
                                         
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0;
                             var sliceLen_Start = DO_5Y["Parent_Child_Indices"][currentSubTotalRowID][0];
                             var columnarData = this._dataTableObj.column(numCols_5Y[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y["Parent_Child_Indices"][currentSubTotalRowID].length)
                                         
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
                             });
                                         
-                            var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5Y[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(0)).split(".")[0]).node()
+                            var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5Y[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(0)).split(".")[0]+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                                         
                             ////// ---------------------- Coloring the cell Starts --------------------------
                 
@@ -15008,25 +15095,31 @@ var start = performance.now();
                             if(TOP_MOST_TOTAL_ROW[numCols_5Y[f]] == "") {
                                 TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = 0
                             }
+
+                            var val = TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")
+                            if(val.toString().includes("span")) {
+                                val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            }
                 
-                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)).split(".")[0]
+                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                         }
                 
                         //// For Variance
                         for(var f = 0; f < varCols_5Y.length; f++) {
                             
-                            var subsetTotal = 0;
+                            var subsetTotal = 0, unformattedSubsetTotal = 0;
                             var sliceLen_Start = DO_5Y["Parent_Child_Indices"][currentSubTotalRowID][0];
                             var columnarData = this._dataTableObj.column(varCols_5Y[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_5Y["Parent_Child_Indices"][currentSubTotalRowID].length)
                             
                             columnarData.forEach(v => {
                                 if(v.toString() != "-" && v != "") {
+                                    unformattedSubsetTotal += getRawValue(v)
                                     v = parseFloat(v.toString().replace(/,{1,}/g,""))
                                     subsetTotal += v;
                                 }
                             });
     
-                            var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5Y[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(no_of_decimalPlaces))).node()
+                            var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_5Y[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(no_of_decimalPlaces))+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
     
                             ////// ---------------------- Coloring the cell Starts --------------------------
     
@@ -15042,7 +15135,12 @@ var start = performance.now();
                                 TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = 0
                             }
                             
-                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toFixed(no_of_decimalPlaces))
+                            var val = TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")
+                            if(val.toString().includes("span")) {
+                                val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            }
+
+                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
                         }
                 
                         //// For Percentage
@@ -15050,14 +15148,14 @@ var start = performance.now();
     
                             var subsetTotal = 0;
     
-                            var value = this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - 8).data()
-                            var val_minus_act = this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - no_of_per_cols - 1).data()
+                            var value = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - 8).data())
+                            var val_minus_act = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - no_of_per_cols - 1).data())
     
                             if(isNaN(value)) {
-                                value = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
     
                             var act1 = value - val_minus_act
@@ -15088,14 +15186,14 @@ var start = performance.now();
     
                             var subsetTotal = 0;
     
-                            var value = this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - 8).data()
-                            var val_minus_act = this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - no_of_per_cols - 1).data()
+                            var value = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - 8).data())
+                            var val_minus_act = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - no_of_per_cols - 1).data())
     
                             if(isNaN(value)) {
-                                value = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                value = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - 8).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
                             if(isNaN(val_minus_act)){
-                                val_minus_act = parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,""))
+                                val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
     
                             var act1 = value - val_minus_act
@@ -15121,15 +15219,15 @@ var start = performance.now();
                             var subsetTotal = 0;
                             var Vbegin= 0, Vfinal = 0, t = (1/4);
 
-                            Vbegin = this._dataTableObj.cell(currentSubTotalRowID, CAGR_Cols_5Y[f] - 13).data()
-                            Vfinal = this._dataTableObj.cell(currentSubTotalRowID, CAGR_Cols_5Y[f] - 9).data()
+                            Vbegin = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, CAGR_Cols_5Y[f] - 13).data())
+                            Vfinal = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, CAGR_Cols_5Y[f] - 9).data())
 
                             if(isNaN(Vbegin) &&  Vbegin.includes(",")) {
-                                Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                Vbegin = getRawValue(Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                             }
 
                             if(isNaN(Vfinal) &&  Vfinal.includes(",")) {
-                                Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                Vfinal = getRawValue(Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                             }
 
                             if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
@@ -15141,6 +15239,9 @@ var start = performance.now();
                             else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
                                 subsetTotal = "100.0 %"
                             } 
+                            else if ((Vbegin < 0 || Vbegin < "0") && (Vfinal < 0 || Vfinal < "0")) {
+                                subsetTotal = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                            }
                             else if (Vbegin < 0 || Vbegin < "0") {
                                 subsetTotal = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
                             }
@@ -15167,15 +15268,15 @@ var start = performance.now();
                             var subsetTotal = 0;
                             var Vbegin= 0, Vfinal = 0, t = (1/4);
 
-                            Vbegin = this._dataTableObj.cell(top_most_total_row_id, CAGR_Cols_5Y[f] - 13).data()
-                            Vfinal = this._dataTableObj.cell(top_most_total_row_id, CAGR_Cols_5Y[f] - 9).data()
+                            Vbegin = getRawValue(this._dataTableObj.cell(top_most_total_row_id, CAGR_Cols_5Y[f] - 13).data())
+                            Vfinal = getRawValue(this._dataTableObj.cell(top_most_total_row_id, CAGR_Cols_5Y[f] - 9).data())
 
                             if(isNaN(Vbegin) &&  Vbegin.includes(",")) {
-                                Vbegin = Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                Vbegin = getRawValue(Vbegin.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                             }
 
                             if(isNaN(Vfinal) &&  Vfinal.includes(",")) {
-                                Vfinal = Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,"")
+                                Vfinal = getRawValue(Vfinal.replace(/,{1,}/g,"").replace(/%{1,}/g,""))
                             }
 
                             if(((Vbegin == 0 || Vbegin == "0") && (Vfinal == 0 || Vfinal == "0")) || (Vbegin == "-" && Vfinal == "-")) {
@@ -15187,6 +15288,9 @@ var start = performance.now();
                             else if (Vfinal == 0 || Vfinal == "0" || Vfinal == "-") {
                                 subsetTotal = "100.0 %"
                             } 
+                            else if ((Vbegin < 0 || Vbegin < "0") && (Vfinal < 0 || Vfinal < "0")) {
+                                subsetTotal = parseFloat((-1.0*(Math.pow((Math.abs(Vfinal)/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
+                            }
                             else if (Vbegin < 0 || Vbegin < "0") {
                                 subsetTotal = parseFloat((-1.0*(Math.pow((Vfinal/Math.abs(Vbegin)), t) - 1)) * 100).toFixed(1).toString()+" %"; //// CAGR sum
                             }
@@ -15291,7 +15395,7 @@ var start = performance.now();
                             }
                         });
                         
-                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
+                        var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_5YQT[f]).data(subsetTotal.toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
                         
                         ////// ---------------------- Coloring the cell Starts --------------------------
 
