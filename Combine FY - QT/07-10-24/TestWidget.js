@@ -4457,6 +4457,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
+
+                    border-right: 55px solid #F2F2F2;
+                    border-width: thick;
+                    border-bottom: 1px solid #CBCBCB;
+                    border-left: 1px solid #CBCBCB;
+                    border-top: 1px solid #CBCBCB;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -6377,6 +6383,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
+                   
+                    border-right: 55px solid #F2F2F2;
+                    border-width: thick;
+                    border-bottom: 1px solid #CBCBCB;
+                    border-left: 1px solid #CBCBCB;
+                    border-top: 1px solid #CBCBCB;
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
@@ -8213,6 +8225,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
+
+                    border-right: 55px solid #F2F2F2;
+                    border-width: thick;
+                    border-bottom: 1px solid #CBCBCB;
+                    border-left: 1px solid #CBCBCB;
+                    border-top: 1px solid #CBCBCB;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -10445,6 +10463,12 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
+
+                    border-right: 55px solid #F2F2F2;
+                    border-width: thick;
+                    border-bottom: 1px solid #CBCBCB;
+                    border-left: 1px solid #CBCBCB;
+                    border-top: 1px solid #CBCBCB;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -12609,6 +12633,12 @@ console.log(DO_5Y, "DO_5Y")
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
+
+                    border-right: 55px solid #F2F2F2;
+                    border-width: thick;
+                    border-bottom: 1px solid #CBCBCB;
+                    border-left: 1px solid #CBCBCB;
+                    border-top: 1px solid #CBCBCB;
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
