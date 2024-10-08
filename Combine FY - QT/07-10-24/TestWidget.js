@@ -5140,7 +5140,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (TOTAL_PREVIOUS_VALUE__RAW - CHILD_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 1) {
@@ -6103,8 +6103,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
 var start = performance.now();
 
                 ///////// Show State on RS Change .......
-                this.columnVisibility([this._stateShown],[])
-                this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
+                // this.columnVisibility([this._stateShown],[])
+                // this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
  
  var end = performance.now();
  var time = end - start;
@@ -7100,7 +7100,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (TOTAL_PREVIOUS_VALUE__RAW - CHILD_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 5) {
@@ -9085,7 +9085,7 @@ var start = performance.now();
                                 var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
     
                                 finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                                var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
+                                var finalVal__RAW = (TOTAL_PREVIOUS_VALUE__RAW - CHILD_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
     
                                 //// Avoiding Numeric Columns for Adding Decimal
                                 if(!flag) {
@@ -11159,7 +11159,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                             var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (TOTAL_PREVIOUS_VALUE__RAW - CHILD_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 5) {
@@ -13267,7 +13267,7 @@ console.log(DO_5Y, "DO_5Y")
                             var TOTAL_PREVIOUS_VALUE__RAW = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f).data()).toString().replace(/,{1,}/g,""))
 
                             var finalVal = (TOTAL_PREVIOUS_VALUE - CHILD_PREVIOUS_VALUE) + parseFloat(subsetTotal.toString().replace(/,{1,}/g,""));
-                            var finalVal__RAW = (CHILD_PREVIOUS_VALUE__RAW - TOTAL_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
+                            var finalVal__RAW = (TOTAL_PREVIOUS_VALUE__RAW - CHILD_PREVIOUS_VALUE__RAW) + parseFloat(unformattedSubsetTotal.toString().replace(/,{1,}/g,""));
                             // console.log(parseFloat(tbl.cell(top_most_total_row_id, f).data().toString().replace(/,{1,}/g,"")));
 
                             //// Avoiding Numeric Columns for Adding Decimal
@@ -14452,7 +14452,7 @@ var start = performance.now();
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
             
-                        TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).split(".")[0].toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                      /// For Variance
@@ -14491,7 +14491,7 @@ var start = performance.now();
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                         
-                        TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                     /// For Percentage
@@ -14673,7 +14673,7 @@ var start = performance.now();
                         }
 
                         // TOP_MOST_TOTAL_ROW[numCols_QT[f]] += subsetTotal
-                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                     /// For Variance
@@ -14712,7 +14712,7 @@ var start = performance.now();
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                         
-                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                       /// For Percentage
@@ -14888,7 +14888,7 @@ var start = performance.now();
                         }
                 
                         // TOP_MOST_TOTAL_ROW[numCols_MT[f]] += subsetTotal
-                        TOP_MOST_TOTAL_ROW[numCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                     /// For Variance
@@ -14928,7 +14928,7 @@ var start = performance.now();
                         }
                         
                         // TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_MT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)
-                        TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
 
                     }
 
@@ -15107,7 +15107,7 @@ var start = performance.now();
                                 val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                             }
                 
-                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)).split(".")[0].toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                         }
                 
                         //// For Variance
@@ -15146,7 +15146,7 @@ var start = performance.now();
                                 val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                             }
 
-                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                         }
                 
                         //// For Percentage
@@ -15423,7 +15423,7 @@ var start = performance.now();
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
 
-                        TOP_MOST_TOTAL_ROW[numCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
                     console.log(TOP_MOST_TOTAL_ROW)
 
@@ -15463,7 +15463,7 @@ var start = performance.now();
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
 
-                        TOP_MOST_TOTAL_ROW[varCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
                     }
 
                     console.log(TOP_MOST_TOTAL_ROW)
