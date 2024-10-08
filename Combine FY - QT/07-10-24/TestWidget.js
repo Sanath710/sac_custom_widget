@@ -179,8 +179,8 @@ function getRawValue(cell_data) {
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._dotsLoader.style.visibility = "visible";
@@ -2689,7 +2689,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 
                 //                 var key_sel = Object.keys(DO_5Y_QT["DRP_SCALING"][i])[j];
                 //                 var selectorID = ".row_level_select_"+key_sel;
-                //                 var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                //                 var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
                                     
                 //                 if(selElement && selElement.selectedIndex != undefined) {
     
@@ -2959,17 +2959,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
                         }
                     } 
                     else if(scene == "Var") {
@@ -3025,17 +3025,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                         }
 
                     }
@@ -3083,17 +3083,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                         }
                     }
                 } 
@@ -3266,17 +3266,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
                         }
                     } 
                     else if(scene == "Per") {
@@ -3337,17 +3337,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
                         }
                     }
                     else if(scene == "Num") {
@@ -3404,17 +3404,17 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         this._dataTableObj.columns(showCols).visible(true);
 
                         ////// 
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 21;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 21;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 21;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 21;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 21;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 21;
                         }
-                        if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                            document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 21;
+                        if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 21;
                         }
                     }
                 }
@@ -3538,15 +3538,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         if(hideCols[0] == "Num") {
                             this._stateShown = 'Num';
                             this.showPercentageWidVariance("Num");
-                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         } 
                         else if(hideCols[0] == "Var") {
                             this._stateShown = 'Var';
                             this.showPercentageWidVariance("Var");
-                            if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         }
                         else if(hideCols[0] == "Per") {
@@ -3559,15 +3559,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         if(hideCols[0] == "Num") {
                             this._stateShown = 'Num';
                             this.showPercentageWidVariance("Num");
-                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         } 
                         else if(hideCols[0] == "Var") {
                             this._stateShown = 'Var';
                             this.showPercentageWidVariance("Var");
-                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         }
                         else if(hideCols[0] == "Per") {
@@ -3606,8 +3606,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         if(hideCols[0] == "Var") {
                             this._stateShown = 'vsPy';
                             this.showPercentageWidVariance("vsPy");
-                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         } 
                         else if(hideCols[0] == "Per") {
@@ -3617,8 +3617,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         else if(hideCols[0] == "Num") {
                             this._stateShown = 'Num';
                             this.showPercentageWidVariance("Num");
-                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
                             }
                         }
                     }
@@ -3997,7 +3997,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 
                     // console.log(this._dataTableObj.column(2).data())
 
-                    const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                    const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                     for(var i = 0; i < list.children.length - 1; i++) {
                         list.removeChild(list.children[i]);
@@ -4077,37 +4077,37 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 
                     topHeader += `</tr>`;
 
-                    document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                    document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 
                     if(this._callFrom == "5Y") {
                         ///////
                         if(this._stateShown != "Per" && this._stateShown != "Var") {
                             ////// 
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
                             }
                         } else {
                             ////// 
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                             }
-                            if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                            if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                             }
                         }
                     }
@@ -4115,31 +4115,31 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         ///////
                         // if(this._stateShown != "Per" && this._stateShown != "Var") {
                         //     ////// 
-                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        //     if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //         document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
                         //     }
-                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        //     if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //         document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
                         //     }
-                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        //     if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //         document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
                         //     }
-                        //     if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                        //         document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        //     if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //         document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
                         //     }
                         //  } else {
                         //      ////// 
-                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
-                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        //      if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //          document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
                         //      }
-                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
-                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        //      if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //          document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
                         //      }
-                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
-                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        //      if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //          document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
                         //      }
-                        //      if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
-                        //          document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        //      if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //          document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
                         //      }
                         //  }
                     }
@@ -4180,7 +4180,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         
                     for(var i = 0; i < valArr.length; i++) {
                         var selectorID = ".row_level_select_"+selector_ids[i];
-                        var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                        var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
                         if(selElement && selElement.selectedIndex != undefined) {
                             selElement.selectedIndex = valArr[i];
                             // console.log(selector_ids)
@@ -4365,7 +4365,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                         
                     for(var i = 0; i < valArr.length; i++) {
                         var selectorID = ".row_level_select_"+selector_ids[i];
-                        var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                        var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
                         if(selElement && selElement.selectedIndex != undefined) {
                             selElement.selectedIndex = valArr[i];
                             // console.log(selector_ids)
@@ -4392,15 +4392,15 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     
                 }
 
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").selectedIndex = 2;
-                // console.log(document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").parentNode.parentNode.setAttribute("class","selected"));
-                // console.log(document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").parentNode.parentNode);
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#\\30").dispatchEvent(new Event("change"));
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").selectedIndex = 2;
+                // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").parentNode.parentNode.setAttribute("class","selected"));
+                // console.log(document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").parentNode.parentNode);
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#\\30").dispatchEvent(new Event("change"));
             }
 
             applyStyling_FY() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -4460,9 +4460,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
 
                     border-right: 55px solid #F2F2F2;
                     border-width: thick;
-                    border-bottom: 1px solid #CBCBCB;
-                    border-left: 1px solid #CBCBCB;
-                    border-top: 1px solid #CBCBCB;
+                    border-bottom: none;
+                    border-left: none;
+                    border-top: none;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -5031,7 +5031,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                 }
                
                 // @--- uncomment below line
-                // console.log(this._widgetID+"cw-combine-table")
+                // console.log(this._widgetID+"v1-custom-table")
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -6060,11 +6060,11 @@ var start = performance.now();
                 if (this._rowCSS) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -6072,7 +6072,7 @@ var start = performance.now();
                 if (this._colCSS) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
@@ -6082,7 +6082,7 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_FY took approx : ") 
 var start = performance.now();
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -6094,7 +6094,7 @@ var start = performance.now();
                 this._root.style.display = "block";
 
                 showTotalonRowUpdateFlag = true;
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 
                 
@@ -6131,7 +6131,7 @@ var start = performance.now();
 
                                     var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
-                                    var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
                                     this._dataTableObj
                                     .rows()
@@ -6199,8 +6199,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._table.style.visibility = "hidden";
@@ -6324,7 +6324,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
             applyStyling_QT() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -6386,9 +6386,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                    
                     border-right: 55px solid #F2F2F2;
                     border-width: thick;
-                    border-bottom: 1px solid #CBCBCB;
-                    border-left: 1px solid #CBCBCB;
-                    border-top: 1px solid #CBCBCB;
+                     border-bottom: none;
+                    border-left: none;
+                    border-top: none;
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
@@ -7001,9 +7001,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                 topHeader += "</tr>";
 
                 // @--- uncomment below line
-                // document.querySelector("cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
-                if(document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector("v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                if(document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").children.length <= 1 && !tbl.data().any()) { // 5 since Empty : 1 + Base : 1 + Rest Scenario : 3
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 }
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -8040,11 +8040,11 @@ var start = performance.now();
                 if (this._rowCSS.length > 1) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -8052,7 +8052,7 @@ var start = performance.now();
                 if (this._colCSS.length > 1) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
@@ -8061,18 +8061,18 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_QT took approx : ") 
 var start = performance.now();
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
                 }
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 // this._dotsLoader.style.visibility = "hidden";
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
 
-                // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
+                // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
                 // Styling Block Ends here
 
                 showTotalonRowUpdateFlag = true;
@@ -8109,7 +8109,7 @@ var start = performance.now();
                                 if(tbl_row_id && tbl_row_id != "Added") {
                                     var select_element_id = Object.keys(DO_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
-                                    var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
                                     this._dataTableObj
                                     .rows()
@@ -8161,7 +8161,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
             // ==========================================================================================================================
 
             applyStyling_MT() {
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -8228,9 +8228,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                     border-right: 55px solid #F2F2F2;
                     border-width: thick;
-                    border-bottom: 1px solid #CBCBCB;
-                    border-left: 1px solid #CBCBCB;
-                    border-top: 1px solid #CBCBCB;
+                     border-bottom: none;
+                    border-left: none;
+                    border-top: none;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -8419,8 +8419,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 this._resultSet = [];
@@ -8951,7 +8951,7 @@ var start = performance.now();
                
 
                 // @--- uncomment below line
-                // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
                 // console.log(topHeader)
@@ -10120,11 +10120,11 @@ var start = performance.now();
                 if (this._rowCSS.length > 1) {
                     // console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -10132,7 +10132,7 @@ var start = performance.now();
                 if (this._colCSS.length > 1) {
                     // console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
@@ -10141,12 +10141,12 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_MT took approx : ") 
 var start = performance.now();
                 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
                 }
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
 
                 // Styling Block Ends here
                 // this._dotsLoader.style.visibility = "hidden";
@@ -10186,7 +10186,7 @@ var start = performance.now();
                                 if(tbl_row_id && tbl_row_id != "Added") {
                                     var select_element_id = Object.keys(DO_MT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
-                                    var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
     
                                     this._dataTableObj
                                     .rows()
@@ -10254,8 +10254,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._dotsLoader.style.visibility = "visible";
@@ -10406,7 +10406,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
             applyStyling_5Y() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -10466,9 +10466,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
 
                     border-right: 55px solid #F2F2F2;
                     border-width: thick;
-                    border-bottom: 1px solid #CBCBCB;
-                    border-left: 1px solid #CBCBCB;
-                    border-top: 1px solid #CBCBCB;
+                     border-bottom: none;
+                    border-left: none;
+                    border-top: none;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -11075,7 +11075,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                 }
                
                 // @--- uncomment below line
-                console.log(this._widgetID+"cw-combine-table")
+                console.log(this._widgetID+"v1-custom-table")
 
 //  ------------------------------ TO BE UNCOMMENTED ----------------------
 
@@ -12338,11 +12338,11 @@ var start = performance.now();
                 if (this._rowCSS) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -12350,7 +12350,7 @@ var start = performance.now();
                 if (this._colCSS) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
@@ -12359,7 +12359,7 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_5Y took approx : ") 
 var start = performance.now();
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
@@ -12370,7 +12370,7 @@ var start = performance.now();
                 this._root.style.display = "block";
 
                 showTotalonRowUpdateFlag = true;
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
 
 var end = performance.now();
@@ -12406,7 +12406,7 @@ var start = performance.now();
 
                                     var select_element_id = Object.keys(DO_5Y["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
-                                    var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
                                     this._dataTableObj
                                     .rows()
@@ -12461,8 +12461,8 @@ console.log(DO_5Y, "DO_5Y")
                     </table>    
                     `
                     this._table = this._shadowRoot.getElementById('example')
-                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
-                    // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
                 }
 
                 // this._table.style.visibility = "hidden";
@@ -12579,7 +12579,7 @@ console.log(DO_5Y, "DO_5Y")
 
             applyStyling_5YQT() {
 
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("style").innerText += `
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("style").innerText += `
                 tbody, td, tfoot, th, thead, tr {
                     border-color: inherit;
                     border-style: none;
@@ -12636,9 +12636,9 @@ console.log(DO_5Y, "DO_5Y")
 
                     border-right: 55px solid #F2F2F2;
                     border-width: thick;
-                    border-bottom: 1px solid #CBCBCB;
-                    border-left: 1px solid #CBCBCB;
-                    border-top: 1px solid #CBCBCB;
+                     border-bottom: none;
+                    border-left: none;
+                    border-top: none;
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
@@ -14314,11 +14314,11 @@ var start = performance.now();
                 if (this._rowCSS.length > 1) {
                     console.log(this._rowCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('td')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelectorAll('th')
                         .forEach(el => (el.style.cssText = this._rowCSS))
                 }
@@ -14326,7 +14326,7 @@ var start = performance.now();
                 if (this._colCSS.length > 1) {
                     console.log(this._colCSS)
                     document
-                        .querySelector(this._widgetID+'cw-combine-table')
+                        .querySelector(this._widgetID+'v1-custom-table')
                         .shadowRoot.querySelector('style').innerText += this._colCSS
                 }
 
@@ -14335,18 +14335,18 @@ var time = end - start;
 console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side") 
 var start = performance.now();
 
-                const list = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead");
+                const list = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead");
 
                 for(var i = 0; i < list.children.length - 1; i++) {
                     list.removeChild(list.children[i]);
                 }
-                document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
                 
                 // this._dotsLoader.style.visibility = "hidden";
                 this._table.style.visibility = "visible";
                 this._root.style.display = "block";
 
-                // document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
+                // document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").click();
                 // Styling Block Ends here
 
 var end = performance.now();
@@ -14388,7 +14388,7 @@ var start = performance.now();
                                     
                                     var select_element_id = Object.keys(DO_5Y_QT["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
                                     var selectorID = ".row_level_select_"+select_element_id;
-                                    var selElement = document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector(selectorID);
+                                    var selElement = document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector(selectorID);
 
                                     this._dataTableObj
                                     .rows()
@@ -15619,14 +15619,14 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
             changeTableHeaderOnVersionChange(header_names) {
                 if(this._callFrom == "QT") {
                     if(this._versionChangeHeader[0] != undefined) {
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").innerHTML = this._versionChangeHeader[0];
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").innerHTML = this._versionChangeHeader[0];
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(7)").innerHTML = this._versionChangeHeader[0];
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(9)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(7)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(9)").innerHTML = this._versionChangeHeader[0];
                     }
                 } else {
                     if(this._versionChangeHeader[0] != undefined) {
-                        document.querySelector(this._widgetID+"cw-combine-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
+                        document.querySelector(this._widgetID+"v1-custom-table").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
                     }
                 }
             }
@@ -15678,5 +15678,5 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total ()"
             // }
          
         }
-        customElements.define('cw-combine-table', CustomTable)
+        customElements.define('v1-custom-table', CustomTable)
     })()
