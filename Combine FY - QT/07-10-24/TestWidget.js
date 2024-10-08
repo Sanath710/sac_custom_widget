@@ -6103,8 +6103,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Heade
 var start = performance.now();
 
                 ///////// Show State on RS Change .......
-                // this.columnVisibility([this._stateShown],[])
-                // this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
+                this.columnVisibility([this._stateShown],[])
+                this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
  
  var end = performance.now();
  var time = end - start;
