@@ -4860,7 +4860,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 targets:numColsForDecimal,
                                 render: function ( data, type, row ) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(data != undefined && !isNaN(data)) {
+                                    if(data != undefined) {
                                         data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
                                     }
                                     return data
@@ -5122,6 +5122,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 1) {
                                 subsetTotal = parseFloat(subsetTotal).toFixed(no_of_decimalPlaces);
+                            } else {
+                                subsetTotal = parseFloat(subsetTotal).toFixed(0);
+                                nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                             }
 
                             subsetTotal = nFormat.format(subsetTotal);
@@ -5142,6 +5145,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                             //// Avoiding Numeric Columns for Adding Decimal
                             if(f >= updateFrom + 1) {
                                 finalVal = parseFloat(finalVal).toFixed(no_of_decimalPlaces)
+                            } else {
+                                finalVal = parseFloat(finalVal).toFixed(0);
+                                nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
                             }
 
                             finalVal = nFormat.format(finalVal)
