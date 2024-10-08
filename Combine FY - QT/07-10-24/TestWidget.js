@@ -6842,7 +6842,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 targets:numCols_render,
                                 render: function (data, type) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(!isNaN(parseFloat(data.toString().replace(/,{1,}/g,"")))) {
+                                    if(data != undefined && data != "-") {
                                         return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
@@ -8787,7 +8787,7 @@ var start = performance.now();
                                 targets:numMT_render,
                                 render: function (data, type) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(!isNaN(parseFloat(data.toString().replace(/,{1,}/g,"")))) {
+                                    if(data != undefined && data != "-") {
                                         return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
@@ -10910,7 +10910,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 targets:numColsForDecimal,
                                 render: function ( data, type, row ) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(data != undefined && !isNaN(data)) {
+                                    if(data != undefined && data != "-") {
                                         data = nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
                                     }
                                     return data
@@ -13030,7 +13030,7 @@ console.log(DO_5Y, "DO_5Y")
                                 targets:numCols_render,
                                 render: function (data, type) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(!isNaN(parseFloat(data.toString().replace(/,{1,}/g,"")))) {
+                                    if(data != undefined && data != "-") {
                                         return nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0))
                                     }
                                     return data
