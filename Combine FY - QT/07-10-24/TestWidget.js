@@ -4860,7 +4860,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 targets:numColsForDecimal,
                                 render: function ( data, type, row ) {
                                     var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
-                                    if(data != undefined) {
+                                    if(data != undefined && data != "-") {
                                         data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
                                     }
                                     return data
