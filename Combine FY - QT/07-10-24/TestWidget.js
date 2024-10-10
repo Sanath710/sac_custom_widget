@@ -14479,7 +14479,7 @@ var start = performance.now();
 
                         var val = TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")
                         if(val.toString().includes("span")) {
-                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span style='display:none;'>")[1].toString().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
                         }
             
                         TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
@@ -14518,7 +14518,8 @@ var start = performance.now();
 
                         var val = TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")
                         if(val.toString().includes("span")) {
-                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span style='display:none;'>")[1].toString().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            // val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                         
                         TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
@@ -14697,13 +14698,17 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[numCols_QT[f]] = 0
                         }
                 
-                        var val = TOP_MOST_TOTAL_ROW[numCols_QT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[numCols_QT[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
 
                         // TOP_MOST_TOTAL_ROW[numCols_QT[f]] += subsetTotal
-                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_QT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                     }
 
                     /// For Variance
@@ -14737,12 +14742,15 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[varCols_QT[f]] = 0
                         }
 
-                        var val = TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,""), val1 = 0;
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                         
-                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_QT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_QT[f]] = nFormat.format(parseFloat(val) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                     }
 
                       /// For Percentage
@@ -14912,13 +14920,17 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[numCols_MT[f]] = 0
                         }
 
-                        var val = TOP_MOST_TOTAL_ROW[numCols_MT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[numCols_MT[f]].toString().replace(/,{1,}/g,""), val1  = 0;
+
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                 
                         // TOP_MOST_TOTAL_ROW[numCols_MT[f]] += subsetTotal
-                        TOP_MOST_TOTAL_ROW[numCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                     }
 
                     /// For Variance
@@ -14952,13 +14964,17 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[varCols_MT[f]] = 0
                         }
 
-                        var val = TOP_MOST_TOTAL_ROW[varCols_MT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[varCols_MT[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span ")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
                         
                         // TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_MT[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)
-                        TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_MT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
 
                     }
 
@@ -15132,12 +15148,16 @@ var start = performance.now();
                                 TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = 0
                             }
 
-                            var val = TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")
+                            var val = TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                             if(val.toString().includes("span")) {
+                                val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                                val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            } else {
                                 val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                             }
                 
-                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[numCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                            TOP_MOST_TOTAL_ROW[numCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                         }
                 
                         //// For Variance
@@ -15171,12 +15191,16 @@ var start = performance.now();
                                 TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = 0
                             }
                             
-                            var val = TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")
+                            var val = TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                             if(val.toString().includes("span")) {
+                                val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                                val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                            } else {
                                 val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                             }
 
-                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(TOP_MOST_TOTAL_ROW[varCols_5Y[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                            TOP_MOST_TOTAL_ROW[varCols_5Y[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                         }
                 
                         //// For Percentage
@@ -15448,12 +15472,16 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[numCols_5YQT[f]] = 0
                         }
 
-                        var val = TOP_MOST_TOTAL_ROW[numCols_5YQT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[numCols_5YQT[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
 
-                        TOP_MOST_TOTAL_ROW[numCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[numCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(0)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                     }
                     console.log(TOP_MOST_TOTAL_ROW)
 
@@ -15488,12 +15516,16 @@ var start = performance.now();
                             TOP_MOST_TOTAL_ROW[varCols_5YQT[f]] = 0
                         }
                         
-                        var val = TOP_MOST_TOTAL_ROW[varCols_5YQT[f]].toString().replace(/,{1,}/g,"")
+                        var val = TOP_MOST_TOTAL_ROW[varCols_5YQT[f]].toString().replace(/,{1,}/g,""), val1 = 0;
+
                         if(val.toString().includes("span")) {
+                            val1 = val.split("<span style='display:none;'>")[1].toString().trim().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+                            val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+                        } else {
                             val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
                         }
 
-                        TOP_MOST_TOTAL_ROW[varCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+                        TOP_MOST_TOTAL_ROW[varCols_5YQT[f]] = nFormat.format(parseFloat(parseFloat(val) + subsetTotal).toFixed(no_of_decimalPlaces)).toString()+" <span style='display:none;'>"+(parseFloat(val1) + unformattedSubsetTotal)+"</span>"
                     }
 
                     console.log(TOP_MOST_TOTAL_ROW)
