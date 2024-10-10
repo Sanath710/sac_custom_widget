@@ -4457,12 +4457,8 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                     text-align: center;
                     padding-top:0%!important;
                     padding-bottom:0%!important;
-
-                    border-right: 55px solid #F2F2F2;
-                    border-width: thick;
-                    border-bottom: none;
-                    border-left: none;
-                    border-top: none;
+   
+                   
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -6384,11 +6380,7 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     padding-top:0%!important;
                     padding-bottom:0%!important;
                    
-                    border-right: 55px solid #F2F2F2;
-                    border-width: thick;
-                     border-bottom: none;
-                    border-left: none;
-                    border-top: none;
+                 
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
@@ -8226,11 +8218,6 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     padding-top:0%!important;
                     padding-bottom:0%!important;
 
-                    border-right: 55px solid #F2F2F2;
-                    border-width: thick;
-                     border-bottom: none;
-                    border-left: none;
-                    border-top: none;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -10464,11 +10451,6 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                     padding-top:0%!important;
                     padding-bottom:0%!important;
 
-                    border-right: 55px solid #F2F2F2;
-                    border-width: thick;
-                     border-bottom: none;
-                    border-left: none;
-                    border-top: none;
                 }
     
                 /* ------------------------- BASE CASE ------------------------- */
@@ -12634,11 +12616,6 @@ console.log(DO_5Y, "DO_5Y")
                     padding-top:0%!important;
                     padding-bottom:0%!important;
 
-                    border-right: 55px solid #F2F2F2;
-                    border-width: thick;
-                     border-bottom: none;
-                    border-left: none;
-                    border-top: none;
                 }
     
                 #example > thead > tr:nth-child(1) > th:nth-child(1) {
