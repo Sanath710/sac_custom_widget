@@ -1,0 +1,18 @@
+
+            hierarchyVisibility(DO, parentRowID) {
+                for(var i = 0; i < DO["Parent_Child_Indices"][parentRowID].length; i++) {
+                    var node = this._dataTableObj.row(DO["Parent_Child_Indices"][parentRowID][i]).node();
+                    if(node.style.visibility == "" || node.style.visibility == "visible") {
+                        node.style.visibility = "collapse";
+                    } else {
+                        node.style.visibility = "visible";
+                    }
+                }
+            }
+
+
+            
+              ///// ------- hierarchy -------- ////// on tbl click
+              if(classList.length > 0 && classList[0] == "group") {
+                this.hierarchyVisibility(DO_5Y_QT, e.currentTarget.rowId);
+            }
