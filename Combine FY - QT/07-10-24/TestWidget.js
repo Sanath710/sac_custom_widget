@@ -9193,6 +9193,10 @@ var start = performance.now();
                                     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                                 }
 
+                                if(flag_check && no_of_decimalPlaces == 0) {
+                                    subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                                }
+
                                 // var act1 = value - val_minus_act
             
                                 // if(value == 0 && act1 == 0) {
@@ -11324,6 +11328,10 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
                                 
                             // var act1 = value - val_minus_act
@@ -13477,6 +13485,9 @@ console.log(DO_5Y, "DO_5Y")
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
 
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                            }
                             // var act1 = value - val_minus_act
 
                             // if(value == 0 && act1 == 0) {
