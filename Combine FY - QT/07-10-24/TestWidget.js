@@ -5217,11 +5217,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                                if(no_of_decimalPlaces == 1 && !subsetTotal.includes(".")) {
+                                    subsetTotal = subsetTotal.split("%")[0].toString().trim()+".0 %";
+                                }
+
                             }
 
                             if(flag_check && no_of_decimalPlaces == 0) {
                                 subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
+
 
                             var node = tbl.cell(parentID, f).data(subsetTotal).node()
 
@@ -5282,6 +5287,9 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                                if(no_of_decimalPlaces == 1 && !subsetTotal.includes(".")) {
+                                    subsetTotal = subsetTotal.split("%")[0].toString().trim()+".0 %";
+                                }
                             }
 
                             if(flag_check && no_of_decimalPlaces == 0) {
