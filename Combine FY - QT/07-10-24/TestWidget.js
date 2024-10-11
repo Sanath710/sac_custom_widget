@@ -5205,16 +5205,22 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
 
                             var node = tbl.cell(parentID, f).data(subsetTotal).node()
@@ -5252,18 +5258,35 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Apply Scaling 
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
         
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
         
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+        
+                            var act1 = value - val_minus_act, flag_check = false;
+
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
-        
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                            }
                             
                             var node = tbl.cell(top_most_total_row_id, f).data(subsetTotal).node()
 
@@ -7163,17 +7186,34 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                            }
+
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
 
                             var node = tbl.cell(parentID, f).data(subsetTotal).node()
 
@@ -7209,16 +7249,34 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
 
                             var node = tbl.cell(top_most_total_row_id, f).data(subsetTotal).node()
@@ -9113,17 +9171,31 @@ var start = performance.now();
                                     val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                                 }
             
-                                var act1 = value - val_minus_act
-            
+                                var act1 = value - val_minus_act, flag_check = false;
+
                                 if(value == 0 && act1 == 0) {
                                     subsetTotal = "-"
                                 } else if(value == 0) {
-                                    subsetTotal = "-100 %"
+                                    subsetTotal = "-100.0 %"
+                                    flag_check = true;
                                 } else if (act1 == 0) {
-                                    subsetTotal = "100 %";
+                                    subsetTotal = "100.0 %";
+                                    flag_check = true;
                                 } else {
                                     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                                 }
+
+                                // var act1 = value - val_minus_act
+            
+                                // if(value == 0 && act1 == 0) {
+                                //     subsetTotal = "-"
+                                // } else if(value == 0) {
+                                //     subsetTotal = "-100 %"
+                                // } else if (act1 == 0) {
+                                //     subsetTotal = "100 %";
+                                // } else {
+                                //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                                // }
 
                                 node = tbl.cell(parentID, f).data(subsetTotal).node()
 
@@ -9144,16 +9216,34 @@ var start = performance.now();
                                     val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                                 }
             
-                                var act1 = value - val_minus_act
+                                // var act1 = value - val_minus_act
             
+                                // if(value == 0 && act1 == 0) {
+                                //     subsetTotal = "-"
+                                // } else if(value == 0) {
+                                //     subsetTotal = "-100 %"
+                                // } else if (act1 == 0) {
+                                //     subsetTotal = "100 %";
+                                // } else {
+                                //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                                // }
+
+                                var act1 = value - val_minus_act, flag_check = false;
+
                                 if(value == 0 && act1 == 0) {
                                     subsetTotal = "-"
                                 } else if(value == 0) {
-                                    subsetTotal = "-100 %"
+                                    subsetTotal = "-100.0 %"
+                                    flag_check = true;
                                 } else if (act1 == 0) {
-                                    subsetTotal = "100 %";
+                                    subsetTotal = "100.0 %";
+                                    flag_check = true;
                                 } else {
                                     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                                }
+    
+                                if(flag_check && no_of_decimalPlaces == 0) {
+                                    subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                                 }
 
                                 // top-most total update
@@ -11214,17 +11304,31 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(parentID, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
+                                
+                            // var act1 = value - val_minus_act
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
 
                             var node = tbl.cell(parentID, f).data(subsetTotal).node()
 
@@ -11250,16 +11354,34 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Select
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, f - 4).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
 
                             var node = tbl.cell(top_most_total_row_id, f).data(subsetTotal).node()
@@ -13333,17 +13455,31 @@ console.log(DO_5Y, "DO_5Y")
                                 val_minus_act = getRawValue(parseFloat(tbl.cell(parentID, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
+
+                            // var act1 = value - val_minus_act
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
 
                             var node = tbl.cell(parentID, f).data(subsetTotal).node()
 
@@ -13378,16 +13514,34 @@ console.log(DO_5Y, "DO_5Y")
                                 val_minus_act = parseFloat(getRawValue(tbl.cell(top_most_total_row_id, idx_parent_2).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
 
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
+
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+
+                            var act1 = value - val_minus_act, flag_check = false;
 
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
-                                subsetTotal = "-100 %"
+                                subsetTotal = "-100.0 %"
+                                flag_check = true;
                             } else if (act1 == 0) {
-                                subsetTotal = "100 %";
+                                subsetTotal = "100.0 %";
+                                flag_check = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+
+                            if(flag_check && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
 
                             var node = tbl.cell(top_most_total_row_id, f).data(subsetTotal).node()
@@ -14517,16 +14671,22 @@ var start = performance.now();
                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
-                        var act1 = value - val_minus_act
+                        var act1 = value - val_minus_act, truncateDecimal = false;
     
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
     
                         var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f]).data(subsetTotal).node()
@@ -14554,16 +14714,34 @@ var start = performance.now();
                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
+    
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
     
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
     
                         TOP_MOST_TOTAL_ROW[perCols_FY[f]] = subsetTotal
@@ -14745,17 +14923,35 @@ var start = performance.now();
                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
-                        var act1 = value - val_minus_act
+                        var act1 = value - val_minus_act, truncateDecimal = false;
     
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                         }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                        }
+
+                        // var act1 = value - val_minus_act
+    
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
     
                         var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_QT[f]).data(subsetTotal).node()
     
@@ -14783,16 +14979,34 @@ var start = performance.now();
                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_QT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
      
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
      
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
+    
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
      
                         TOP_MOST_TOTAL_ROW[perCols_QT[f]] = subsetTotal
@@ -14972,16 +15186,34 @@ var start = performance.now();
                             val_minus_act = getRawValue(parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_MT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
     
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
+    
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
     
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
     
                         var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_MT[f]).data(subsetTotal).node()
@@ -15010,16 +15242,34 @@ var start = performance.now();
                             val_minus_act = getRawValue(parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_MT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
   
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
   
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
+    
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
   
                         TOP_MOST_TOTAL_ROW[perCols_MT[f]] = subsetTotal
@@ -15195,18 +15445,36 @@ var start = performance.now();
                                 val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
     
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
+    
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100.0 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100.0 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+    
+                            var act1 = value - val_minus_act, truncateDecimal = false;
     
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
                                 subsetTotal = "-100.0 %"
+                                truncateDecimal = true;
                             } else if (act1 == 0) {
                                 subsetTotal = "100.0 %";
+                                truncateDecimal = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
                             }
     
+                            if(truncateDecimal && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+                            }
+
                             var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_5Y[f]).data(subsetTotal).node()
     
                             ////// ---------------------- Coloring the cell Starts --------------------------
@@ -15233,16 +15501,34 @@ var start = performance.now();
                                 val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_5Y[f] - no_of_per_cols - 1).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                             }
     
-                            var act1 = value - val_minus_act
+                            // var act1 = value - val_minus_act
+    
+                            // if(value == 0 && act1 == 0) {
+                            //     subsetTotal = "-"
+                            // } else if(value == 0) {
+                            //     subsetTotal = "-100.0 %"
+                            // } else if (act1 == 0) {
+                            //     subsetTotal = "100.0 %";
+                            // } else {
+                            //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            // }
+
+                            var act1 = value - val_minus_act, truncateDecimal = false;
     
                             if(value == 0 && act1 == 0) {
                                 subsetTotal = "-"
                             } else if(value == 0) {
                                 subsetTotal = "-100.0 %"
+                                truncateDecimal = true;
                             } else if (act1 == 0) {
                                 subsetTotal = "100.0 %";
+                                truncateDecimal = true;
                             } else {
                                 subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                            }
+    
+                            if(truncateDecimal && no_of_decimalPlaces == 0) {
+                                subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                             }
     
                             TOP_MOST_TOTAL_ROW[perCols_5Y[f]] = subsetTotal
@@ -15531,16 +15817,34 @@ var start = performance.now();
                             val_minus_act = getRawValue(parseFloat(this._dataTableObj.cell(currentSubTotalRowID, perCols_5YQT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
 
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
 
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
+    
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
 
                         var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_5YQT[f]).data(subsetTotal).node()
@@ -15569,16 +15873,34 @@ var start = performance.now();
                             val_minus_act = getRawValue(parseFloat(this._dataTableObj.cell(top_most_total_row_id, perCols_5YQT[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
                         }
 
-                        var act1 = value - val_minus_act
+                        // var act1 = value - val_minus_act
 
+                        // if(value == 0 && act1 == 0) {
+                        //     subsetTotal = "-"
+                        // } else if(value == 0) {
+                        //     subsetTotal = "-100.0 %"
+                        // } else if (act1 == 0) {
+                        //     subsetTotal = "100.0 %";
+                        // } else {
+                        //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        // }
+
+                        var act1 = value - val_minus_act, truncateDecimal = false;
+    
                         if(value == 0 && act1 == 0) {
                             subsetTotal = "-"
                         } else if(value == 0) {
                             subsetTotal = "-100.0 %"
+                            truncateDecimal = true;
                         } else if (act1 == 0) {
                             subsetTotal = "100.0 %";
+                            truncateDecimal = true;
                         } else {
                             subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+                        }
+
+                        if(truncateDecimal && no_of_decimalPlaces == 0) {
+                            subsetTotal = subsetTotal.split(".")[0].toString()+" %";
                         }
 
                         TOP_MOST_TOTAL_ROW[perCols_5YQT[f]] = subsetTotal
