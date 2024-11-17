@@ -3188,15 +3188,16 @@ console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Creating Scale
                         tbl.column(0).visible(false);
                         tbl.column(1).visible(true);
 
-                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th.truncate.dt-orderable-none").textContent = state;
-                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none").textContent = state;
+                        // $('#example thead th:eq(1)').html('My new column name')
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").innerHTML = state;
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").innerHTML = state;
                     } 
                     else {
                         tbl.column(0).visible(true);
                         tbl.column(1).visible(true);
 
-                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th.truncate.dt-orderable-none").textContent = state;
-                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th.truncate.dt-orderable-none").textContent = "Brand";
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").innerHTML = state;
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").innerHTML = "Brand";
                     }
 
                     // console.log(state, selOptID)
