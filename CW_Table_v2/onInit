@@ -1,0 +1,42 @@
+// ==========================================================================================================================
+// ------------------------------------------------------- Full Year --------------------------------------------------------
+// ==========================================================================================================================
+
+var headerSeq = {
+	"@MeasureDimension":["Actual", "Variance", "currentVersion", "Percentage_Col"],
+	"no_of_decimal_K":["0"],
+	"no_of_decimal_M":["1"],
+};
+var customHeaders = {
+	"DIMEN_NAME":["Country", "Brand", "Scenario_ID", "GX_Date", "Scenario_Name"], // in-order
+	"MES_NAME":["FY", "vs PY", "vs AI MAR'24", "vs LO Mar"],
+	"TOP_HEADER":["VAR_AI_RUN", "Scenario 1", "Scenario 2"]
+};
+
+var hideParticularCols = [""];
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(1) {width:15%;padding-left:0%;}"; //#example td:nth-of-type(2) { background-color:yellow; width:70%; }text-wrap:nowrap;
+
+CW_Table_v2_FY.setExtraParams(headerSeq, customHeaders, hideParticularCols);
+CW_Table_v2_FY.applyStyling(table_styling, row_styling, col_styling);
+
+var rs = FY_Table_v2.getDataSource().getResultSet();
+rs.shift();
+//	rs.shift();
+//	rs.shift();
+//	rs.shift();
+//	rs.shift();
+
+
+console.log(rs);
+
+var topHeaders_Colspan = {"EmptyCase":"1","BaseCase":"5","RestCase":"5"};
+var currentScale_and_show = {
+		"CurrentScale":"K",
+		"Visible":"Actual",
+		"ShowScenario":"Actual",
+		"VersionChangeHeader":"VAR_AI_RUN",
+};
+CW_Table_v2_FY.setResultSet_FY(rs, topHeaders_Colspan, currentScale_and_show);
