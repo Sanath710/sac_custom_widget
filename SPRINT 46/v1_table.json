@@ -1,0 +1,326 @@
+{
+    "eula": "",
+    "vendor": "",
+    "license": "",
+    "id": "V1_CustomTable",
+    "icon": "https://sac-dev-cw.novartis.net/cw/prod/SAC_CUSTOM_TABLE_CW/table.png",
+    "version": "1.0.0",
+    "name": "V1 Custom Table - FY",
+    "newInstancePrefix": "V1_CustomTable",
+    "description": "V1 - Advanced Custom Table Widget",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "v1-custom-table",
+            "url": "https://sac-dev-cw.novartis.net/cw/prod/SAC_CUSTOM_TABLE_CW/v1_tableMain.js?v=1.0.0",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "_tableCSS":{
+            "type":"any",
+            "description":"table level css",
+            "default":""
+        },
+        "_rowCSS":{
+            "type":"any",
+            "description":"row level css",
+            "default":""
+        },
+        "_colCSS":{
+            "type":"any",
+            "description":"col level css",
+            "default":""
+        },
+        "_headers":{
+            "type":"any",
+            "description":"headers level css"
+        },
+        "_customHeaderNames":{
+            "type":"any",
+            "description":"custom headers name"
+        },
+        "_dateColName":{
+            "type":"any",
+            "description":"selection column name"
+        },
+        "_hideExtraVisibleColumnFromIndex":{
+            "type":"any",
+            "description":"hide cols from index"
+        },
+        "_hide_Individual_ExtraVisibleColumnOfIndices":{
+            "type":"any",
+            "description":"hide col of indices"
+        },
+        "_customTopHeader":{
+            "type":"any",
+            "description":"custom top most header"
+        }
+    },
+    "methods": {
+        "setExtraParams":{
+            "parameters": [
+                {
+                    "name": "top_most_header_sequence",
+                    "description":"Header Value Sequence",
+                    "type": "any"
+                },
+                {
+                    "name": "customHeaderNames",
+                    "description":"Custom Header Names of DataTable",
+                    "type": "any"
+                },
+                {
+                    "name": "selectionColumnName",
+                    "description":"Header Names of Selection Column",
+                    "type": "any"
+                },
+                {
+                    "name": "hideExtraVisibleColumnFromIndex",
+                    "description":"Hides access visible columns from particular column count (index)",
+                    "type": "any"
+                },
+                {
+                    "name": "hide_Individual_ExtraVisibleColumnOfIndices",
+                    "description":"Hides particular visible columns (index)",
+                    "type": "any"
+                }
+            ],
+            "body":"this._headers = top_most_header_sequence; this._customHeaderNames = customHeaderNames; this._dateColName = selectionColumnName; this._hideExtraVisibleColumnFromIndex = hideExtraVisibleColumnFromIndex; this._hide_Individual_ExtraVisibleColumnOfIndices = hide_Individual_ExtraVisibleColumnOfIndices;"
+        },
+        "setResultSet_FY": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "setResultSet_QT": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {   
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "setResultSet_MT": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "setResultSet_5Y": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "setResultSet_5Y_QT": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "grp_colNo_as_row",
+                    "description":"Column no. to be rowed (Grouping)",
+                    "type": "integer"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "showScenarios":{
+            "parameters": [
+                {
+                    "name": "fixedCols",
+                    "description":"No. of fixed initial cols",
+                    "type": "any"
+                },
+                {
+                    "name": "col_start_indices",
+                    "description":"column index to be shown",
+                    "type": "any"
+                },
+                {
+                    "name": "top_header_names_to_show",
+                    "description":"show top headers from names",
+                    "type": "any"
+                },
+                {
+                    "name": "no_of_succeeding_measures",
+                    "description":"how many measures does it contain in one scenario",
+                    "type": "any"
+                }
+            ]
+        },
+        "applyStyling":{
+            "parameters": [
+                {
+                    "name": "table_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "row_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "column_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                }
+            ],
+            "body":"this._tableCSS = table_level_css; this._rowCSS = row_level_css; this._colCSS = column_level_css;"
+        },
+        "applyScaling_FY":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "applyScaling_QT":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "applyScaling_MT":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "applyScaling_5Y":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "applyScaling_5Y_QT":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "columnVisibility":{
+            "parameters": [
+                {
+                    "name": "hideColumns",
+                    "description":"Pass index position in array to hide those columns",
+                    "type": "any"
+                },
+                {
+                    "name": "showColumns",
+                    "description":"Pass index position in array to show those columns",
+                    "type": "any"
+                }
+            ]
+        },
+        "exportToExcel":{
+            "parameters": [
+                {
+                    "name": "widgetName",
+                    "description":"Widget (CW - View) to be Exported",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events": {}
+}
