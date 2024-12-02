@@ -1,0 +1,3364 @@
+var getScriptPromisify = src => {
+    return new Promise(resolve => {
+        $.getScript(src, resolve)
+    })
+}
+
+var load_libs_flag = false;
+var widget_ID_Name = {};
+var is_lib_loaded_exportToExcel = false;
+var replaceZero = "";
+
+//// -------- Data Objects Starts -----------
+var DO_FY = {};
+//// -------- Data Objects Ends -------------
+
+
+function getRawValue(cell_data) {
+
+    var regex = "<span style='display:none;'>(.*?)<\/span>";
+    var output = undefined;
+
+    if(cell_data.toString().includes("span")) {
+        output = parseFloat(cell_data.match(regex)[1])
+    } else {
+        output = cell_data
+    }
+
+    return output;
+}
+
+
+; (function () {
+
+        const prepared = document.createElement('template')
+        prepared.innerHTML = `
+          <style type="text/css">
+            @import url("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css");
+            @import url("https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css");
+			@import url("https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css");
+            
+          </style>
+          <script src= "https://code.jquery.com/jquery-3.7.1.min.js"></script>
+          <div id="root" style="width:100%; height:100%; padding:0%; overflow: auto; position: absolute; display: inline-grid;">
+            <table id="example" class="table">
+                <thead>
+                </thead>
+                <tbody></tbody>
+            </table>
+          </div>
+        `
+
+        var no_of_decimalPlaces = 1, no_of_decimalPlaces_K = 0, no_of_decimalPlaces_M = 1;
+        var stateShown_FY = "actual";
+
+        class CustomTable extends HTMLElement {
+
+            constructor() {
+                // console.clear()
+                super()
+                this._shadowRoot = this.attachShadow({ mode: 'open' })
+                this._shadowRoot.appendChild(prepared.content.cloneNode(true))
+                this._root = this._shadowRoot.getElementById('root')
+                this._table = this._shadowRoot.getElementById('example')
+                // this._dotsLoader = this._shadowRoot.getElementById('loader');
+                this._props = {}
+
+                if(!load_libs_flag) {
+                    this.loadLibraries()
+                    load_libs_flag = true;
+                }
+            }
+
+            async loadLibraries() {
+                var start = performance.now();
+                await getScriptPromisify(
+                    'https://cdn.datatables.net/2.0.1/js/dataTables.min.js'
+                )
+                var end = performance.now();
+                var time = end - start;
+                console.log("Library took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+            }
+            
+            onCustomWidgetBeforeUpdate(changedProperties) {
+
+                if(changedProperties["_headers"]) {
+                    this._headers = changedProperties["_headers"];
+                    // this._dropdownsSelected = this._headers["DROPDOWN_SELECTED"];
+                    this.no_of_decimalPlaces_K = this._headers["no_of_decimal_K"];
+                    this.no_of_decimalPlaces_M = this._headers["no_of_decimal_M"];
+                }
+
+                if(changedProperties["_hide_Individual_ExtraVisibleColumnOfIndices"]) {
+                    this._hide_Individual_ExtraVisibleColumnOfIndices = changedProperties["_hide_Individual_ExtraVisibleColumnOfIndices"];
+                }
+
+                if(changedProperties["_customHeaderNames"]) {
+                    this._customHeaderNames = changedProperties["_customHeaderNames"];
+                    this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
+                }
+
+                // console.log("BU")
+
+            }
+
+            onCustomWidgetAfterUpdate(changedProperties) {
+
+                if(changedProperties["_headers"]) {
+                    this._headers = changedProperties["_headers"];
+                    // this._dropdownsSelected = this._headers["DROPDOWN_SELECTED"];
+                    this.no_of_decimalPlaces_K = this._headers["no_of_decimal_K"];
+                    this.no_of_decimalPlaces_M = this._headers["no_of_decimal_M"];
+                }
+
+                if(changedProperties["_hide_Individual_ExtraVisibleColumnOfIndices"]) {
+                    this._hide_Individual_ExtraVisibleColumnOfIndices = changedProperties["_hide_Individual_ExtraVisibleColumnOfIndices"];
+                }
+
+                if(changedProperties["_customHeaderNames"]) {
+                    this._customHeaderNames = changedProperties["_customHeaderNames"];
+                    this._customTopHeader = this._customHeaderNames["TOP_HEADER"];
+                }
+
+                // console.log("AU")
+            }
+
+
+            applyScaling_FY(scaleTo = "K") {
+
+                // var dt_tbl_obj = this._dataTableObj;
+                // var numCols_FY = this._dataTableObj.columns('.numericColsCSS')[0];
+                // var vsPyCols_FY = this._dataTableObj.columns('.vsPy')[0];
+                // var perCols_FY = this._dataTableObj.columns('.perCols')[0];
+
+                if(scaleTo == "K") 
+                {
+                    DO_FY["Current_Scale"] = "K";
+
+                    if(!Object.keys(DO_FY).includes("OriginalData")) {
+                        this.createDataObjects("FY", false);
+                    }
+
+                    var selectionsIDs = [];
+
+                    if(DO_FY["DRP"]) {
+                        selectionsIDs = Object.keys(DO_FY["DRP"]);
+                    }
+                    
+                    var reSelectIDs = []
+                    // console.log(DO_FY);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+
+                        this._dataTableObj.row(i).data(DO_FY["OriginalData"][i].slice()).draw();
+
+                        if(selectionsIDs.includes(i.toString())) {
+                            reSelectIDs.push(i);
+                        }
+                    }
+
+                    for(var i = 0; i < reSelectIDs.length; i++) {
+                        this.preserveSelection(reSelectIDs[i], Object.keys(DO_FY["DRP"][reSelectIDs[i]]), Object.values(DO_FY["DRP"][reSelectIDs[i]]), "FY");
+                    }
+
+                } 
+                else 
+                {
+                    DO_FY["Current_Scale"] = "M";
+
+                    this.createDataObjects("FY", true);
+
+                    for(var i = 0; i < this._dataTableObj.rows().count(); i++) {
+                        this._dataTableObj.row(i).data(DO_FY["ScaledData"][i].slice()).draw();
+                    }
+                }
+
+                console.log(DO_FY);
+
+            }
+
+            showPercentageWidVariance(scene = null) {
+
+                if(this._callFrom == "MT") {
+
+                    var showCols = [];
+                    var hideCols = [];
+
+                    if(scene == "Num") {
+                        // var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                        var numCols = this._dataTableObj.columns('.numCol')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        selCol.push(2); // selection column base
+    
+                        var numCols = numCols.concat(selCol);
+                        var filteredArray = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = numCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
+    
+    
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(numCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME")) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+    
+                        for(var i = 2; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            // if(numCols.includes(i)) {
+                            //     this._dataTableObj.column(i).visible(true);
+                            // } else {
+                            //     this._dataTableObj.column(i).visible(false);
+                            // }
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            } else {
+                                if(numCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    } 
+                    else if(scene == "Var") {
+                        // var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                        // var numCols = this._dataTableObj.columns('.numCol')[0];
+                        var varCols = this._dataTableObj.columns('.varCol')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        selCol.push(2); // selection column base
+    
+                        varCols = varCols.concat(selCol);
+                        var filteredArray = [];
+                       
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = varCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
+    
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(varCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME")) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+    
+                        for(var i = 2; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            // if(varCols.includes(i)) {
+                            //     this._dataTableObj.column(i).visible(true);
+                            // } else {
+                            //     this._dataTableObj.column(i).visible(false);
+                            // }
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(varCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    }
+                    else if(scene == "Per") {
+                        var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                        // var numCols = this._dataTableObj.columns('.numCol')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        selCol.push(2); // selection column base
+    
+                        var filteredArray = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < this._colIndices.length; i++) {
+                            for(var j = parseInt(this._colIndices[i]); j <= parseInt(this._colIndices[i]) + this._no_of_succeeding; j++) {
+                                filteredArray.push(j)
+                            }
+                        }
+                        filteredArray = perCols.filter(value => filteredArray.includes(value)).concat(Array.from(new Set(this._gxDatesFiltered)))
+    
+                        
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(perCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME")) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+    
+                        for(var i = 2; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            perCols = perCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            } else {
+                                if(perCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    }
+                }
+                else if(this._callFrom == "5Y") {
+
+                    this._fixedCols = 17; 
+                    var visibleCagrCols = new Set();
+                    var cagrCols = this._dataTableObj.columns('.cagrCol')[0];
+                    visibleCagrCols.add(cagrCols[0]) ///// BASE CAGR
+
+                    if(this._headerNames_to_show) {
+                        if(this._headerNames_to_show.includes("Scenario 1")) {
+                            visibleCagrCols.add(cagrCols[1])
+                        } 
+                        if(this._headerNames_to_show.includes("Scenario 2"))  {
+                            visibleCagrCols.add(cagrCols[2])
+                        }
+                        if(this._headerNames_to_show.includes("Scenario 3"))  {
+                            visibleCagrCols.add(cagrCols[3])
+                        }
+                    } else {
+                        for(var i = 0; i < 4; i++) {
+                            visibleCagrCols.add(cagrCols[i])
+                        }
+                    }
+
+                    visibleCagrCols = Array.from(visibleCagrCols);
+
+
+                    if(scene == "Num") {
+                        // var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        numCols.push(this._fixedCols - 1); //// BASE CAGR
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+        
+                        var numCols = numCols.concat(selCol);
+                        const filteredArray = numCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+        
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(i != 2 && (numCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            // if(numCols.includes(i)) {
+                            //     this._dataTableObj.column(i).visible(true);
+                            // } else {
+                            //     this._dataTableObj.column(i).visible(false);
+                            // }
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(numCols.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        }
+                    } 
+                    else if(scene == "Var") {
+                        // var perCols = this._dataTableObj.columns('.perColCSS')[0];
+                        // var numCols = this._dataTableObj.columns('.numCol')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var varCols = this._dataTableObj.columns('.varCols')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        varCols.push(this._fixedCols - 1); //// BASE CAGR
+                        selCol.push(2); // selection column base
+        
+                        const filteredArray = varCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+        
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(i != 2 && (varCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        // filteredBase.pop();
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            varCols = varCols.concat(selCol);
+                            // if(varCols.includes(i)) {
+                            //     this._dataTableObj.column(i).visible(true);
+                            // } else {
+                            //     this._dataTableObj.column(i).visible(false);
+                            // }
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(varCols.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        }
+
+                    }
+                    else if(scene == "Per") {
+                        var perCols = this._dataTableObj.columns('.perCols')[0];
+                        perCols.push(this._fixedCols - 1); //// BASE CAGR
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+        
+                        const filteredArray = perCols.filter(value => this._visibleCols.includes(value)).concat(this._gxDatesFiltered);
+                            
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(i != 2 && (perCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            perCols = perCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(perCols.includes(i) || visibleCagrCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        }
+                    }
+                } 
+                else if(this._callFrom == "QT") {
+                    if(scene == "vsPy") {
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        var vsPyCols = this._dataTableObj.columns('.vsPy')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+
+                        const filteredArray = vsPyCols.filter(value => this._visibleCols.includes(value));
+                            
+                        /// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < this._fixedCols; i++) {
+                            if(i != 2 && (vsPyCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        /// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 8; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            vsPyCols = vsPyCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    if(this._gxDatesFiltered.includes(i)) {
+                                        for(var j = i+1; j < i+1+5; j++) {
+                                            // this._dataTableObj.column(j).visible(true);
+                                            showCols.push(j)
+                                        }
+                                        i = j-1;
+                                    }
+                                    ////// --------------------------------------------------
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(vsPyCols.includes(i) || numCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    } 
+                    else if(scene == "Per") {
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        var perCols = this._dataTableObj.columns('.perCols')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+        
+                        var filteredArray = perCols.filter(value => this._visibleCols.includes(value));
+                            
+                        // for(var i = 0; i < perCols.length; i++) {
+                        //     filteredArray.push(perCols[i] - 10);
+                        // }
+                        // filteredArray = Array.from(new Set(filteredArray))
+
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < 18; i++) {
+                            if(i != 2 && (perCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 8; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            perCols = perCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    if(this._gxDatesFiltered.includes(i)) {
+                                        for(var j = i+1; j < i+1+5; j++) {
+                                            // this._dataTableObj.column(j).visible(true);
+                                            showCols.push(j)
+                                        }
+                                        i = j-1;
+                                    }
+                                    ////// --------------------------------------------------
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(perCols.includes(i) || numCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+                        
+                    }
+                }
+                else if(this._callFrom == "5Y_QT") {
+
+                    if(scene == "vsPy") {
+                        
+                        var numCols  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+
+                        const filteredArray = vsPyCols.filter(value => this._visibleCols.includes(value));
+                            
+                        /// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < (this._measureOrder.length * 3) + this._measureOrder.length + 4; i++) {
+                            if(i != 2 && (vsPyCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        /// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            vsPyCols = vsPyCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if((filteredArray.includes(i) && !numCols.includes(i)) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    // if(this._gxDatesFiltered.includes(i)) {
+                                    //     for(var j = i+1; j < i+1+5; j++) {
+                                    //         this._dataTableObj.column(j).visible(true);
+                                    //     }
+                                    //     i = j-1;
+                                    // }
+                                    ////// --------------------------------------------------
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(vsPyCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i)
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
+                        }
+                    } 
+                    else if(scene == "Per") {
+
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0]);
+                        var perCols = this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0]);
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+        
+                        var filteredArray = perCols.filter(value => this._visibleCols.includes(value));
+                            
+                        // for(var i = 0; i < perCols.length; i++) {
+                        //     filteredArray.push(perCols[i] - 10);
+                        // }
+                        // filteredArray = Array.from(new Set(filteredArray))
+
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < (this._measureOrder.length * 3) + this._measureOrder.length + 4; i++) {
+                            if(i != 2 && (perCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            perCols = perCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if((filteredArray.includes(i) && !numCols.includes(i)) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    // if(this._gxDatesFiltered.includes(i)) {
+                                    //     for(var j = i+1; j < i+1+5; j++) {
+                                    //         this._dataTableObj.column(j).visible(true);
+                                    //     }
+                                    //     i = j-1;
+                                    // }
+                                    ////// --------------------------------------------------
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            } else {
+                                if(perCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 17;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 17;
+                        }
+                    }
+                    else if(scene == "Num") {
+
+                        var numCols  =  Array.from(new Set(this._dataTableObj.columns('.numericColsCSS')[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        var perCols  =  Array.from(new Set(this._dataTableObj.columns('.perCols')[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                        var vsPyCols =  Array.from(new Set(this._dataTableObj.columns('.vsPy')[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        selCol.push(2); // selection column base
+        
+                        var filteredArray = numCols.filter(value => this._visibleCols.includes(value));
+                            
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < (this._measureOrder.length * 3) + this._measureOrder.length + 4; i++) {
+                            if(i != 2 && (numCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 3; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            numCols = numCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if((filteredArray.includes(i) && !(perCols.includes(i) || vsPyCols.includes(i))) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    // if(this._gxDatesFiltered.includes(i)) {
+                                    //     for(var j = i+1; j < i+1+5; j++) {
+                                    //         this._dataTableObj.column(j).visible(true);
+                                    //     }
+                                    //     i = j-1;
+                                    // }
+                                    ////// --------------------------------------------------
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            } else {
+                                if(numCols.includes(i)) {
+                                    // this._dataTableObj.column(i).visible(true);
+                                    showCols.push(i);
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i);
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                        ////// 
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 21;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 21;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 21;
+                        }
+                        if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                            document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 21;
+                        }
+                    }
+                }
+                else if(this._callFrom == "FY") {
+                    if(scene == "vsPy") {
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        var vsPyCols = this._dataTableObj.columns('.vsPy')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+
+                        const filteredArray = vsPyCols.filter(value => this._visibleCols.includes(value));
+                            
+                        /// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < 9; i++) {
+                            if(i != 2 && (vsPyCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        /// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 4; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            vsPyCols = vsPyCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    if(this._gxDatesFiltered.includes(i)) {
+                                        // this._dataTableObj.column(i + 1).visible(true);
+                                        showCols.push(i + 1);
+                                        i += 1;
+                                    }
+                                    ////// --------------------------------------------------
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        // this._dataTableObj.column(i).visible(true);
+                                        showCols.push(i);
+                                    }
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(vsPyCols.includes(i) || numCols.includes(i)) {
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        // this._dataTableObj.column(i).visible(true);
+                                        showCols.push(i)
+                                    }
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    }
+                    else if(scene == "Per") {
+                        var numCols = this._dataTableObj.columns('.numericColsCSS')[0];
+                        var perCols = this._dataTableObj.columns('.perCols')[0];
+                        var selCol = this._dataTableObj.columns('.selColClass')[0];
+                        var showCols = [];
+                        var hideCols = [];
+                        
+                        var filteredArray = perCols.filter(value => this._visibleCols.includes(value));
+                            
+                        ///// -------------- Handling Base Scenario Visibility Starts ---------------------
+                        const filteredBase = [];
+                        for(var i = 0; i < 9; i++) {
+                            if(i != 2 && (perCols.includes(i) || i == this._dimensions.indexOf("SCENARIO_NAME"))) {
+                                filteredBase.push(i);
+                            }
+                        }
+                        ///// -------------- Handling Base Scenario Visibility Ends -----------------------
+        
+                        for(var i = 4; i < this._hideExtraVisibleColumnFromIndex; i++) {
+                            perCols = perCols.concat(selCol);
+                            if(this._visibleCols.length > 0) {
+                                if(filteredArray.includes(i) || filteredBase.includes(i) || this._gxDatesFiltered.includes(i)) {
+                                    ////// Handling Numeric Cols ---------------------------
+                                    if(this._gxDatesFiltered.includes(i)) {
+                                        // this._dataTableObj.column(i + 1).visible(true);
+                                        showCols.push(i + 1);
+                                        i += 1;
+                                    }
+                                    ////// --------------------------------------------------
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        // this._dataTableObj.column(i).visible(true);
+                                        showCols.push(i)
+                                    }
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            } else {
+                                if(perCols.includes(i) || numCols.includes(i)) {
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        // this._dataTableObj.column(i).visible(true);
+                                        showCols.push(i)
+                                    }
+                                } else {
+                                    // this._dataTableObj.column(i).visible(false);
+                                    hideCols.push(i)
+                                }
+                            }
+                        }
+
+                        this._dataTableObj.columns(hideCols).visible(false);
+                        this._dataTableObj.columns(showCols).visible(true);
+
+                    }
+                }
+            }
+
+            columnVisibility(showCols) {
+
+                if(this._resultSet != undefined) {
+
+                    // var stateShown = undefined;
+                    this._stateShown = showCols[0];
+
+                    if(this._callFrom == "MT") {
+                        if(hideCols[0] == "Num") {
+                            this._stateShown = 'Num';
+                            this.showPercentageWidVariance("Num");
+                            if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
+                        } 
+                        else if(hideCols[0] == "Var") {
+                            this._stateShown = 'Var';
+                            this.showPercentageWidVariance("Var");
+                            if(hideCols[1] != undefined &&  document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                            }
+                        }
+                        else if(hideCols[0] == "Per") {
+                            this._stateShown = 'Per';
+                            this.showPercentageWidVariance("Per");
+                        }
+    
+                    } 
+                    // else if (this._callFrom == "5Y") {
+                    //     if(hideCols[0] == "Num") {
+                    //         this._stateShown = 'Num';
+                    //         this.showPercentageWidVariance("Num");
+                    //         if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                    //             document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    //         }
+                    //     } 
+                    //     else if(hideCols[0] == "Var") {
+                    //         this._stateShown = 'Var';
+                    //         this.showPercentageWidVariance("Var");
+                    //         if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                    //             document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    //         }
+                    //     }
+                    //     else if(hideCols[0] == "Per") {
+                    //         this._stateShown = 'Per';
+                    //         this.showPercentageWidVariance("Per");
+                    //     }
+    
+                    //     // Color Cagr
+                    //     let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
+                    //     var cagrRowIndices = this._dataTableObj.rows().indexes();
+                    //     stateShown5Y_FY = this._stateShown;
+    
+                    //     if(hideCols[0] == "Var" || hideCols[0] == "Per") {
+                    //         for(var i = 0; i < cagrRowIndices.length; i++) {
+                    //             for(var j = 0; j < cagrCols.length; j++) {
+                    //                 var nodeVal = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).data().toString().replace(/,{1,}/g,"").replace(/%{1,}/g,"");
+                    //                 var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                    //                 if(nodeVal >= "0" || nodeVal > 0) {
+                    //                     node.style.color = "#2D7230";
+                    //                 } else {
+                    //                     node.style.color = "#A92626";
+                    //                 }
+                    //             }
+                    //         }
+                    //     } else {
+                    //         for(var i = 0; i < cagrRowIndices.length; i++) {
+                    //             for(var j = 0; j < cagrCols.length; j++) {
+                    //                 var node = this._dataTableObj.cell(cagrRowIndices[i], cagrCols[j]).node();
+                    //                 node.style.color = "#212121";
+                    //             }
+                    //         }
+                    //     }
+    
+                    // } 
+                    // else if (this._callFrom == "5Y_QT") {
+                    //     if(hideCols[0] == "Var") {
+                    //         this._stateShown = 'vsPy';
+                    //         this.showPercentageWidVariance("vsPy");
+                    //         if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                    //             document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    //         }
+                    //     } 
+                    //     else if(hideCols[0] == "Per") {
+                    //         this._stateShown = 'Per';
+                    //         this.showPercentageWidVariance("Per");
+                    //     }
+                    //     else if(hideCols[0] == "Num") {
+                    //         this._stateShown = 'Num';
+                    //         this.showPercentageWidVariance("Num");
+                    //         if(hideCols[1] != undefined && document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)") != undefined) {
+                    //             document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = hideCols[1];
+                    //         }
+                    //     }
+                    // }
+                    // else if (this._callFrom == "QT") {
+                    //     if(hideCols[0] == "vsPy") {
+                    //         this._stateShown = 'vsPy';
+                    //         this.showPercentageWidVariance("vsPy");
+                    //     } 
+                    //     else if(hideCols[0] == "Per") {
+                    //         this._stateShown = 'Per';
+                    //         this.showPercentageWidVariance("Per");
+                    //     }
+                    // }
+                    else if (this._callFrom == "FY") {
+                        if(showCols[0] == "variance") {
+                            this.switchColumn(this._callFrom, this._stateShown);
+                        } 
+                        else if(showCols[0] == "percentage") {
+                            this.switchColumn(this._callFrom, this._stateShown);
+                        }
+                    }
+                    console.log(this._stateShown);
+                    stateShown_FY = this._stateShown;
+                    // visible_FY = this._stateShown;
+                }
+              
+            }
+
+            showScenarios(fixedCols, col_start_indices, top_header_names_to_show, no_of_succeeding_measures) {
+
+                if(this._resultSet != undefined) {
+                    
+                    var colIndices = col_start_indices;
+                    var no_of_succeeding = no_of_succeeding_measures;
+                    var headerNames_to_show = this._fixedScenario.slice();
+                    headerNames_to_show = headerNames_to_show.concat(top_header_names_to_show);
+                    this._headerNames_to_show =headerNames_to_show;
+                    var fixedCols = fixedCols;
+                    this._fixedCols = fixedCols;
+                    var visibleCols = [];
+                    this._colIndices = colIndices.slice();
+                    this._no_of_succeeding = no_of_succeeding;
+
+
+                    if(this._callFrom == "MT") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perColCSS")[0];
+                        } else if(this._stateShown == "Var") {
+                            showCols = this._dataTableObj.columns(".varCol")[0];
+                        } else {
+                            showCols = this._dataTableObj.columns(".numCol")[0];
+                        }
+                        this._gxDatesFiltered = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                visibleCols.push(j)
+                            }
+                        }
+
+                        var visiCols = [];
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = fixedCols; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    this._dataTableObj.column(i).visible(true);
+                                    visiCols.push(i)
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        
+                        }
+
+                        this._visibleCols = visiCols.slice();
+
+                    } 
+                    else if(this._callFrom == "5Y") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+                        let cagrCols = this._dataTableObj.columns(".cagrCol")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
+                        } else if(this._stateShown == "Var") {
+                            showCols = this._dataTableObj.columns(".varCols")[0];
+                        } else {
+                            showCols = this._dataTableObj.columns(".numericColsCSS")[0];
+                        }
+                        this._gxDatesFiltered = [];
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                
+                                visibleCols.push(j)
+                                
+                                if(cagrCols.includes(j)) {
+                                    showCols.push(j);
+                                }
+
+                            }
+                        }
+
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 17; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    this._dataTableObj.column(i).visible(true);
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        
+                        }
+                        
+                    }
+                    else if (this._callFrom == "QT") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
+                        } 
+                        ///// --------------------- vsPy CASE -----------------------
+                        else { 
+                            showCols = this._dataTableObj.columns(".vsPy")[0];
+                        }
+
+                        showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 8; i < 18; i++) {
+                            visibleCols.push(i)
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                visibleCols.push(j)
+                            }
+                        }
+
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 8; i < this._tableColumnNames.length; i++) {
+                            if(i < this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    this._dataTableObj.column(i).visible(true);
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        }
+
+                    }
+                    else if (this._callFrom == "FY") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols = this._dataTableObj.columns(".perCols")[0];
+                        } 
+                        ///// --------------------- vsPy CASE -----------------------
+                        else { 
+                            showCols = this._dataTableObj.columns(".vsPy")[0];
+                        }
+
+                        showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 5; i < 10; i++) {
+                            visibleCols.push(i)
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                if(!visibleCols.includes(j)) {
+                                    visibleCols.push(j)
+                                }
+                            }
+                        }
+
+                        this._visibleCols = Array.from(new Set(visibleCols.slice()));
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 8; i < this._tableColumnNames.length; i++) {
+                            if(i <= this._hideExtraVisibleColumnFromIndex) 
+                            {
+                                if(visibleCols.includes(i) && (showCols.includes(i) || gxDates.includes(i))) {
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                    }
+                                    if(!this._hide_Individual_ExtraVisibleColumnOfIndices.includes(i)) {
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        }
+
+                    }
+                    else if (this._callFrom == "5Y_QT") {
+
+                        let showCols = [];
+                        let gxDates = this._dataTableObj.columns(".selColClass")[0];
+
+                        if(this._stateShown == "Per") {
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".perCols")[0].concat(this._dataTableObj.columns(".perCols.rightBorder")[0])));
+                        } 
+                        ///// --------------------- vsPy CASE -----------------------
+                        else if(this._stateShown == "vsPy") { 
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".vsPy")[0].concat(this._dataTableObj.columns(".vsPy.rightBorder")[0])));
+                        }
+                        ///// --------------------- Num CASE -----------------------
+                        else if(this._stateShown == "Num") { 
+                            showCols =  Array.from(new Set(this._dataTableObj.columns(".numericColsCSS")[0].concat(this._dataTableObj.columns(".numericColsCSS.rightBorder")[0])));
+                        }
+
+                        // showCols = Array.from(new Set(showCols.concat(this._dataTableObj.columns(".numericColsCSS")[0])))
+
+                        this._gxDatesFiltered = [];
+
+                        ////// BASE CASE --------------------------
+                        for(var i = 3; i < 55; i++) {
+                            if(this._stateShown == "Per" && showCols.includes(i)) {
+                                visibleCols.push(i)
+                            } else if(this._stateShown == "Num" && showCols.includes(i))  {
+                                visibleCols.push(i)
+                            } else if (this._stateShown == "vsPy" && showCols.includes(i)) {
+                                visibleCols.push(i)
+                            }
+                        }
+                        ////// ------------------------------------
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            
+                            for(var j = parseInt(colIndices[i]); j < parseInt(colIndices[i]) + (this._measureOrder.length * 3) + this._measureOrder.length + 1; j++) {
+                                
+                                // if(this._stateShown == "Per" && showCols.includes(j)) {
+                                //     visibleCols.push(j)
+                                // } else if(this._stateShown == "Num" && showCols.includes(j))  {
+                                //     visibleCols.push(j)
+                                // } else if (this._stateShown == "vsPy" && showCols.includes(j)) {
+                                    visibleCols.push(j)
+                                // }
+
+                                // if(gxDates.includes(j)) {
+                                //     visibleCols.push(j)
+                                //     this._gxDatesFiltered.push(j)
+                                // }
+                            }
+
+                        }
+
+                        this._visibleCols = visibleCols.slice();
+
+                        ///// For Hiding Columns form Indices
+                        for(var i = 3; i < this._tableColumnNames.length; i++) {
+
+                            if(i < this._hideExtraVisibleColumnFromIndex + 53) 
+                            {
+                                if(visibleCols.includes(i)) {
+
+                                    if(this._stateShown == "Per" && showCols.includes(i)) 
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    } 
+                                    else if(this._stateShown == "Num" && showCols.includes(i))  
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    } 
+                                    else if (this._stateShown == "vsPy" && showCols.includes(i)) 
+                                    {
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+
+                                    if(gxDates.includes(i)) {
+                                        this._gxDatesFiltered.push(i)
+                                        this._dataTableObj.column(i).visible(true);
+                                    }
+
+                                } else {
+                                    this._dataTableObj.column(i).visible(false);
+                                }
+                            } 
+                            else {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+
+                        }
+
+                    }
+                    else {
+                        ////// Fixed cols i.e base case
+                        for(var i = 0; i <= fixedCols; i++) {
+                            visibleCols.push(i);
+                        }
+
+                        ////// For showing Columns from indices
+                        for(var i = 0; i < colIndices.length; i++) {
+                            for(var j = parseInt(colIndices[i]); j <= parseInt(colIndices[i]) + no_of_succeeding; j++) {
+                                // console.log(j, "->", parseInt(colIndices[i])+no_of_succeeding)
+                                this._dataTableObj.column(j).visible(true);
+                                visibleCols.push(j)
+                            }
+                        }
+
+                        ////// For Hiding Columns from indices (Pre-Decided)
+                        for(var i = 0; i < this._tableColumnNames.length; i++) {
+                            if(!visibleCols.includes(i)) {
+                                this._dataTableObj.column(i).visible(false);
+                            }
+                        }
+                    }
+                
+                    // console.log(this._dataTableObj.column(2).data())
+
+                    const list = document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead");
+
+                    for(var i = 0; i < list.children.length - 1; i++) {
+                        list.removeChild(list.children[i]);
+                    }
+
+                    var topHeader = "<tr role='row'>";
+
+                    // Monthly Case
+                    if(this._callFrom == "MT") {
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                        }
+                    }
+                    // QTR Case
+                    else if(this._callFrom == "QT") {
+                    // else if(this._colOrder.includes("Q1") || this._colOrder.includes("Q2") || this._colOrder.includes("Q3") || this._colOrder.includes("Q4")) {
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[1].replace(" ","")}' >${this._customTopHeader[1]}</th>`
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[1].replace(" ","")}' >${this._customTopHeader[1]}</th>`
+                        }
+                    } 
+                    else if(this._callFrom == "5Y") {
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                        }
+                    }
+                    else if(this._callFrom == "5Y_QT") {
+
+                        if(this._stateShown == "Num") {
+                            ////// Empty Case
+                            topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                            ////// Base Case
+                            topHeader += `<th class='top-header' colspan='21' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                            ////// Rest Case
+                            for(var i = 0; i < top_header_names_to_show.length; i++) {
+                                topHeader += `<th class='top-header' colspan='21' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            }
+                        } else {
+                            ////// Empty Case
+                            topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                            ////// Base Case
+                            topHeader += `<th class='top-header' colspan='17' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                            ////// Rest Case
+                            for(var i = 0; i < top_header_names_to_show.length; i++) {
+                                topHeader += `<th class='top-header' colspan='17' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                            }
+                        }
+                    }
+                    // Full Year Case
+                    else { 
+                        ////// Empty Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+                        ////// Base Case
+                        topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[0].replace(" ","")}' >${this._customTopHeader[0]}</th>`
+                        ////// Rest Case
+                        for(var i = 0; i < top_header_names_to_show.length; i++) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${top_header_names_to_show[i].replace(" ","")}' >${top_header_names_to_show[i]}</th>`
+                        }
+                    }
+
+                
+                    topHeader += `</tr>`;
+
+                    document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+
+                    if(this._callFrom == "5Y") {
+                        ///////
+                        if(this._stateShown != "Per" && this._stateShown != "Var") {
+                            ////// 
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                            }
+                        } else {
+                            ////// 
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                            }
+                            if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                            }
+                        }
+                    }
+                    else if(this._callFrom == "5Y_QT") {
+                        ///////
+                        // if(this._stateShown != "Per" && this._stateShown != "Var") {
+                        //     ////// 
+                        //     if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 7;
+                        //     }
+                        //     if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 7;
+                        //     }
+                        //  } else {
+                        //      ////// 
+                        //      if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)")) {
+                        //          document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)")) {
+                        //          document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)")) {
+                        //          document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = 6;
+                        //      }
+                        //      if(document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)")) {
+                        //          document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").colSpan = 6;
+                        //      }
+                        //  }
+                    }
+                }
+                
+            }
+
+            applyStyling_FY() {
+
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("style").innerText += `
+                tbody, td, tfoot, th, thead, tr {
+                    border-color: inherit;
+                    border-style: none;
+                    border-width: 0;
+                }
+    
+                /* ------------------------- CUSTOM STYLING --------------------------------- */
+    
+                /* 
+
+                #example > tbody > tr:nth-child(2) > td.truncate {
+                    font-weight:bold;
+                }
+
+                */
+    
+                select {
+                    padding-top:0%;
+                    background-color:#DCE6EF;
+                    outline:none;
+                }
+
+                #dimensionSwitch, .measure_dropdown {
+                    padding: 4%;
+                    border: none;
+                    font-weight: bold;
+                }
+    
+                option {
+                    background-color:white;
+                    color:black;
+                }
+                
+                select:focus>option:checked {
+                    background:#0460A9;
+                    color:white;
+                    /* selected */
+                }
+    
+                #example th {
+                    text-wrap: nowrap;
+                    border-bottom: 1px solid #CBCBCB;
+                    background-color:#F2F2F2;
+                    align-content: center;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                }
+                
+                /*
+    
+                #example > tbody > tr:nth-child(2) {
+                    font-weight:bold;
+                }
+
+                */
+    
+                /* ------------------------- TOP MOST - HEADER ROW ------------------------- */
+    
+                #example .top-header {
+                    height:32px;
+                    max-height:32px;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                    font-weight:bold;
+                    text-align: center;
+                    padding-top:0%!important;
+                    padding-bottom:0%!important;
+   
+                   
+                }
+    
+                /* ------------------------- BASE CASE ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(2) {
+                    background-color:#E0E0E0;
+                }
+    
+                /* ------------------------- SCENARIO 1 ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(3) {
+                    background-color:#D9D9D9;
+                }
+    
+                /* ------------------------- SCENARIO 2 ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(4) {
+                    background-color:#CBCBCB;
+                }
+    
+                /* ------------------------- SCENARIO 3 ------------------------- */
+    
+                #example > thead > tr:nth-child(1) > th:nth-child(5) {
+                    background-color:#BDBDBD;
+                }
+    
+                /* ------------------------- 2nd MOST HEADER ------------------------- */
+                
+                #example > thead > tr:nth-child(2) {
+                    height:48px; 
+                }
+    
+                /* ------------------------- SCENARIO SELECT ELEMENTS HEADER ------------------------- */
+    
+                .scenarios {
+                    background-color:inherit;
+                    font-family: Arial;
+                    color:black;
+                    font-size:14px;
+                    text-align:center;
+                    font-weight:bold;
+                    height:30px;
+                    border:none;
+                    cursor: pointer;
+                }
+    
+                /* ------------------------- GROUPED ROW ------------------------- */
+    
+                #example .group > td {
+                    height:32px;
+                    padding: 0px 10px!important;
+                    align-content: center;
+                    font-weight:bold;
+                    color: #212121;
+                    font-family: Arial;
+                    background-color:#E0E0E0!important;
+                }
+
+                #example .clTotalRow > td {
+                    background-color:#b7d0e621;
+                }
+    
+                /* ------------------------- NORMAL ROW ------------------------- */
+    
+                #example td {
+                    text-wrap:nowrap;
+                    background-color:white;
+                    height:48px;
+                    border-bottom:1px solid #CBCBCB!important;
+                    font-family: Arial;
+                    font-size:14px;
+                    align-content: center;
+                }
+    
+                #example .actual,  #example .variance,  #example .percentage {
+                    text-align:right!important;
+                }
+
+                #example .actual {
+                    color:#212121;
+                }
+    
+                /* ------------------------- ROW LEVEL SELECT ------------------------- */
+    
+                #example .row_level_select {
+                    font-family: Arial;
+                    font-size: 14px;
+                    height: 30px;
+                    background-color: #DCE6EF;
+                    border-radius:4px;
+                    border:none;
+                    outline:none;
+                    cursor: pointer;
+                }
+     
+                /* ------------------------- TRUNCATE ROW LEVEL DATA ------------------------- */
+    
+                #example > tbody > tr.group > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.3% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                 #example > tbody > tr:not(.group) > td.truncate {
+                    max-width:50%;
+                    padding-left: 0.7% !important;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    /* text-overflow: ellipsis; */
+                }
+
+                /*
+                #example .truncate {
+                    padding: 0.7% !important;
+                    max-width:50%;
+                    padding-left: 2%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                */
+    
+                /* ------------------------- TOP FIXED HEADER SCROLL ------------------------- */
+    
+                #example > thead {
+                    position: sticky;
+                    top:0%!important;
+                    border-bottom: 1px solid #CBCBCB;
+                    background-color: yellow;
+                }
+    
+                #example {
+                    position: absolute;
+                    width:100%!important;
+                    border-collapse: separate;
+                }
+    
+                .mt-2 {
+                    margin-top: 0% !important;
+                }
+    
+                /* ------------------------- REMOVE TOP MOST PADDING ------------------------- */
+    
+                #example_wrapper > div.dt-layout-row.dt-layout-table > div {
+                    padding:0%!important;
+                }
+    
+                /* --------------------------- 1ST TOP TOTAL ROW ---------------------------- 
+    
+                #example > tbody > tr:nth-child(1) > td {
+                    font-weight:bold;
+                }
+
+                #example > tbody > tr:nth-child(1) {
+                    position:sticky!important;
+                    top:80px!important;
+                } */
+                
+                `;
+            }
+
+            gxDate_visibility(setAs) {
+
+                var gx_date_indices = this._dataTableObj.columns('.col_gx_date')[0].slice(1,);
+
+                if(setAs == "false" || setAs == false) {
+                    this._dataTableObj.columns(gx_date_indices).visible(false);
+                } else {
+                    this._dataTableObj.columns(gx_date_indices).visible(true);
+                }
+
+                if(this._callFrom == "FY") {
+                    if(setAs == "false" || setAs == false) {
+                        this.switchColumn("FY", "actual");
+                        stateShown_FY = 'actual';
+                        this._stateShown = stateShown_FY;
+                        // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = "4";
+                        document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = "4";
+                        document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = "4";
+                    } else {
+                        document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").colSpan = "5";
+                        document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").colSpan = "5";
+                        document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(4)").colSpan = "5";
+                    }
+                }
+              
+            }
+
+            switchColumn(call_from, currentState) {
+
+                let gx_cols_original = this._dataTableObj.columns(".col_gx_date")[0];
+                let gx_cols_transformed = gx_cols_original.slice();
+                let row_length = this._dataTableObj.column(1).data().length;
+                let color_flag = false;
+                let fetch_index = 0;
+                
+               
+                if(call_from == "FY") {
+
+                    var valueArray = Object.values(DO_FY["TransformedRow"]);
+                    
+                    for(var i = 0; i < gx_cols_original.length; i++) {
+
+                        if(i != 0) {
+                            gx_cols_transformed[i] = gx_cols_transformed[i - 1] + (this._no_of_mes*3) + 1;
+                        }
+
+                        if(currentState == "actual") 
+                        {
+                            fetch_index = gx_cols_transformed[i] + 1;
+                        } 
+                        else if (currentState == "variance") 
+                        {
+                            fetch_index = (gx_cols_transformed[i] + 1 + (this._no_of_mes));
+                            color_flag = true;
+                        } 
+                        else 
+                        {
+                            fetch_index = (gx_cols_transformed[i] + 1 + (this._no_of_mes * 2));
+                            color_flag = true;
+                        }
+
+                        for(var idx = 0; idx < this._no_of_mes; idx++) {
+
+                            for(var k = 0; k < row_length; k++) {
+
+                                let data_from_obj = valueArray[k][fetch_index];
+
+                                // console.log(gx_cols_transformed[i], "-----", fetch_index);
+
+                                var node = this._dataTableObj.cell(k, (gx_cols_original[i] + 1) + idx).data(data_from_obj).node()
+                                
+                                data_from_obj = getRawValue(data_from_obj);
+
+                                if(color_flag) {
+                                    if(data_from_obj && data_from_obj > 0 || data_from_obj > "0") {
+                                        node.style.color = "#2D7230";
+                                    } else {
+                                        node.style.color = "#A92626";
+                                    }
+                                } else {
+                                    node.style.color = "#212121";
+                                }
+                                
+                            }
+
+                            fetch_index++;
+
+                        }
+                    }
+
+                }
+
+            }
+
+            setResultSet_FY(rs, colspan_to_top_headers, currentScale_and_Show) {
+
+                // this.reinitialize_changedProperties_ClassVariables();
+                var start = performance.now();
+
+                if(this._table) {
+                    this._table.remove();
+                    this._root.innerHTML = `
+                     <table id="example" class="table">
+                        <thead>
+                        </thead>
+                        <tbody></tbody>
+                    </table>    
+                    `
+                    this._table = this._shadowRoot.getElementById('example')
+                    // console.log( document.querySelector("#"+this["parentNode"].id+" > cw-table-v2").shadowRoot.querySelector("#example > colgroup:nth-child(2)"))
+                    // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > colgroup:nth-child(2)").remove();
+                }
+
+                this._resultSet = [];
+
+
+                this._callFrom = "FY";
+                var headers = this._headers
+                // console.log(headers);
+
+                var remove = ["@MeasureDimension"]
+                this._dimensions = Array.from(new Set(Object.keys(rs[0]).filter((k) => !remove.includes(k))))
+                this._measures = new Set()
+
+                this._measureOrder = headers["@MeasureDimension"]
+
+                this._dateColIndex = this._dimensions.indexOf("GX_Date");
+                this._dateColName = this._dimensions[this._dateColIndex];
+               
+                // this._customHeaderNames = customHeaderNames;
+
+                console.log("Dimensions", this._dimensions)
+                console.log("Measure Order", this._measureOrder)
+
+             
+                this._currentScaling = currentScale_and_Show["CurrentScale"];
+                this._stateShown = currentScale_and_Show["Visible"];
+                // this._varPreserveSelection = currentScale_and_Show["PreserveSelection"];
+                this._colspan_EmptyCase = parseInt(colspan_to_top_headers["EmptyCase"]);
+                this._colspan_BaseCase = parseInt(colspan_to_top_headers["BaseCase"]);
+                this._colspan_RestCase = parseInt(colspan_to_top_headers["RestCase"]);
+                // this._shownScenarios_ID_RS = currentScale_and_Show["ShowScenario"].split("_#_")[0].split(",");
+                // this._shownScenarios_Text_RS = currentScale_and_Show["ShowScenario"].split("_#_")[1].split(",");
+                this._versionChangeHeader = currentScale_and_Show["VersionChangeHeader"].split(",");
+
+                no_of_decimalPlaces_K = this.no_of_decimalPlaces_K;
+                no_of_decimalPlaces_M = this.no_of_decimalPlaces_M;
+                
+                if(this._currentScaling == "K") {
+                    no_of_decimalPlaces = no_of_decimalPlaces_K;
+                    replaceZero = "0";
+                } else {
+                    no_of_decimalPlaces = no_of_decimalPlaces_M;
+                    replaceZero = "0.0";
+                }
+
+                console.log("No. of Decimal Places", no_of_decimalPlaces)
+
+                for(var i = 0; i < rs.length;) {
+                    var tempArr = [], dims = new Set();
+                    for(var k = 0; k < this._dimensions.length; k++) {
+                        dims.add(rs[i][this._dimensions[k]].description);
+                    }
+                    for(var j = 0; j < this._measureOrder.length; j++) {
+                        if(JSON.stringify(this._measureOrder[j]) == JSON.stringify(rs[i]["@MeasureDimension"].description) && rs[i]["@MeasureDimension"].formattedValue != undefined) {
+                            if(rs[i]["@MeasureDimension"].formattedValue.includes("%")) {
+                                var v = rs[i]["@MeasureDimension"].formattedValue;
+                                if(v.includes("+")) {
+                                    v = v.split("+")[1];
+                                }
+                                tempArr.push(v)
+                            } else {
+                                tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                            }
+                        } else {
+                            while(JSON.stringify(this._measureOrder[j]) != JSON.stringify(rs[i]["@MeasureDimension"].description)) {
+                                tempArr.push("-")
+                                j+=1;
+                                if(j > this._measureOrder.length) {
+                                    console.log("Hit to Infinite Loop Case...")
+                                    return;
+                                }
+                            }
+                            if(JSON.stringify(this._measureOrder[j]) == JSON.stringify(rs[i]["@MeasureDimension"].description) && rs[i]["@MeasureDimension"].formattedValue != undefined) {
+                                if(rs[i]["@MeasureDimension"].formattedValue.includes("%")) {
+                                    var v = rs[i]["@MeasureDimension"].formattedValue;
+                                    if(v.includes("+")) {
+                                        v = v.split("+")[1];
+                                    }
+                                    tempArr.push(parseFloat(v))
+                                } else {
+                                    tempArr.push(parseFloat(rs[i]["@MeasureDimension"].formattedValue.replace(/,{1,}/g,"")).toFixed(no_of_decimalPlaces).toString()+" <span style='display:none;'>"+rs[i]["@MeasureDimension"].rawValue.toString()+"</span>")
+                                }
+                            }
+                        }
+                        i++;
+                        if(i >= rs.length || tempArr.length > this._measureOrder.length) {
+                            break;
+                        }
+                    }
+                    if(i > rs.length) {
+                        break;
+                    }
+                    tempArr.unshift(...Array.from(dims))
+                    // console.log(tempArr)
+                    this._resultSet.push(tempArr)
+                    // console.log(tempArr)
+                }
+
+                console.log("-- Result Set --")
+                console.log(this._resultSet)
+                console.log("----------------")
+
+                var end = performance.now();
+                var time = end - start;
+                console.log("setResultSet_FY took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+
+                var start = performance.now();
+
+                this.render_FY();
+
+                var end = performance.now();
+                var time = end - start;
+                console.log("Render_FY took approx : "+(Math.round(time/1000, 2)).toString()+"s to load...")
+
+            }
+
+
+            async render_FY() {
+
+                // DO_FY = {}
+
+                if (!this._resultSet) {
+                    return
+                }
+
+                DO_FY["Current_Scale"] =  this._currentScaling;
+                DO_FY["Parent_Child_Indices"] = {}
+
+                if(this._varPreserveSelection == "FALSE") {
+                    DO_FY = {};
+                }
+
+                this._widgetID = "#"+this["parentNode"].id+" > ";
+                // this._stateShown = "vsPy";
+                this._visibleCols = [];
+
+                var table_cols = []
+
+                var col_dimension = this._dimensions;
+                var col_measures = this._measureOrder;
+                var fixedScenarioAt = this._dateColIndex;
+
+                var visible_FY = "actual";
+
+                this._object_key_till = this._dimensions.indexOf("Scenario_Name");
+                this._customDateName = "";
+
+                console.log("Fixed Scenario At : ", fixedScenarioAt);
+
+                console.log('ResultSet Success')
+
+                // col_dimension = col_dimension.slice(0, col_dimension.indexOf("SCENARIO_NAME"))
+
+                var classname_col = "actual";
+
+                  
+                function dimensionVisibility_FY(state, _widgetID) {
+
+                    var selOptID = state.getElementsByTagName('option')[state.options.selectedIndex].id
+
+                    if(selOptID == "country") {
+                        tbl.column(0).visible(true);
+                        tbl.column(1).visible(false);
+
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(1)").colSpan = "1";
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").replaceChildren(state)
+                        // let dimensionTemplate =  `<select id='dimensionSwitch' onChange='dimensionVisibility_FY(this, "${_widgetID}")'> <option id='country' selected='selected'>Country</option> <option id='brand'>Brand</option> <option id='country_brand'>Country & Brand</option></select>`
+                        // document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").innerHTML = dimensionTemplate;
+                    } 
+                    else if(selOptID == "brand") {
+                        tbl.column(0).visible(false);
+                        tbl.column(1).visible(true);
+
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(1)").colSpan = "1";
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").replaceChildren(state)
+                        
+                        // let dimensionTemplate =  `<select id='dimensionSwitch' onChange='dimensionVisibility_FY(this, "${_widgetID}")'> <option id='country'>Country</option> <option id='brand' selected='selected'>Brand</option> <option id='country_brand'>Country & Brand</option></select>`
+                        // document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").innerHTML = dimensionTemplate;
+                    } 
+                    else {
+                        tbl.column(0).visible(true);
+                        tbl.column(1).visible(true);
+
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(1)").colSpan = "2";
+
+                        // let dimensionTemplate =  `<select id='dimensionSwitch' onChange='dimensionVisibility_FY(this, "${_widgetID}")'> <option id='country'>Country</option> <option id='brand' >Brand</option> <option id='country_brand' selected='selected'>Country & Brand</option></select>`
+                        // document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").innerHTML = dimensionTemplate;
+
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(1)").replaceChildren(state)
+                        document.querySelector(_widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(2)").innerHTML = "Brand";
+                    }
+
+                    // console.log(state, selOptID)
+                }
+
+                window.dimensionVisibility_FY = dimensionVisibility_FY;
+
+                var dimensionTemplate =  `<select id='dimensionSwitch' onChange='dimensionVisibility_FY(this, "${this._widgetID.toString()}")'> <option id='country'>Country</option> <option id='brand'>Brand</option> <option id='country_brand'>Country & Brand</option></select>`
+
+                if(Object.keys(this._customHeaderNames).length > 0) {
+
+                    for (var i = 0; i < this._customHeaderNames["DIMEN_NAME"].length; i++) {
+                        if(i == 0) {
+                            table_cols.push({
+                                title: dimensionTemplate
+                            })
+                        } 
+                        else {
+                            if(this._customHeaderNames["DIMEN_NAME"][i] != "Scenario_Name") {
+                                if(this._dateColName == this._customHeaderNames["DIMEN_NAME"][i]) {
+                                    table_cols.push({
+                                        title: this._customHeaderNames["DIMEN_NAME"][i],
+                                        className:"col_gx_date"
+                                    })
+                                    this._customDateName = this._customHeaderNames["DIMEN_NAME"][i];
+                                } else {
+                                    table_cols.push({
+                                        title: this._customHeaderNames["DIMEN_NAME"][i]
+                                    })
+                                }
+                            }
+                        }
+                    }
+        
+                    // for(var j = 0; j < this._customHeaderNames["MES_NAME"].length; j++) {
+                    //     if(j < 4) {
+                    //         classname_col = "actual";
+                    //     }
+                    //     else if(j < 8) {
+                    //         classname_col = "variance";
+                    //     }
+                    //     else {
+                    //         classname_col = "percentage";
+                    //     }
+                    //     table_cols.push({
+                    //         title: this._customHeaderNames["MES_NAME"][j],
+                    //         className:classname_col
+                    //     })
+                    // }
+                       
+                    table_cols.pop();
+
+                    var no_of_mes = 4;
+                    this._no_of_mes = no_of_mes;
+
+                    for(var i = 0; i < 3; i++) {
+
+                        table_cols.push({
+                            title: this._customDateName,
+                            className:"col_gx_date"
+                        })
+
+                        // for(var j = 0, cnt = 0; j < this._customHeaderNames["MES_NAME"].length * 3; j++) {
+                        for(var j = 0, cnt = 0; j < this._customHeaderNames["MES_NAME"].length; j++) {
+
+                            if(j < no_of_mes) {
+                                classname_col = "actual";
+                            }
+                            else if(j < 8) {
+                                classname_col = "variance";
+                            }
+                            else {
+                                classname_col = "percentage";
+                            }
+
+                            table_cols.push({
+                                title: this._customHeaderNames["MES_NAME"][cnt],
+                                className:classname_col
+                            })
+
+                            cnt++;
+
+                            if(cnt >= this._customHeaderNames["MES_NAME"].length) {
+                                cnt = 0;
+                            }
+
+                        }
+                    }
+
+                } else {
+                    // for (var i = 0; i < col_dimension.length; i++) {
+                    //     if(col_dimension[i] != "Scenario_Name") {
+                    //         if(col_dimension[i] == this._dateColName) {
+                    //             table_cols.push({
+                    //                 title: col_dimension[i],
+                    //                 className:"col_gx_date"
+                    //             })
+                    //         } else {
+                    //             table_cols.push({
+                    //                 title: col_dimension[i]
+                    //             })
+                    //         }
+                    //     }
+                    // }
+        
+                    // for(var j = 0; j < this._measureOrder.length; j++) {
+                    //     if(j == this._measureOrder.length - 2 || j == this._measureOrder.length - 1) {
+                    //         classname_col = "percentage";
+                    //     } 
+                    //     else if(j == this._measureOrder.length - 3 || j == this._measureOrder.length - 4) {
+                    //         classname_col = "variance";
+                    //     }
+                    //     else {
+                    //         classname_col = "actual";
+                    //     }
+                    //     table_cols.push({
+                    //         title: col_measures[j],
+                    //         className:classname_col
+                    //     })
+                    // }
+                       
+                    // for(var i = 0; i < 2; i++) 
+                    // {
+                    //     table_cols.push({
+                    //         title: this._customDateName,
+                    //         className:"col_gx_date"
+                    //     })
+
+                    //     for(var j = 0; j < this._customHeaderNames["MES_NAME"].length; j++) {
+                    //         if(j == this._customHeaderNames["MES_NAME"].length - 3 || j == this._customHeaderNames["MES_NAME"].length - 2 || j == this._customHeaderNames["MES_NAME"].length - 1) {
+                    //             classname_col = "percentage";
+                    //         }
+                    //         else if(j == this._customHeaderNames["MES_NAME"].length - 6  || j == this._customHeaderNames["MES_NAME"].length - 5 || j == this._customHeaderNames["MES_NAME"].length - 4) {
+                    //             classname_col = "variance";
+                    //         }
+                    //         else {
+                    //             classname_col = "actual";
+                    //         }
+                    //         table_cols.push({
+                    //             title: this._customHeaderNames["MES_NAME"][j],
+                    //             className:classname_col
+                    //         })
+                    //     }
+                    // }
+                }
+               
+                // TRIM LOGIC
+                // table_cols = table_cols.slice(0, this._hideExtraVisibleColumnFromIndex)
+                console.log('Data Table Columns : ', table_cols)
+                this._tableColumnNames = table_cols;
+
+
+                //// ------------------------ var cols indices starts ---------------------------------
+                var colorColIndices = new Set();
+                var considerCons = ["percentage", "variance"];
+                var numColsForDecimal = [], varColsForDecimal = [], perColsForDecimal = [], currVersionColsForDecimal = [];
+
+                // var alignCols = ["actual", "percentage", "variance"]
+                // var alignRight = new Set();
+
+                for(var i = 0; i < this._tableColumnNames.length; i++) {
+                    if(considerCons.includes(this._tableColumnNames[i]["className"])) {
+                       colorColIndices.add(i);
+                    }
+                    // if(alignCols.includes(this._tableColumnNames[i]["className"])) {
+                    //    alignRight.add(i)
+                    // }
+                    if(this._tableColumnNames[i]["className"] == "actual") {
+                       numColsForDecimal.push(i);
+                    }
+                    if(this._tableColumnNames[i]["className"] == "current_version") {
+                        currVersionColsForDecimal.push(i);
+                     }
+                    if(this._tableColumnNames[i]["className"] == "variance") {
+                       varColsForDecimal.push(i);
+                    }
+                    if(this._tableColumnNames[i]["className"] == "percentage") {
+                       perColsForDecimal.push(i);
+                    }
+                }
+                //// ------------------------ var cols indices ends -----------------------------------
+
+                //// ------------------------ Show Totals on Row Block Starts ---------------------------------
+                // this._fixedIndices = this._fixedIndices.concat(this._dropdownIndices);
+                // var templateGroupTotal = ["Total"];
+
+                // for(var i = 0; i < this._tableColumnNames.length; i++) {
+                //     if(this._dropdownIndices.includes(i)) {
+                //         indices.push(-1);
+                //     } 
+                //     else if (!this._fixedIndices.includes(i)) {
+                //         indices.push(i);
+                //     }
+                //     ////// -------------- For subset group total on rowgroup level starts --------------------
+                //     if(i > 0) {
+                //         if(this._customHeaderNames["SCENARIO_NAME"].includes(this._tableColumnNames[i].title) || this._tableColumnNames[i].title == this._dateColName) {
+                //             templateGroupTotal.push("");
+                //         } else {
+                //             templateGroupTotal.push("");
+                //         }
+                //     }
+                //     ////// -------------- For subset group total on rowgroup level Ends ----------------------
+                // }
+
+                // this._indices = indices;
+
+                //// ------------------------ Show Totals on Row Block Ends ---------------------------------
+
+                // --------------- Hide Columns STARTS ---------------
+                var hideCols = [1, 4]
+
+                // @--------------- CHANGED UNCOMMENT THIS... ----------------------------------
+
+                // for(var i = this._hideExtraVisibleColumnFromIndex; i < table_cols.length; i++) {
+                //     hideCols.push(i)
+                // }
+
+                // for(var i = 0; i < this._hide_Individual_ExtraVisibleColumnOfIndices.length; i++) {
+                //     hideCols.push(this._hide_Individual_ExtraVisibleColumnOfIndices[i])
+                // }
+
+                // --------------- Hide Columns ENDS ---------------
+
+
+                var tbl = undefined;
+                var groupBy = new Set();
+
+                if (!jQuery().dataTable) {
+                    console.log("-------- Datatable not initialized. \nRe-Initialzing Datatable libraries ...  ");
+                    await this.loadLibraries();
+               }
+
+                this._dataTableObj = new DataTable(this._table, {
+                    layout: {},
+                    columns: table_cols,
+                    bAutoWidth: false, 
+                    columnDefs: [
+                        {
+                            defaultContent: '-',
+                            // targets: hideCols, //_all
+                            targets : "_all",
+                            // className: 'dt-body-left'
+                        },
+                        { 
+                            targets:hideCols,  visible: false
+                        },
+                        { 
+                            targets:1, className:"truncate"
+                        },
+                        {
+                            targets:numColsForDecimal,
+                            render: function ( data, type, row ) {
+                                var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
+                                if(data != undefined && data != "-") {
+                                    if(data.toString().includes("%")) {
+                                        data = nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0)).toString()+" %";
+                                    } else {
+                                        data = nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
+                                    }
+                                }
+                                return data
+                            },
+                        },
+                        // {
+                        //     targets:currVersionColsForDecimal,
+                        //     render: function ( data, type, row ) {
+                        //         var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 0});
+                        //         if(data != undefined && data != "-") {
+                        //             data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
+                        //         }
+                        //         return data
+                        //     },
+                        // },
+                        // {
+                        //     targets:varColsForDecimal,
+                        //     render: function ( data, type, row ) {
+                        //         var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+                        //         if(data != undefined && data != "-") {
+                        //             data =  nFormat.format(parseFloat(data.toString().replace(/,{1,}/g,"")).toFixed(0));
+                        //         }
+                        //         return data
+                        //     },
+                        // },
+                        // {
+                        //     targets:perColsForDecimal,
+                        //     render: function ( data, type, row ) {
+                        //         if(data != undefined && !data.toString().includes("%")) {
+                        //             data =  data.toString()+" %";
+                        //         }
+                        //         return data
+                        //     },
+                        // },
+                        // {
+                        //     "targets": numColsForDecimal,
+                        //     "createdCell": function (td, cellData, rowData, row, col) {
+                        //         if (cellData >= 0 || cellData >= "0") {
+                        //             $(td).css('color', '#2D7230')
+                        //         }
+                        //         else if (cellData < 0 || cellData < "0") {
+                        //             $(td).css('color', '#A92626')
+                        //         }
+                        //     }
+                        // },
+                    ],
+                     createdRow: function(row){
+                        var td = $(row).find(".truncate");
+                        td["prevObject"]["context"]["children"][0].title = td["prevObject"]["context"]["cells"][0]["innerText"];
+                    },
+                    displayLength: 25,
+                    // initComplete: function (settings, json) {
+                    //     alert('DataTables has finished its initialisation.');
+                    // },
+                    bPaginate: false,
+                    searching: false,
+                    ordering: false,
+                    info: false,     // Showing 1 of N Entries...
+                    destroy: true,
+                })
+
+                tbl = this._dataTableObj
+
+                if(tbl.data().any()) {
+                    tbl.rows().remove().draw();
+                }
+
+                // console.log(this._dataTableObj)
+
+                ////// -------------------------- Show Total Row ------------------------
+                // var showTotalRow = ["Total", "Total"];
+                // var showTotalonRowUpdateFlag = false;
+                // for(var i = 2; i < this._tableColumnNames.length; i++) {
+                //     if(this._indices.includes(i)) {
+                //         showTotalRow.push("")
+                //     } else {
+                //         showTotalRow.push("")
+                //     }
+                // }
+                // tbl.row.add(showTotalRow).draw(false)
+                /////  ------------------------------------------------------------------
+
+//  ------------------------------ TO BE UNCOMMENTED ----------------------
+                // Top Most Header Block Starts
+                var topHeader = "<tr role='row'>";
+                
+                topHeader += `<th class='top-header' colspan='${this._colspan_EmptyCase}'></th>`;
+    
+
+                if(this._customTopHeader) {
+                    for(var i = 0; i < 3; i++) {
+                        if(i == 0) {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_BaseCase}' id='${this._customTopHeader[i].replace(" ","")}' >${this._customTopHeader[i]}</th>`
+                        } else {
+                            topHeader += `<th class='top-header' colspan='${this._colspan_RestCase}' id='${this._customTopHeader[i].replace(" ","")}' >${this._customTopHeader[i]}</th>`
+                        }
+                    }
+                } 
+
+                topHeader += "</tr>";
+
+                // console.log(this._widgetID+"cw-table-v2")
+
+//  ------------------------------ TO BE UNCOMMENTED ----------------------
+
+                // console.log(topHeader)
+               
+                tbl.on('click', 'tbody tr', e => {
+
+                    // let classList = e.currentTarget.classList
+                    // tbl
+                    //     .rows()
+                    //     .nodes()
+                    //     .each(row => row.classList.remove('selected'));
+                    
+                    // if(classList.length != 1) {
+
+                    //     classList.add('selected');
+
+                    //     if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
+                    //         DO_FY["DRP_USR_TRIGGERED"] = {}
+                    //     }
+    
+                    //     if(DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] == undefined) {
+                    //         DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()] = {}
+                    //     }
+    
+                    // }
+
+                    // // console.log(typeof(e.target.classList), Object.keys(e.target.classList), e)
+                    // if(e.target.classList && e.target.classList[0] == "row_level_select") {
+                    //     var sid = e.target.classList[1].split("row_level_select_")[1];
+                    //     DO_FY["DRP_USR_TRIGGERED"][tbl.row('.selected').index()][sid] = 1;
+                    // }
+
+                })
+
+                
+                // Master Reference Node For Selection Elements used Inside updateRow(), updateColumns() Method
+                var fixRowsObj = {}, masterObj = {};
+               
+                for(var i = 0, prev_key = ""; i < this._resultSet.length;) {
+
+                    var key = this._resultSet[i].slice(0, this._object_key_till).join("_#_");
+                    
+                    if(i==0) {prev_key = key.substring(0, )}
+
+                    var tempKey = key.substring(0, );
+
+                    while(JSON.stringify(key) == JSON.stringify(tempKey)) {
+
+                        if(this._resultSet[i] == undefined) {
+                            break;
+                        }
+                        tempKey = this._resultSet[i].slice(0, this._object_key_till).join("_#_");
+
+                        if(JSON.stringify(key) != JSON.stringify(tempKey)) {
+                            break;
+                        }
+
+                        var masterKey = tempKey.split("_#_").slice(0, fixedScenarioAt);
+                        var scene = this._resultSet[i][fixedScenarioAt];
+                        var scenarios_key = this._resultSet[i][this._object_key_till];
+                        
+
+                        if(masterObj[masterKey.join("_#_")] == undefined) {
+                            // masterObj[masterKey.join("_#_")] = structuredClone(scenarioObj);
+                            // masterObj[masterKey.join("_#_")] = structuredClone(scenarioObj);
+                            masterObj[masterKey.join("_#_")] = {};
+                        }
+
+                        if(masterObj[masterKey.join("_#_")][scene] == undefined) {
+                            masterObj[masterKey.join("_#_")][scene] = {};
+                        }
+
+                        if(masterObj[masterKey.join("_#_")][scene][scenarios_key] == undefined) {
+                            masterObj[masterKey.join("_#_")][scene][scenarios_key] = [];
+                        }
+
+                        masterObj[masterKey.join("_#_")][scene][scenarios_key] = this._resultSet[i].slice(this._object_key_till + 1, )
+
+                        i += 1;
+                    }
+
+                    prev_key = key;
+                }
+
+                // console.log("Master Object - FY", structuredClone(masterObj))
+
+                DO_FY["MasterObject"] = structuredClone(masterObj);
+
+                // Final Row Assignment
+                var lastRowId = undefined;
+                var manual_rowID = 1;
+                this._max_scenarios_length = 0;
+
+                for(const [k, v] of Object.entries(masterObj)) {
+
+                    var finalRow = [];
+                    var table_final_row = [];
+                    
+                    // Pushing Dimensions to finalRow.
+                    var dim = k.split("_#_");
+                    for(var f = 0; f < dim.length; f++) {
+                        finalRow.push(dim[f])
+                    }
+
+                    table_final_row = table_final_row.concat(finalRow.slice());
+
+                    // Pushing Measures to finalRow
+
+                    for(const v1 in v) {
+                            
+                        // finalRow.push(v1); //pushing gx date
+
+                        this._max_scenarios_length = Math.max(this._max_scenarios_length, Object.keys(masterObj[k][v1]).length);
+
+                        for(const v2 in masterObj[k][v1]) {
+                
+                            if(masterObj[k][v1][v2].length == 0) {
+                                for(var h = 0; h < this._measureOrder.length + 1; h++) {
+                                    finalRow.push(replaceZero+" <span style='display:none;'>0</span>")
+                                }
+                            } else {
+                                finalRow = finalRow.concat(masterObj[k][v1][v2].slice());
+                            }
+
+                            // finalRow.push(v1); //pushing gx date
+
+                        }
+                       
+                    }
+
+                    // finalRow.pop();
+
+                    ////// If only BASE is present STARTS -----------------------------------------
+                    // var onlyBaseAvailable = false, sliced = undefined;
+                    // if(masterObj[k]["DropDownFieldName"].size == 1) {
+                    //     sliced = finalRow.slice(k.split("_#_").length, this._dimensions.length - 1 + this._measureOrder.length);
+                    //     var cnt = 0;
+                    //     for(var i = sliced.length + k.split("_#_").length; i < table_cols.length; i++) {
+                    //         if(cnt >= sliced.length) {
+                    //             cnt = 0;
+                    //         }
+                    //         finalRow[i] = sliced[cnt]
+                    //         cnt++;
+                    //     }
+                    //     onlyBaseAvailable = true;
+                    //     // console.log(sliced, "-------", finalRow);
+                    // }
+                    ////// If only BASE is present ENDS ------------------------------------------
+                    // var baseRepeatedFlag = false;
+
+                    if(finalRow.length < this._tableColumnNames.length) 
+                    {
+                        var gx_date_1st_col = this._dataTableObj.columns(".col_gx_date")[0][0];
+                        var repeatBase = finalRow.slice(gx_date_1st_col, this._measureOrder.length + gx_date_1st_col + 1);
+
+                        var null_valued_column = repeatBase.slice().map(x => "-");
+
+                        for(var fr = finalRow.length; fr < this._tableColumnNames.length; fr = finalRow.length) 
+                        {
+                            finalRow = finalRow.concat(null_valued_column.slice());
+                        }
+                    }
+
+                    fixRowsObj[k] = finalRow.slice()
+                    //// finalRow = finalRow.slice(0, this._tableColumnNames.length)
+
+                    // Avoiding variance and % hidden columns in table.
+                    var gx_cols = this._dataTableObj.columns(".col_gx_date")[0];
+                    for(var r = 0; r < 3; r++) {
+                        if(r == 0) {
+                            table_final_row = table_final_row.concat(finalRow.slice(gx_cols[r], gx_cols[r] + no_of_mes + 1));
+                        } else {
+                            var start_from = (no_of_mes * (3 * r)) + 2 + 1 + (r - 1);
+                                             // 4       *  (3 * 1) +   3   +    0  (i.e : 1 - 1)
+                                             // 4       *  (3 * 1) +   3   +    1  (i.e : 2 - 1)
+                                             // 4       *  (3 * 1) +   3   +    2  (i.e : 3 - 1)
+                            table_final_row = table_final_row.concat(finalRow.slice(start_from, start_from + no_of_mes + 1));
+                        }
+                    }
+
+                    table_final_row = table_final_row.slice(0, this._tableColumnNames.length)
+// var start = performance.now();
+
+                    ////// ================================ Group by Row Starts =========================================
+                    // if(!Array.from(groupBy).includes(finalRow[0])) {
+                    //     groupBy.add(finalRow[0])
+                    //     templateGroupTotal[1] = finalRow[0]
+                    //     var node = tbl.row.add(templateGroupTotal.slice()).draw(false).node()
+                    //     node.classList.add("group")
+                    //     node.rowId = manual_rowID;
+                    //     manual_rowID++;
+
+                    //     lastRowId = node.rowId;
+
+                    //     if(DO_FY["Parent_Child_Indices"] == undefined) {
+                    //         DO_FY["Parent_Child_Indices"] = {}
+                    //     }
+                       
+                    //     if(DO_FY["Parent_Child_Indices"][lastRowId] == undefined) {
+                    //         DO_FY["Parent_Child_Indices"][lastRowId] = []
+                    //     }
+                    // }
+                    ////// ================================ Group by Row Ends ============================================
+
+                    // var node = tbl.row.add(finalRow.slice(0, table_cols.length)).draw().node();
+                    var node = tbl.row.add(table_final_row.slice(0, table_cols.length)).draw().node();
+                    node.rowId = manual_rowID;
+                    var rid = tbl.rows().indexes().toArray()[tbl.rows().indexes().toArray().length - 1];
+
+                    // if(!DO_FY["Parent_Child_Indices"][lastRowId].includes(node.rowId)) {
+                    //     DO_FY["Parent_Child_Indices"][lastRowId].push(node.rowId)
+                    // }
+
+                    manual_rowID++;
+
+                    // console.log(finalRow);
+
+                //     if(!onlyBaseAvailable) {
+
+                //         var cga = Array.from(caughtDropDownsAt);
+                //         master_dropdownArr = Array.from(master_dropdownArr).slice(1, );
+
+                //         if(master_dropdownArr.length < 3) {
+                //             for(var md = master_dropdownArr.length; md < 3; md++) {
+                //                 master_dropdownArr.push(0);
+                //             }
+                //         }
+
+                //         if(cga.length < 3) {
+                //             for(var b = 0; b < master_dropdownArr.length; b++) {
+                //                 if(cga.length >= 3) {
+                //                     break;
+                //                 }
+                //                 cga.push(master_dropdownArr[b]);
+                //             }
+                //         }
+
+                //         var drp = Array.from(dropdownIDs);
+
+                //         if(DO_FY["DRP"] == undefined) {
+                //             DO_FY["DRP"] = {}
+                //         }
+
+                //         if(this._varPreserveSelection == "TRUE"){
+                //             if(DO_FY["DRP_USR_TRIGGERED"] == undefined) {
+                //                 DO_FY["DRP_USR_TRIGGERED"] = {}
+                //             }
+                //             if(DO_FY["DRP_USR_TRIGGERED"]["Added"] ==  undefined) {
+                //                 DO_FY["DRP_USR_TRIGGERED"]["Added"] = []
+                //             }
+                //             for(var rowid = 0; rowid < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; rowid++) {
+                                
+                //                 if(DO_FY["DRP_USR_TRIGGERED"] && Object.keys(DO_FY["DRP"]).includes(Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid])) {
+                                    
+                //                     var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
+
+                //                     for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
+                //                         if(tbl_row_id && tbl_row_id != "Added") {
+
+                //                             var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+
+                //                             if(select_element_id && Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).includes(select_element_id)) {
+                //                                 if(!DO_FY["DRP_USR_TRIGGERED"]["Added"].includes(tbl_row_id+"_#_"+select_element_id) && DO_FY["DRP"][tbl_row_id] && DO_FY["DRP"][tbl_row_id][select_element_id]) {
+                //                                     DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id] =  DO_FY["DRP"][tbl_row_id][select_element_id]
+                //                                     DO_FY["DRP_USR_TRIGGERED"]["Added"].push(tbl_row_id+"_#_"+select_element_id)
+                //                                 }
+                //                             }
+                //                         }
+
+                //                     }
+
+                //                 }
+
+                //             }
+                //         }
+
+                //         if(DO_FY["DRP"][rid] == undefined) {
+                //             DO_FY["DRP"][rid] = {}
+                //         }
+
+                //         DO_FY["DRP"][rid][drp[0]] = cga[0];
+                //         DO_FY["DRP"][rid][drp[1]] = cga[1];
+                //         DO_FY["DRP"][rid][drp[2]] = cga[2];
+
+                //         this.setSelectorsSelectedValue(dropdownIDs, cga, "FY");
+                //     }
+
+                }
+
+                var _max_scenarios_length = this._max_scenarios_length;
+
+                //// ---------------------------- Make master transformed row of equal length as per max scenario ---------------------------------
+                for(var x in fixRowsObj) {
+                    for(var g = fixRowsObj[x].length; g < this._measureOrder.length * _max_scenarios_length; g = fixRowsObj[x].length) {
+                        fixRowsObj[x] = fixRowsObj[x].concat(null_valued_column.slice());
+                    }
+                }
+                DO_FY["TransformedRow"] = structuredClone(fixRowsObj)
+                //// -----------------------------------------------------------------------------------------------------------------------------
+
+
+// var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Selector Selected Value -- Render_FY took approx : ") 
+var start = performance.now();
+
+                this.applyStyling_FY();
+                
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Set Styling -- Render_FY took approx : ") 
+var start = performance.now();
+
+
+                // if (this._tableCSS) {
+                //     // console.log(this._tableCSS)
+                //     this._table.style.cssText = this._tableCSS
+                // }
+
+                // if (this._rowCSS) {
+                //     console.log(this._rowCSS)
+                //     document
+                //         .querySelector(this._widgetID+'cw-table-v2')
+                //         .shadowRoot.querySelectorAll('td')
+                //         .forEach(el => (el.style.cssText = this._rowCSS))
+                //     document
+                //         .querySelector(this._widgetID+'cw-table-v2')
+                //         .shadowRoot.querySelectorAll('th')
+                //         .forEach(el => (el.style.cssText = this._rowCSS))
+                // }
+
+                // if (this._colCSS) {
+                //     console.log(this._colCSS)
+                //     document
+                //         .querySelector(this._widgetID+'cw-table-v2')
+                //         .shadowRoot.querySelector('style').innerText += this._colCSS
+                // }
+
+
+var end = performance.now();
+var time = end - start;
+console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Table CSS - SAC Side -- Render_FY took approx : ") 
+var start = performance.now();
+
+                const list = document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead");
+
+                for(var i = 0; i < list.children.length - 1; i++) {
+                    list.removeChild(list.children[i]);
+                }
+
+
+//                 showTotalonRowUpdateFlag = true;
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead").insertAdjacentHTML('afterBegin', topHeader);
+                
+                
+                
+var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Top Most Header -- Render_FY took approx : ") 
+                                
+//                 DO_FY["Current_Scale"] = this._currentScaling;
+                
+//                 this.showTotal_FY();
+            
+// var start = performance.now();
+
+//                 ///////// Show State on RS Change .......
+//                 this.columnVisibility([this._stateShown],[])
+//                 this.showScenarios(10, this._shownScenarios_ID_RS, this._shownScenarios_Text_RS, 7);
+ 
+//  var end = performance.now();
+//  var time = end - start;
+//  console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show/Hide -- Render_FY took approx : ")     
+
+// var start = performance.now();
+
+//                 if(this._varPreserveSelection == "TRUE" && DO_FY["DRP_USR_TRIGGERED"]) {
+//                     for(var rowid = 0; rowid < Object.keys(DO_FY["DRP_USR_TRIGGERED"]).length; rowid++) {
+
+//                         if(Object.keys(DO_FY["DRP"]).includes(Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid])) {
+
+//                             var tbl_row_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"])[rowid];
+
+//                             for(var selID = 0; selID < Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id]).length; selID++) {
+
+//                                 if(tbl_row_id && tbl_row_id != "Added") {
+
+//                                     var select_element_id = Object.keys(DO_FY["DRP_USR_TRIGGERED"][tbl_row_id])[selID];
+//                                     var selectorID = ".row_level_select_"+select_element_id;
+//                                     var selElement = document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector(selectorID);
+
+//                                     this._dataTableObj
+//                                     .rows()
+//                                     .nodes()
+//                                     .each(row => row.classList.remove('selected'));
+
+//                                     this._dataTableObj.row(tbl_row_id).node().setAttribute("class","selected")
+
+//                                     if(selElement && selElement.selectedIndex != undefined) {
+//                                         selElement.selectedIndex = DO_FY["DRP_USR_TRIGGERED"][tbl_row_id][select_element_id];
+//                                         selElement.dispatchEvent(new Event("change"));
+//                                     }
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+
+// var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Trigger Selection -- Render_FY took approx : ") 
+//         // }
+
+                var measure_order = this._measureOrder;
+
+                var measure_1_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_5_#_base' class='measure_dropdown'> 
+                                                <option id='Scenario_0_#_vs Py_#_2' selected> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3'> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2'> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3'> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2'> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3'> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option> 
+                                            </select>`;
+
+                var measure_2_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_6_#_base' class='measure_dropdown'> 
+                                                <option id='Scenario_0_#_vs Py_#_2'> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3' selected> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2'> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3'> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2'> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3'> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option> 
+                                            </select>`;
+
+                var measure_3_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_10_#_base' class='measure_dropdown'> 
+                                                <option id='Scenario_0_#_vs Py_#_2'> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3'> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2' selected> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3'> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2'> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3'> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option> 
+                                            </select>`;
+
+                var measure_4_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_11_#_base' class='measure_dropdown'> 
+                                                <option id='Scenario_0_#_vs Py_#_2'> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3'> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2'> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3' selected> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2'> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3'> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option>
+                                            </select>`;
+
+                var measure_5_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_15_#_base' class='measure_dropdown'>
+                                                <option id='Scenario_0_#_vs Py_#_2'> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3'> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2'> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3'> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2' selected> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3'> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option> 
+                                            </select>`;
+
+                var measure_6_template =   `<select onchange='changeColumn_FY(this)' id='actual_#_16_#_base' class='measure_dropdown'> 
+                                                <option id='Scenario_0_#_vs Py_#_2'> Base - vs Py </option> 
+                                                <option id='Scenario_0_#_vs LO MAR_#_3'> Base - vs LO MAR </option> 
+                                                <option id='Scenario_1_#_vs Py_#_2'> S1 - vs Py </option> 
+                                                <option id='Scenario_1_#_vs LO MAR_#_3'> S1 - vs LO MAR </option> 
+                                                <option id='Scenario_2_#_vs Py_#_2'> S2 - vs Py </option> 
+                                                <option id='Scenario_2_#_vs LO MAR_#_3' selected> S2 - vs LO MAR </option> 
+                                                <option id='Scenario_3_#_vs Py_#_2'> S3 - vs Py </option> 
+                                                <option id='Scenario_3_#_vs LO MAR_#_3'> S3 - vs LO MAR </option>
+                                            </select>`;
+                // var measure_2_template =  `<select onchange='pivotDataToColumn_FY(this)' id='actual_#_6_#_base' class='measure_dropdown'> <option id='Scenario_1'> Scenario_1 </option> <option id='Scenario_2'> Scenario_2 </option> </select>`;
+
+                // BASE TABLE - ACTUAL
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(4)").innerHTML  =  measure_1_template;
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(5)").innerHTML  =  measure_2_template;
+
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(9)").innerHTML  =  measure_3_template;
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(10)").innerHTML =  measure_4_template;
+
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(14)").innerHTML =  measure_5_template;
+                document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(15)").innerHTML =  measure_6_template;
+                // // BASE TABLE - VARIANCE
+                // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(8)").innerHTML = measure_1_template;
+                // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(9)").innerHTML = measure_2_template;
+
+                // // BASE TABLE - PERCENTAGE
+                // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(12)").innerHTML = measure_1_template;
+                // document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(2) > th:nth-child(13)").innerHTML = measure_2_template;
+ 
+
+ console.log("Data Object - FY :", DO_FY)
+ 
+                this._dataTableObj.columns(currVersionColsForDecimal).visible(false);
+                this._dataTableObj.columns(varColsForDecimal).visible(false);
+                this._dataTableObj.columns(perColsForDecimal).visible(false);
+
+                //  if(this._versionChangeHeader.length > 0) {
+                //      this.changeTableHeaderOnVersionChange(this._versionChangeHeader);
+                //  }
+
+                // Styling Block Ends here
+
+                function changeColumn_FY(state) {
+
+                    // console.log(state)
+                    var selection_id = state.id; 
+                    var column_id = selection_id.split("_#_")[0]+"_#_"+selection_id.split("_#_")[1];
+                    var selection_option_index = state.options.selectedIndex;
+                    var selection_option_id = state.getElementsByTagName('option')[state.options.selectedIndex].id;
+                    var current_case = parseInt(selection_option_id.split("_#_")[0].split("_")[1]);
+                    
+                    var gx_cols = tbl.columns(".col_gx_date")[0];
+                    var scenario_of = parseInt(selection_option_id.split("_#_")[0].split("_")[1]);
+                    // var visible = column_id.split("_#_")[0];
+                    // var visible = "percentage"; // will be coming from SAC Side
+                    var scenario_index = parseInt(selection_option_id.split("_#_")[2]);
+                    var fetch_from_index = undefined;
+
+                    // if(visible == "actual") {
+                    //     fetch_from_index = gx_cols[scenario_of] + 0 + 1 + measure_order.indexOf(scenario_name);
+                    // } 
+                    // else if (visible == "variance") {
+                    //     fetch_from_index = gx_cols[scenario_of] + 4 + 1 + measure_order.indexOf(scenario_name);
+                    // } 
+                    // else if (visible == "percentage") {
+                    //     fetch_from_index = gx_cols[scenario_of] + 8 + 1 + measure_order.indexOf(scenario_name);
+                    // }
+
+                    var index_of = undefined;
+
+                    if(current_case == 0) {
+                        index_of = parseInt(gx_cols[0]) + 1;
+                    } else {
+                        index_of = no_of_mes * (3 * current_case) + 3;
+                    }
+
+                    if(stateShown_FY == "actual") {
+                        fetch_from_index = index_of;
+                    } 
+                    else if (stateShown_FY == "variance") {
+                        fetch_from_index = index_of + no_of_mes;
+                    } 
+                    else if (stateShown_FY == "percentage") {
+                        fetch_from_index = index_of + (no_of_mes * 2);
+                    }
+                   
+                    fetch_from_index += scenario_index + 1;
+
+                    console.log("Column ID : ", column_id, "\nSelection ID : ", selection_id, "\nSelection Option ID : ", selection_option_id, "\nSelection Option Index : ", selection_option_index)
+
+                    // console.log(tbl.column(5).data()[0]);
+
+                    //// fetch_from_index += 2 // country + brand.
+
+                    let data = [];
+
+                    for(var key in DO_FY["TransformedRow"]) {
+                        data.push(DO_FY["TransformedRow"][key][fetch_from_index + current_case - 1]);
+                    }
+
+                    tbl.columns(column_id.split("_#_")[1]).data(data).draw()
+
+                    var d = tbl.columns(column_id.split("_#_")[1]).data()[0];
+
+                    for(var i = 0; i < d.length; i++) {
+                        tbl.cell(i, column_id.split("_#_")[1]).data(data[i]).draw();
+                    }
+
+                    console.log(data)
+
+
+                }
+
+                window.changeColumn_FY = changeColumn_FY;
+            }
+
+//             showTotal_FY() {
+
+// var start = performance.now();
+
+//                 var no_of_per_cols = 3;
+//                 var top_most_total_row_id = 0;
+//                 this._callFrom = "FY";
+//                 var no_of_decimalPlaces = parseInt(this.no_of_decimalPlaces_K[0]);
+//                 var subTotalRowIDs = Object.keys(DO_FY["Parent_Child_Indices"]);
+//                 var TOP_MOST_TOTAL_ROW = this._dataTableObj.rows(0).data().toArray()[0]
+
+//                 var numCols_FY  =  this._dataTableObj.columns('.numericColsCSS')[0];
+//                 var varCols_FY  =  this._dataTableObj.columns('.vsPy')[0];
+//                 var perCols_FY  =  this._dataTableObj.columns('.perCols')[0];
+
+//                 if(this._currentScaling == "M") {
+//                     no_of_decimalPlaces = parseInt(this.no_of_decimalPlaces_M[0]) ;
+//                 }
+
+//                 var nFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: no_of_decimalPlaces});
+
+//                 for(var e = 0; e < subTotalRowIDs.length; e++) {
+                    
+//                     var currentSubTotalRowID = subTotalRowIDs[e];
+                    
+//                     //// For Numeric 
+//                     for(var f = 0; f < numCols_FY.length; f++) {
+                                        
+//                         var subsetTotal = 0, unformattedSubsetTotal = 0;
+//                         var sliceLen_Start = DO_FY["Parent_Child_Indices"][currentSubTotalRowID][0];
+//                         var columnarData = this._dataTableObj.column(numCols_FY[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_FY["Parent_Child_Indices"][currentSubTotalRowID].length)
+                                   
+//                         columnarData.forEach(v => {
+//                             if(v.toString() != "-" && v != "") {
+//                                 unformattedSubsetTotal += getRawValue(v)
+//                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
+//                                 subsetTotal += v;
+//                             }
+//                         });
+
+//                         var node = this._dataTableObj.cell(currentSubTotalRowID, numCols_FY[f]).data(nFormat.format(parseFloat(subsetTotal).toFixed(0)).split(".")[0].toString()+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
+                                        
+//                         ////// ---------------------- Coloring the cell Starts --------------------------
+                
+//                         if(subsetTotal >= 0 || subsetTotal >= "0") {
+//                             node.style.color = "#2D7230";
+//                         } else {
+//                             node.style.color = "#A92626";
+//                         }
+                
+//                         ////// ---------------------- Coloring the cell Ends ----------------------------
+                
+                                        
+//                         if(TOP_MOST_TOTAL_ROW[numCols_FY[f]] == "") {
+//                             TOP_MOST_TOTAL_ROW[numCols_FY[f]] = 0
+//                         }
+
+//                         var val = TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")
+//                         if(val.toString().includes("span")) {
+//                             val = val.split("<span style='display:none;'>")[1].toString().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+//                         }
+            
+//                         TOP_MOST_TOTAL_ROW[numCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[numCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+//                     }
+
+//                      /// For Variance
+//                      for(var f = 0; f < varCols_FY.length; f++) {
+                        
+//                         var subsetTotal = 0, unformattedSubsetTotal = 0;
+//                         var sliceLen_Start = DO_FY["Parent_Child_Indices"][currentSubTotalRowID][0];
+//                         var columnarData = this._dataTableObj.column(varCols_FY[f]).data().toArray().slice(sliceLen_Start, sliceLen_Start + DO_FY["Parent_Child_Indices"][currentSubTotalRowID].length)
+                        
+//                         columnarData.forEach(v => {
+//                             if(v.toString() != "-" && v != "") {
+//                                 unformattedSubsetTotal += getRawValue(v)
+//                                 v = parseFloat(v.toString().replace(/,{1,}/g,""))
+//                                 subsetTotal += v;
+//                             }
+//                         });
+
+//                         var node = this._dataTableObj.cell(currentSubTotalRowID, varCols_FY[f]).data(nFormat.format(subsetTotal)+" <span style='display:none;'>"+unformattedSubsetTotal+"</span>").node()
+
+//                         ////// ---------------------- Coloring the cell Starts --------------------------
+
+//                         if(subsetTotal >= 0 || subsetTotal >= "0") {
+//                             node.style.color = "#2D7230";
+//                         } else {
+//                             node.style.color = "#A92626";
+//                         }
+
+//                         ////// ---------------------- Coloring the cell Ends ----------------------------
+
+//                         if(TOP_MOST_TOTAL_ROW[varCols_FY[f]] == "") {
+//                             TOP_MOST_TOTAL_ROW[varCols_FY[f]] = 0
+//                         }
+
+//                         var val = TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")
+//                         if(val.toString().includes("span")) {
+//                             val = val.split("<span style='display:none;'>")[1].toString().split("</span>")[0].trim().toString().replace(/,{1,}/g,"")
+//                             // val = val.split("<span")[0].trim().toString().replace(/,{1,}/g,"")
+//                         }
+                        
+//                         TOP_MOST_TOTAL_ROW[varCols_FY[f]] = nFormat.format(parseFloat(TOP_MOST_TOTAL_ROW[varCols_FY[f]].toString().replace(/,{1,}/g,"")) + subsetTotal).toString()+" <span style='display:none;'>"+(parseFloat(val) + unformattedSubsetTotal)+"</span>"
+//                     }
+
+//                     /// For Percentage
+//                     for(var f = 0, idx = 0; f < perCols_FY.length; f++) {
+
+//                         var subsetTotal = 0;
+    
+//                         var value = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data())
+//                         var val_minus_act = getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data())
+    
+//                         if(isNaN(value)) {
+//                             value = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
+//                         }
+//                         if(isNaN(val_minus_act)){
+//                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
+//                         }
+    
+//                         var act1 = value - val_minus_act, truncateDecimal = false;
+    
+//                         if(value == 0 && act1 == 0) {
+//                             subsetTotal = replaceZero.toString()
+//                         } else if(value == 0) {
+//                             subsetTotal = "-100.0 %"
+//                             truncateDecimal = true;
+//                         } else if (act1 == 0) {
+//                             subsetTotal = "100.0 %";
+//                             truncateDecimal = true;
+//                         } else {
+//                             subsetTotal = (val_minus_act / act1 * 100);
+//                             if(subsetTotal > 99999 || subsetTotal < -99999) {
+//                                 subsetTotal = (0).toFixed(no_of_decimalPlaces);
+//                             } else {
+//                                 subsetTotal = subsetTotal.toFixed(no_of_decimalPlaces)
+//                             }
+//                             subsetTotal = nFormat.format(subsetTotal).toString()+" %"
+//                             // subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+//                         }
+
+//                         if(truncateDecimal && no_of_decimalPlaces == 0) {
+//                             subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+//                         }
+    
+//                         var node = this._dataTableObj.cell(currentSubTotalRowID, perCols_FY[f]).data(subsetTotal).node()
+    
+//                         ////// ---------------------- Coloring the cell Starts --------------------------
+    
+//                         if(subsetTotal >= 0 || subsetTotal >= "0") {
+//                             node.style.color = "#2D7230";
+//                         } else {
+//                             node.style.color = "#A92626";
+//                         }
+    
+//                         ////// ---------------------- Coloring the cell Ends ----------------------------
+//                         ///// ------------------- TOP MOST TOTAL PERCENTAGE STARTS ----------------------
+
+//                         var subsetTotal = 0;
+
+//                         var value = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data())
+//                         var val_minus_act = getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data())
+    
+//                         if(isNaN(value)) {
+//                             value = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - (idx + 4)).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
+//                         }
+//                         if(isNaN(val_minus_act)){
+//                             val_minus_act = parseFloat(getRawValue(this._dataTableObj.cell(top_most_total_row_id, perCols_FY[f] - no_of_per_cols).data().replace(/,{1,}/g,"").replace(/%{1,}/g,"")))
+//                         }
+    
+//                         // var act1 = value - val_minus_act
+    
+//                         // if(value == 0 && act1 == 0) {
+//                         //     subsetTotal = replaceZero.toString()
+//                         // } else if(value == 0) {
+//                         //     subsetTotal = "-100.0 %"
+//                         // } else if (act1 == 0) {
+//                         //     subsetTotal = "100.0 %";
+//                         // } else {
+//                         //     subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+//                         // }
+
+//                         var act1 = value - val_minus_act, truncateDecimal = false;
+    
+//                         if(value == 0 && act1 == 0) {
+//                             subsetTotal = replaceZero.toString()
+//                         } else if(value == 0) {
+//                             subsetTotal = "-100.0 %"
+//                             truncateDecimal = true;
+//                         } else if (act1 == 0) {
+//                             subsetTotal = "100.0 %";
+//                             truncateDecimal = true;
+//                         } else {
+//                             subsetTotal = (val_minus_act / act1 * 100);
+//                             if(subsetTotal > 99999 || subsetTotal < -99999) {
+//                                 subsetTotal = (0).toFixed(no_of_decimalPlaces);
+//                             } else {
+//                                 subsetTotal = subsetTotal.toFixed(no_of_decimalPlaces)
+//                             }
+//                             subsetTotal = nFormat.format(subsetTotal).toString()+" %"
+//                             // subsetTotal = nFormat.format((val_minus_act / act1 * 100).toFixed(no_of_decimalPlaces)).toString()+" %"
+//                         }
+
+//                         if(truncateDecimal && no_of_decimalPlaces == 0) {
+//                             subsetTotal = subsetTotal.split(".")[0].toString()+" %";
+//                         }
+    
+//                         TOP_MOST_TOTAL_ROW[perCols_FY[f]] = subsetTotal
+    
+//                         ///// ------------------- TOP MOST TOTAL PERCENTAGE ENDS --------------------------
+  
+//                         idx++;
+
+//                         if(idx >= 3) {
+//                             idx = 0;
+//                         }
+                          
+//                      }
+
+//                 }
+
+//                 // console.log("TOP_MOST_TOTAL_ROW ---", TOP_MOST_TOTAL_ROW)
+//                 this._dataTableObj.row(top_most_total_row_id).data(TOP_MOST_TOTAL_ROW).draw(false)
+
+//                 console.log("-----------------------------------",TOP_MOST_TOTAL_ROW)
+
+//                 ///// ------------------- For Color Top-Most Total Starts --------------------------
+        
+//                 var loopCells = varCols_FY.concat(perCols_FY);
+      
+//                 for(var i = 0; i < loopCells.length; i++) {
+        
+//                   var data =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).data()
+//                   var node =  this._dataTableObj.cell(top_most_total_row_id, loopCells[i]).node()
+        
+//                   if(node != undefined) {
+        
+//                     if(data > 0 || data > "0") {
+//                         node.style.color = "#2D7230";
+//                     } else {
+//                         node.style.color = "#A92626";
+//                     }
+        
+//                   }
+        
+//                 }
+        
+//                 ///// ------------------- For Color Top-Most Total Ends --------------------------
+        
+//                 ////// SUB-TOTAL CALCULATION ENDS //////
+        
+// var end = performance.now();
+// var time = end - start;
+// console.log((Math.round(time/1000, 2)).toString()+"s to load..."+"Show Total () -- Render_FY took approx : ") 
+   
+
+//             }
+
+          
+            changeTableHeaderOnVersionChange(header_names) {
+                // if(this._callFrom == "QT") {
+                //     if(this._versionChangeHeader[0] != undefined) {
+                //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(3)").innerHTML = this._versionChangeHeader[0];
+                //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(5)").innerHTML = this._versionChangeHeader[0];
+                //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(7)").innerHTML = this._versionChangeHeader[0];
+                //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(9)").innerHTML = this._versionChangeHeader[0];
+                //     }
+                // } else {
+                //     if(this._versionChangeHeader[0] != undefined) {
+                //         document.querySelector(this._widgetID+"cw-table-v2").shadowRoot.querySelector("#example > thead > tr:nth-child(1) > th:nth-child(2)").innerHTML = this._versionChangeHeader[0];
+                //     }
+                // }
+            }
+        }
+        customElements.define('cw-table-v2', CustomTable)
+    })()
