@@ -1,0 +1,174 @@
+{
+    "eula": "",
+    "vendor": "Sanath Ezhuthachan",
+    "license": "",
+    "id": "CW_Table_v2_DigitalSweep",
+    "icon": "https://sanath710.github.io/sac_custom_widget/CustomTable/table.png",
+    "version": "1.0.0",
+    "name": "CW Table v2",
+    "newInstancePrefix": "CW_Table_v2",
+    "description": "CW - Table v2",
+    "webcomponents": [
+        {
+            "kind": "main",
+            "tag": "cw-table-v2",
+            "url": "http://127.0.0.1:5000/CW_Table_v2.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
+    ],
+    "properties": {
+        "_tableCSS":{
+            "type":"any",
+            "description":"table level css",
+            "default":""
+        },
+        "_rowCSS":{
+            "type":"any",
+            "description":"row level css",
+            "default":""
+        },
+        "_colCSS":{
+            "type":"any",
+            "description":"col level css",
+            "default":""
+        },
+        "_headers":{
+            "type":"any",
+            "description":"headers level css"
+        },
+        "_customHeaderNames":{
+            "type":"any",
+            "description":"custom headers name"
+        },
+        "_dateColName":{
+            "type":"any",
+            "description":"selection column name"
+        },
+        "_hideExtraVisibleColumnFromIndex":{
+            "type":"any",
+            "description":"hide cols from index"
+        },
+        "_hide_Individual_ExtraVisibleColumnOfIndices":{
+            "type":"any",
+            "description":"hide col of indices"
+        },
+        "_customTopHeader":{
+            "type":"any",
+            "description":"custom top most header"
+        }
+    },
+    "methods": {
+        "gxDate_visibility":{
+            "parameters": [
+                {
+                    "name": "show_hide_gx_date",
+                    "description":"boolean value",
+                    "type": "any"
+                }
+            ]
+        },
+        "setExtraParams":{
+            "parameters": [
+                {
+                    "name": "top_most_header_sequence",
+                    "description":"Header Value Sequence",
+                    "type": "any"
+                },
+                {
+                    "name": "customHeaderNames",
+                    "description":"Custom Header Names of DataTable",
+                    "type": "any"
+                },
+                {
+                    "name": "hide_Individual_ExtraVisibleColumnOfIndices",
+                    "description":"Hides particular visible columns (index)",
+                    "type": "any"
+                }
+            ],
+            "body":"this._headers = top_most_header_sequence; this._customHeaderNames = customHeaderNames; this._hide_Individual_ExtraVisibleColumnOfIndices = hide_Individual_ExtraVisibleColumnOfIndices;"
+        },
+        "setResultSet_FY": {
+            "parameters": [
+                {
+                    "name": "resultSet",
+                    "description":"Pass the ResultSet",
+                    "type": "any"
+                },
+                {
+                    "name": "colspan_to_top_headers",
+                    "description":"Provides Colspan to top most headers (Seq : Empty Block - Base Case - Rest Scenarios)",
+                    "type": "any"
+                },
+                {
+                    "name": "current_scale",
+                    "description":"Current Scale",
+                    "type": "any"
+                }
+            ]
+        },
+        "showScenarios":{
+            "parameters": [
+                {
+                    "name": "fixedCols",
+                    "description":"No. of fixed initial cols",
+                    "type": "any"
+                },
+                {
+                    "name": "col_start_indices",
+                    "description":"column index to be shown",
+                    "type": "any"
+                },
+                {
+                    "name": "top_header_names_to_show",
+                    "description":"show top headers from names",
+                    "type": "any"
+                },
+                {
+                    "name": "no_of_succeeding_measures",
+                    "description":"how many measures does it contain in one scenario",
+                    "type": "any"
+                }
+            ]
+        },
+        "applyStyling":{
+            "parameters": [
+                {
+                    "name": "table_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "row_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                },
+                {
+                    "name": "column_level_css",
+                    "description":"CSS Styling",
+                    "type": "any"
+                }
+            ],
+            "body":"this._tableCSS = table_level_css; this._rowCSS = row_level_css; this._colCSS = column_level_css;"
+        },
+        "applyScaling_FY":{
+            "parameters": [
+                {
+                    "name": "scaleTo",
+                    "description":"Accepted [M, K]",
+                    "type": "string"
+                }
+            ]
+        },
+        "columnVisibility":{
+            "parameters": [
+                {
+                    "name": "showColumns",
+                    "description":"Values (Act / Var / %) - columns",
+                    "type": "any"
+                }
+            ]
+        }
+    },
+    "events": {}
+}
