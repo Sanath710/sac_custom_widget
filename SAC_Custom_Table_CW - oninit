@@ -1,0 +1,72 @@
+Panel_Multi.showBusyIndicator();
+
+var START_$ = Date.now();
+console.log((Date.now()-START_$)/1000);
+
+if(hiddenTable_Country.getDataSource().isResultEmpty())
+{
+	Popup_Authorization_Error.open();
+	return;
+}
+
+TopNavigationBar.toggleConfigIcon(true);
+
+TopNavigationBar.setUserTeamInfo(Application.getTeamsInfo());
+TopNavigationBar.setUserNameAvatar(Application.getUserInfo());
+SideNavigationMenu_1.setAccess(Application.getTeamsInfo());
+
+// ------------------------------ Filter Table Reading -----------------------
+SCRO_Utilities.FUN_Reading_Filter_Table();
+
+//------------------------------------------CW_FULLYEAR_START-----------------------
+/// base -12 base-1, base, base1-12
+var headerSeq = {
+	"SCENARIO_ORDER":["BASE-12","BASE-11","BASE-10","BASE-9","BASE-8","BASE-7","BASE-6","BASE-5","BASE-4","BASE-3","BASE-2","BASE-1","BASE1","BASE2","BASE3","BASE4","BASE5","BASE6","BASE7","BASE8","BASE9","BASE10","BASE11","BASE12","BASE"],
+	"FIXED_SCENARIO":["BASE"],
+	"COL_NAME_ORDER":["FY"],
+	"@MeasureDimension":["LO_FY","LO_FY_Calc1","LO_FY_Calc2","LO_FY_Calc3","Per_Calc1","Per_Calc2","Per_Calc3"],
+	"FIXED_INDICES":["0","1","2","3"],
+	"DROPDOWN_INDICES":["11","17","23","29","35"],
+	"DROPDOWN_SELECTED":["BASE1","BASE2","BASE3"], // Uppercase only
+	"no_of_decimal_K":["0"],
+	"no_of_decimal_M":["1"],
+	"Exclude":["COL_ORDER", "COL_NAME","SCENARIO_ORDER"] // Include Exclude at last only
+};
+var customHeaders = {
+	"DIMEN_NAME":["FRS_BRAND_NAME","Country","SCENARIO_NAME", "Gx entry date"], // in-order
+	"MES_NAME":["FY","vs PY","vs FP24",VAR_LO_FY_text,"vs PY","vs FP24",VAR_LO_FY_text],
+	"SCENARIO_NAME":["Base", "Gx entry date", "Gx entry date", "Gx entry date", "Gx entry date", "Gx entry date"],
+	"TOP_HEADER":[VAR_AI_RUN, "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4", "Scenario 5"] // Accepted till 3 scenarios only along with one base scenario (Total : 4)
+};
+
+var selectionColumnName = "GX_DATE_NAME"; // to give dropdown for column
+var hideParticularCols = [5,8,13,16,21,24,29,32]; // hide column of Table
+
+var table_styling = ""; //font-size:14px;
+var row_styling = ""; //border-bottom: 1px solid #cccccc; padding-top: 1%; padding-top:1%; padding-bottom:1%;
+var col_styling = "#example td:nth-of-type(3), #example td:nth-of-type(7), #example td:nth-of-type(11), #example td:nth-of-type(15) {border-bottom: 1px solid #CBCBCB; background-color:#FAFAFA; color:#212121;} #example td:nth-of-type(1) {width:7.6%;} #example > thead > tr:nth-child(1) > th:nth-child(1) {border:none;} #example > tbody > tr:nth-child(1) > td:nth-child(3) { color:#212121!important;} #example > tbody > tr:nth-child(1) > td:nth-child(7) { color:#212121!important;} #example > tbody > tr:nth-child(1) > td:nth-child(11) { color:#212121!important;} #example > tbody > tr:nth-child(1) > td:nth-child(15) { color:#212121!important;}";
+
+CW_Full_Year.setExtraParams(headerSeq, customHeaders, selectionColumnName, 34, hideParticularCols);
+CW_Full_Year.applyStyling(table_styling, row_styling, col_styling);
+
+var Country_table_res= hiddenTable_Country.getDataSource().getResultSet();
+
+VAR_Current_Selected_Country = [Country_table_res[0]["NODENAME"].description];
+
+VAR_Previous_selected_Country = VAR_Current_Selected_Country;
+
+VAR_Selected_Country_Child_DES = [Country_table_res[0]["DESCRIPTION"].description];
+
+Button_Country.setText(VAR_Selected_Country_Child_DES[0]);
+
+var brand_res = hiddenTable_BrandList.getDataSource().getResultSet();
+
+for(var i=0; i< brand_res.length; i++){
+	VAR_Brand_memberInfo.push({id:brand_res[i]["NODENAME"].description, description:brand_res[i]["NODENAME"].description});
+}
+
+Table_GX_Date_FY.getDataSource().setDimensionFilter("COUNTRY_CODE",{id:VAR_Current_Selected_Country[0],description:VAR_Current_Selected_Country[0]});
+Table_GX_Date_FY.getDataSource().setDimensionFilter("FRS_BRAND_CODE",VAR_Brand_memberInfo);
+
+Table_GX_Date_FY.getDataSource().setRefreshPaused(false);
+
