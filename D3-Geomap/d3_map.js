@@ -5,60 +5,63 @@ var getScriptPromisify = src => {
 }
 
 ;(function () {
-  const template = document.createElement('template')
+
+  const template = document.createElement('template');
+
   template.innerHTML = `
     <style>
         html,
         body {
-        height: 100%;
-        margin: 0;
+            height: 100%;
+            margin: 0;
         }
         #app {
-        height: 100%;
+            height: 100%;
         }
         .map-wrapper .province-title {
-        position: absolute;
-        top: 50px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-family: sans-serif;
+            position: absolute;
+            top: 50px;
+            left: 60%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: sans-serif;
         }
         .map-wrapper .province-info {
         background: white;
-        position: absolute;
-        top: 150px;
-        right: 20px;
-        width: 300px;
-        padding: 10px;
-        border-radius: 5px;
-        font-family: sans-serif;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            width: 210px;
+            border: 2px solid black;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: sans-serif;
         }
         .map-wrapper .background {
-        fill: #021019;
-        pointer-events: all;
+            fill: white;
+            pointer-events: all;
         }
         .map-wrapper .map-layer {
-        fill: #08304b;
-        stroke: #021019;
-        stroke-width: 1px;
+            fill: #08304b;
+            stroke: #021019;
+            stroke-width: 1px;
         }
         .scale-control,
         .country-control {
-        position: absolute;
-        z-index: 10;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 10px;
-        border-radius: 5px;
-        font-family: sans-serif;
+            position: absolute;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: sans-serif;
         }
         .scale-control {
-        top: 20px;
-        right: 20px;
+            top: 20px;
+            right: 20px;
         }
         .country-control {
-        top: 20px;
-        left: 20px;
+            top: 20px;
+            left: 20px;
         }
     </style>
     
@@ -227,6 +230,7 @@ var getScriptPromisify = src => {
       }
 
       function setupMap (mapData) {
+        
         initializeSize()
 
         projection = d3.geo.mercator()
