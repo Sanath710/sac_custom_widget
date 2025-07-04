@@ -1,0 +1,56 @@
+{
+    "eula": "",
+    "vendor": "",
+    "license": "",
+    "id": "d3.geomap",
+    "version": "1.0.0",
+    "supportsMobile": true,
+    "name": "D3geomap",
+    "newInstancePrefix": "geomap",
+    "description": "A sample geompap custom widget project",
+    "webcomponents": [
+      {
+        "kind": "main",
+        "tag": "d3-geomap",
+        "url": "http://127.0.0.1:5500/d3_map.js",
+        "integrity": "",
+        "ignoreIntegrity": true
+      }
+    ],
+    "properties": {
+        "dimensionFeed": {
+            "type": "string[]",
+            "default": []
+        },
+        "measureFeed": {
+            "type": "string[]",
+            "default": []
+        },
+        "width": {
+            "type": "integer",
+            "default": 600
+        },
+        "height": {
+            "type": "integer",
+            "default": 320
+        }
+    },
+    "dataBindings": {
+        "myDataBinding": {
+            "feeds": [
+                {
+                    "id": "dimensions",
+                    "description": "Dimensions",
+                    "type": "dimension"
+                },
+                {
+                    "id": "measures",
+                    "description": "Measures",
+                    "type": "mainStructureMember"
+                }
+            ]
+        }
+    },
+    "methods": {},
+    "events": {}
+}
