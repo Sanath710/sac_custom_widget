@@ -5,8 +5,7 @@ var getScriptPromisify = src => {
 }
 
 ;(function () {
-
-  const template = document.createElement('template');
+  const template = document.createElement('template')
 
   template.innerHTML = `
     <style>
@@ -63,6 +62,17 @@ var getScriptPromisify = src => {
             top: 20px;
             left: 20px;
         }
+        .legend text {
+            fill: #333;
+            font-weight:bold;
+            font-size: 10px;
+        }
+        .legend-axis path,
+        .legend-axis line {
+            fill: none;
+            /*   stroke: pink; */
+            shape-rendering: crispEdges;
+        }
     </style>
     
     <div id="root"></div>
@@ -76,7 +86,7 @@ var getScriptPromisify = src => {
       this._shadowRoot.appendChild(template.content.cloneNode(true))
       this._root = this._shadowRoot.getElementById('root')
 
-    //   this.render(this._root)
+      //   this.render(this._root)
     }
 
     // ------------------
@@ -85,13 +95,13 @@ var getScriptPromisify = src => {
     async onCustomWidgetBeforeUpdate (changedProps) {}
 
     async onCustomWidgetAfterUpdate (changedProps) {
-    //   if (changedProps.text) {
-    //     this.render(this._root)
-    //   }
-        if(changedProps.myDataBinding.state == "success") {
-            this.myDataBinding = changedProps["myDataBinding"];
-            this.render(this._root)
-        }
+      //   if (changedProps.text) {
+      //     this.render(this._root)
+      //   }
+      if (changedProps.myDataBinding.state == 'success') {
+        this.myDataBinding = changedProps['myDataBinding']
+        this.render(this._root)
+      }
     }
 
     async onCustomWidgetResize (width, height) {
@@ -107,9 +117,10 @@ var getScriptPromisify = src => {
     }
 
     async render (root) {
-
       await getScriptPromisify('https://d3js.org/d3.v3.min.js')
-      await getScriptPromisify('https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.4/vue.min.js')
+      await getScriptPromisify(
+        'https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.4/vue.min.js'
+      )
       // this.dispose()
 
       // root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div")
@@ -143,11 +154,12 @@ var getScriptPromisify = src => {
 
       // console.log(root,d3,root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div"));
 
-      var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id);
-      var total_projects = this.myDataBinding.data.map(dim => dim.measures_0.raw);
+      var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id)
+      var total_projects = this.myDataBinding.data.map(
+        dim => dim.measures_0.raw
+      )
 
-      console.log("----", divisions, total_projects);
-
+      console.log('----', divisions, total_projects)
 
       const app = new Vue({
         el: root,
@@ -187,7 +199,14 @@ var getScriptPromisify = src => {
           },
           getId (feature) {
             const props = feature?.properties || {}
-            return props.id || props.code || props.CODE || props.REGION || props.DIVISION || 'N/A'
+            return (
+              props.id ||
+              props.code ||
+              props.CODE ||
+              props.REGION ||
+              props.DIVISION ||
+              'N/A'
+            )
           },
           loadGeoJson () {
             d3.json(this.selectedCountry, (error, mapData) => {
@@ -230,7 +249,6 @@ var getScriptPromisify = src => {
       }
 
       function setupMap (mapData) {
-        
         initializeSize()
 
         projection = d3.geo.mercator()
@@ -267,11 +285,9 @@ var getScriptPromisify = src => {
           .selectAll('*')
           .remove()
 
-        svg = d3.select(
-          document
+        svg = d3.select(document
             .querySelector('#__widget0 > d3-geomap')
-            .shadowRoot.querySelector('#app > div > svg')
-        )
+            .shadowRoot.querySelector('#app > div > svg'))
 
         svg
           .append('rect')
@@ -296,6 +312,7 @@ var getScriptPromisify = src => {
           .on('click', clicked)
 
         applyTransform()
+        defineLegend()
       }
 
       function clicked (d) {
@@ -362,8 +379,8 @@ var getScriptPromisify = src => {
       function mouseover (d) {
         d3.select(this).style('fill', '#1483ce')
         if (d) {
-            app.selectProvince(d)
-            app.openInfo(d)
+          app.selectProvince(d)
+          app.openInfo(d)
         }
       }
 
@@ -375,38 +392,126 @@ var getScriptPromisify = src => {
         app.closeInfo()
       }
 
+      const colorScale = d3.scale
+        .linear()
+        .domain(Array.from(new Set(total_projects)))
+        .range([
+          '#f4ebff',
+          '#eadfff',
+          '#e0d3ff',
+          '#d6c8ff',
+          '#ccbaff',
+          '#c2a3fd',
+          '#b89afb',
+          '#ae8ff9',
+          '#a796e8',
+          '#9d88f0',
+          '#967af3',
+          '#896deb',
+          '#7f61dd',
+          '#7555cf',
+          '#6b66c6',
+          '#6156b7',
+          '#5748a9',
+          '#4d3a9b',
+          '#432c8d',
+          '#391e80'
+        ])
+
       function fillFn (d) {
         const props = d.properties || {}
         const len = props.DIVISION || 0
         // const len = (props.name || props.nom || props.state || '').length || 5
-        const scale = d3.scale
+        return colorScale(len)
+      }
+
+      function defineLegend () {
+
+        if (!size || !size.height) {
+          console.warn("Legend skipped: 'size' is not initialized yet.")
+          return
+        }
+
+        const legendWidth = 300
+        const legendHeight = 12
+        const padding = 10
+        const xPos = legendWidth - 270 // bottom right corner
+        const yPos = size.height - 60
+
+        const legendGroup = d3
+          .select(document
+            .querySelector('#__widget0 > d3-geomap')
+            .shadowRoot.querySelector('#app > div > svg'))
+          .append('g')
+          .attr('class', 'legend')
+          .attr('transform', `translate(${xPos}, ${yPos})`)
+
+        // Define the gradient
+        const defs = legendGroup.append('defs')
+        const linearGradient = defs
+          .append('linearGradient')
+          .attr('id', 'legend-gradient')
+          .attr('x1', '0%')
+          .attr('x2', '100%')
+
+        linearGradient
+          .selectAll('stop')
+          .data(
+            colorScale.range().map((color, i) => ({
+              offset: `${(i / (colorScale.range().length - 1)) * 100}%`,
+              color
+            }))
+          )
+          .enter()
+          .append('stop')
+          .attr('offset', d => d.offset)
+          .attr('stop-color', d => d.color)
+
+        // Draw the gradient rectangle
+        legendGroup
+          .append('rect')
+          .attr('width', legendWidth)
+          .attr('height', legendHeight)
+          .style('fill', 'url(#legend-gradient)')
+          .style('stroke', '#aaa')
+          .style('stroke-width', '0.5')
+
+        // Add title label
+        legendGroup
+          .append('text')
+          .attr('x', 0)
+          .attr('y', -8)
+          .style('font-size', '11px')
+          .style('font-weight', 'bold')
+          .text('Total Count')
+
+        // Create axis scale
+        const legendScale = d3.scale
           .linear()
-          .domain(Array.from(new Set(total_projects)))
-          .range(
-                [
-                    "#f4ebff",
-                    "#eadfff",
-                    "#e0d3ff",
-                    "#d6c8ff",
-                    "#ccbaff",
-                    "#c2a3fd",
-                    "#b89afb",
-                    "#ae8ff9",
-                    "#a796e8",
-                    "#9d88f0",
-                    "#967af3",
-                    "#896deb",
-                    "#7f61dd",
-                    "#7555cf",
-                    "#6b66c6",
-                    "#6156b7",
-                    "#5748a9",
-                    "#4d3a9b",
-                    "#432c8d",
-                    "#391e80"
-                ]
-            )
-        return scale(len)
+          .domain([0, 450])
+          .range([0, legendWidth])
+
+        const legendAxis = d3.svg
+          .axis()
+          .scale(legendScale)
+          .orient('bottom')
+          .tickValues([0, 50, 100, 150, 200, 250, 300, 350, 400, 450])
+          .tickFormat(d3.format('d'))
+
+        // Add ticks below gradient
+        legendGroup
+          .append('g')
+          .attr('class', 'legend-axis')
+          .attr('transform', `translate(0, ${legendHeight + padding})`)
+          .call(legendAxis)
+          .selectAll('text')
+          .style('font-size', '10px')
+          .style('fill', '#333')
+
+        legendGroup
+          .selectAll('.legend-axis path, .legend-axis line')
+          .style('stroke', '#ccc')
+          .style('stroke-width', '0.5')
       }
     }
   }
