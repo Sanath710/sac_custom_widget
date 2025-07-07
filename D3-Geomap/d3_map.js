@@ -115,6 +115,7 @@ var getScriptPromisify = src => {
     }
 
     loadData () {
+        
       this.dataFromSAC = {}
       this.dimension_names = []
       this.measure_names = []
@@ -206,12 +207,28 @@ var getScriptPromisify = src => {
 
       var dataFromSAC = this.dataFromSAC
       var measure_names = this.measure_names
+      var widget_id = '#' + this._root.offsetParent.id + ' > ' + this.localName
       // console.log(root,d3,root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div"));
 
       var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id)
       var total_projects = this.myDataBinding.data.map(
         dim => dim.measures_0.raw
       )
+
+      //// bining - legend range
+
+      var min = Math.min(...total_projects);
+      var max = Math.max(...total_projects);
+      const bins = (max - 5 > 0) ? max - 5 : 7
+
+      var step = Math.ceil((max - min + 1) / bins)
+
+      var legendRange = []
+      for (let i = min; i <= max; i += step) {
+        legendRange.push(i)
+      }
+
+      ///// legend range ends
 
       console.log('----', this.myDataBinding, divisions, total_projects)
 
@@ -234,12 +251,14 @@ var getScriptPromisify = src => {
             this.province = feature
           },
           openInfo (feature) {
-            let key = feature.properties.COUNTY_NAM || feature.properties.DIVISION
-            let value = "N/A"
-            if(dataFromSAC[key]) {
-                value = dataFromSAC[key][measure_names[0]]
+            let key =
+              feature.properties.COUNTY_NAM || feature.properties.DIVISION
+            let value = 'N/A'
+            if (dataFromSAC[key]) {
+              value = dataFromSAC[key][measure_names[0]]
             }
-            feature.properties['display_info'] = measure_names[0] + ' : ' + value
+            feature.properties['display_info'] =
+              measure_names[0] + ' : ' + value
             this.currentProvince = feature
           },
           closeInfo () {
@@ -341,7 +360,7 @@ var getScriptPromisify = src => {
         svg = d3
           .select(
             document
-              .querySelector('#__widget0 > d3-geomap')
+              .querySelector(widget_id)
               .shadowRoot.querySelector('#app > div > svg')
           )
           .attr('width', size.width)
@@ -351,7 +370,7 @@ var getScriptPromisify = src => {
 
         svg = d3.select(
           document
-            .querySelector('#__widget0 > d3-geomap')
+            .querySelector(widget_id)
             .shadowRoot.querySelector('#app > div > svg')
         )
 
@@ -462,6 +481,7 @@ var getScriptPromisify = src => {
         .linear()
         .domain(Array.from(new Set(total_projects)))
         .range([
+            'white',
           '#f4ebff',
           '#eadfff',
           '#e0d3ff',
@@ -481,17 +501,18 @@ var getScriptPromisify = src => {
           '#5748a9',
           '#4d3a9b',
           '#432c8d',
-          '#391e80'
+          '#391e80',
         ])
 
       function fillFn (d) {
         const props = d.properties || {}
-        const len = props.DIVISION || 0
+        const len = (dataFromSAC[props.COUNTY_NAM]) ? dataFromSAC[props.COUNTY_NAM][measure_names[0]] : 0
         // const len = (props.name || props.nom || props.state || '').length || 5
         return colorScale(len)
       }
 
       function defineLegend () {
+
         if (!size || !size.height) {
           console.warn("Legend skipped: 'size' is not initialized yet.")
           return
@@ -506,7 +527,7 @@ var getScriptPromisify = src => {
         const legendGroup = d3
           .select(
             document
-              .querySelector('#__widget0 > d3-geomap')
+              .querySelector(widget_id)
               .shadowRoot.querySelector('#app > div > svg')
           )
           .append('g')
@@ -555,14 +576,14 @@ var getScriptPromisify = src => {
         // Create axis scale
         const legendScale = d3.scale
           .linear()
-          .domain([0, 450])
+          .domain([(min - 1 >= 0) ? min - 1 : min, max])
           .range([0, legendWidth])
 
         const legendAxis = d3.svg
           .axis()
           .scale(legendScale)
           .orient('bottom')
-          .tickValues([0, 50, 100, 150, 200, 250, 300, 350, 400, 450])
+          .tickValues([(min - 1 >= 0) ? min - 1 : min, ...legendRange.slice(1, legendRange.length - 1), max])
           .tickFormat(d3.format('d'))
 
         // Add ticks below gradient
