@@ -81,11 +81,9 @@ var getScriptPromisify = src => {
   class Main extends HTMLElement {
     constructor () {
       super()
-
       this._shadowRoot = this.attachShadow({ mode: 'open' })
       this._shadowRoot.appendChild(template.content.cloneNode(true))
       this._root = this._shadowRoot.getElementById('root')
-
       //   this.render(this._root)
     }
 
@@ -116,6 +114,58 @@ var getScriptPromisify = src => {
       this._renderer.dispose()
     }
 
+    loadData () {
+      this.dataFromSAC = {}
+      this.dimension_names = []
+      this.measure_names = []
+
+      //// dimension names
+      Object.keys(this.myDataBinding.metadata.dimensions).forEach((key, idx) =>
+        this.dimension_names.push(
+          this.myDataBinding.metadata.dimensions[key].description
+        )
+      )
+      //// measure names
+      Object.keys(this.myDataBinding.metadata.mainStructureMembers).forEach(
+        (key, idx) =>
+          this.measure_names.push(
+            this.myDataBinding.metadata.mainStructureMembers[key].label
+          )
+      )
+
+      console.log(
+        'Dimension Names : ',
+        this.dimension_names,
+        '\nMeasure Names : ',
+        this.measure_names
+      )
+
+      for (var i = 0; i < this.myDataBinding.data.length; i++) {
+        let key = ''
+        let object = this.myDataBinding.data[i]
+
+        for (var j in object) {
+          if (!(object[j].id in this.dataFromSAC) && j == 'dimensions_0') {
+            key = object[j].id
+            this.dataFromSAC[key] = {}
+            continue
+          }
+
+          let checkpoint = j.split('_')
+
+          if (checkpoint[0] == 'dimensions') {
+            this.dataFromSAC[key][this.dimension_names[checkpoint[1]]] =
+              object[j].id
+          } else {
+            this.dataFromSAC[key][this.measure_names[checkpoint[1]]] =
+              object[j].raw
+          }
+        }
+      }
+
+      console.log('SAC object : ', this.dataFromSAC)
+    }
+
     async render (root) {
       await getScriptPromisify('https://d3js.org/d3.v3.min.js')
       await getScriptPromisify(
@@ -144,7 +194,7 @@ var getScriptPromisify = src => {
             <div v-if="currentProvince" class="province-info">
             <h3 class="text-center">{{ getName(currentProvince) }}</h3>
             <ul>
-                <li>ID: {{ getId(currentProvince) }}</li>
+                <li>{{ getId(currentProvince) }}</li>
             </ul>
             </div>
 
@@ -152,6 +202,10 @@ var getScriptPromisify = src => {
         </div>
         </div>`
 
+      this.loadData()
+
+      var dataFromSAC = this.dataFromSAC
+      var measure_names = this.measure_names
       // console.log(root,d3,root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div"));
 
       var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id)
@@ -159,7 +213,7 @@ var getScriptPromisify = src => {
         dim => dim.measures_0.raw
       )
 
-      console.log('----', divisions, total_projects)
+      console.log('----', this.myDataBinding, divisions, total_projects)
 
       const app = new Vue({
         el: root,
@@ -180,6 +234,12 @@ var getScriptPromisify = src => {
             this.province = feature
           },
           openInfo (feature) {
+            let key = feature.properties.COUNTY_NAM || feature.properties.DIVISION
+            let value = "N/A"
+            if(dataFromSAC[key]) {
+                value = dataFromSAC[key][measure_names[0]]
+            }
+            feature.properties['display_info'] = measure_names[0] + ' : ' + value
             this.currentProvince = feature
           },
           closeInfo () {
@@ -200,6 +260,7 @@ var getScriptPromisify = src => {
           getId (feature) {
             const props = feature?.properties || {}
             return (
+              props.display_info ||
               props.id ||
               props.code ||
               props.CODE ||
@@ -208,7 +269,10 @@ var getScriptPromisify = src => {
               'N/A'
             )
           },
-          loadGeoJson () {
+          async loadGeoJson () {
+            this.data_geojson = await (await fetch(this.selectedCountry)).json()
+            console.log(this.data_geojson)
+
             d3.json(this.selectedCountry, (error, mapData) => {
               if (error) {
                 alert('Failed to load map.')
@@ -285,9 +349,11 @@ var getScriptPromisify = src => {
           .selectAll('*')
           .remove()
 
-        svg = d3.select(document
+        svg = d3.select(
+          document
             .querySelector('#__widget0 > d3-geomap')
-            .shadowRoot.querySelector('#app > div > svg'))
+            .shadowRoot.querySelector('#app > div > svg')
+        )
 
         svg
           .append('rect')
@@ -426,7 +492,6 @@ var getScriptPromisify = src => {
       }
 
       function defineLegend () {
-
         if (!size || !size.height) {
           console.warn("Legend skipped: 'size' is not initialized yet.")
           return
@@ -439,9 +504,11 @@ var getScriptPromisify = src => {
         const yPos = size.height - 60
 
         const legendGroup = d3
-          .select(document
-            .querySelector('#__widget0 > d3-geomap')
-            .shadowRoot.querySelector('#app > div > svg'))
+          .select(
+            document
+              .querySelector('#__widget0 > d3-geomap')
+              .shadowRoot.querySelector('#app > div > svg')
+          )
           .append('g')
           .attr('class', 'legend')
           .attr('transform', `translate(${xPos}, ${yPos})`)
