@@ -1,1 +1,28 @@
+ "dataBindings": {
+        "primary": {
+            "feeds": [
+                {
+                    "id": "dimensions",
+                    "type": "dimension"
+                },
+                {
+                    "id": "mainMeasures",
+                    "type": "mainStructureMember"
+                }
+            ]
+        },
+        "secondary": {
+            "feeds": [
+                {
+                    "id": "dimensions",
+                    "type": "dimension"
+                },
+                {
+                    "id": "mainMeasures",
+                    "type": "mainStructureMember"
+                }
+            ]
+        }
+    },
 
+To be analyzed...
