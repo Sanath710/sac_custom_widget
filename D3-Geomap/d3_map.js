@@ -603,6 +603,5 @@ var getScriptPromisify = src => {
       }
     }
   }
-
   customElements.define('d3-geomap', Main)
 })()
