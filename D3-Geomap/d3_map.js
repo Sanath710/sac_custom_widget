@@ -115,7 +115,6 @@ var getScriptPromisify = src => {
     }
 
     loadData () {
-        
       this.dataFromSAC = {}
       this.dimension_names = []
       this.measure_names = []
@@ -217,11 +216,11 @@ var getScriptPromisify = src => {
 
       //// bining - legend range
 
-      var min = Math.min(...total_projects);
-      var max = Math.max(...total_projects);
-      const bins = (max - 5 > 0) ? max - 5 : 7
+      var min = (Math.min(...total_projects) > 0) ? 0 : Math.min(...total_projects)
+      var max = Math.max(...total_projects)
+      const bins = max - 5 > 0 ? max - 5 : 7
 
-      var step = Math.ceil((max - min + 1) / bins)
+      var step = Math.ceil((max - min) / bins)
 
       var legendRange = []
       for (let i = min; i <= max; i += step) {
@@ -251,14 +250,6 @@ var getScriptPromisify = src => {
             this.province = feature
           },
           openInfo (feature) {
-            let key =
-              feature.properties.COUNTY_NAM || feature.properties.DIVISION
-            let value = 'N/A'
-            if (dataFromSAC[key]) {
-              value = dataFromSAC[key][measure_names[0]]
-            }
-            feature.properties['display_info'] =
-              measure_names[0] + ' : ' + value
             this.currentProvince = feature
           },
           closeInfo () {
@@ -464,8 +455,16 @@ var getScriptPromisify = src => {
       function mouseover (d) {
         d3.select(this).style('fill', '#1483ce')
         if (d) {
-          app.selectProvince(d)
-          app.openInfo(d)
+          let key = d.properties.COUNTY_NAM || d.properties.DIVISION
+          let value = 'N/A'
+          if (dataFromSAC[key]) {
+            value = dataFromSAC[key][measure_names[0]]
+          }
+          d.properties['display_info'] = measure_names[0] + ' : ' + value
+          if (value != 'N/A') {
+            app.selectProvince(d)
+            app.openInfo(d)
+          }
         }
       }
 
@@ -477,11 +476,13 @@ var getScriptPromisify = src => {
         app.closeInfo()
       }
 
+      let sorted_total_projects = total_projects.slice()
+      sorted_total_projects.sort()
+
       const colorScale = d3.scale
         .linear()
-        .domain(Array.from(new Set(total_projects)))
+        .domain(Array.from(new Set(sorted_total_projects)))
         .range([
-            'white',
           '#f4ebff',
           '#eadfff',
           '#e0d3ff',
@@ -501,18 +502,19 @@ var getScriptPromisify = src => {
           '#5748a9',
           '#4d3a9b',
           '#432c8d',
-          '#391e80',
+          '#391e80'
         ])
 
       function fillFn (d) {
         const props = d.properties || {}
-        const len = (dataFromSAC[props.COUNTY_NAM]) ? dataFromSAC[props.COUNTY_NAM][measure_names[0]] : 0
+        const len = dataFromSAC[props.COUNTY_NAM]
+          ? dataFromSAC[props.COUNTY_NAM][measure_names[0]]
+          : 0
         // const len = (props.name || props.nom || props.state || '').length || 5
-        return colorScale(len)
+        return (len == 0) ? '#f7f7f7' : colorScale(len)
       }
 
       function defineLegend () {
-
         if (!size || !size.height) {
           console.warn("Legend skipped: 'size' is not initialized yet.")
           return
@@ -571,19 +573,23 @@ var getScriptPromisify = src => {
           .attr('y', -8)
           .style('font-size', '11px')
           .style('font-weight', 'bold')
-          .text('Total Count')
+          .text(measure_names[0])
 
         // Create axis scale
         const legendScale = d3.scale
           .linear()
-          .domain([(min - 1 >= 0) ? min - 1 : min, max])
+          .domain([min - 1 >= 0 ? min - 1 : min, max])
           .range([0, legendWidth])
 
         const legendAxis = d3.svg
           .axis()
           .scale(legendScale)
           .orient('bottom')
-          .tickValues([(min - 1 >= 0) ? min - 1 : min, ...legendRange.slice(1, legendRange.length - 1), max])
+          .tickValues([
+            min - 1 >= 0 ? min - 1 : min,
+            ...legendRange.slice(1, legendRange.length - 1),
+            max
+          ])
           .tickFormat(d3.format('d'))
 
         // Add ticks below gradient
@@ -603,5 +609,6 @@ var getScriptPromisify = src => {
       }
     }
   }
+
   customElements.define('d3-geomap', Main)
 })()
