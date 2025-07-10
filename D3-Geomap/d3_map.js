@@ -81,26 +81,79 @@ var getScriptPromisify = src => {
   class Main extends HTMLElement {
     constructor () {
       super()
+      this.flag = false
       this._shadowRoot = this.attachShadow({ mode: 'open' })
       this._shadowRoot.appendChild(template.content.cloneNode(true))
       this._root = this._shadowRoot.getElementById('root')
       //   this.render(this._root)
     }
 
+    connectedCallback () {}
     // ------------------
     // LifecycleCallbacks
     // ------------------
-    async onCustomWidgetBeforeUpdate (changedProps) {}
+    onCustomWidgetBeforeUpdate (changedProps) {}
 
-    async onCustomWidgetAfterUpdate (changedProps) {
-      //   if (changedProps.text) {
-      //     this.render(this._root)
-      //   }
+    // bindNewSource (source, datasource) {
+    //   this.bindWithSource_ = datasource
+    //   this.source = source
+
+    //   this.dispatchEvent(
+    //     new CustomEvent('propertiesChanged', {
+    //       detail: {
+    //         properties: {
+    //           "check": this.source
+    //         }
+    //       }
+    //     })
+    //   )
+
+    //   this.dispatchEvent(
+    //     new CustomEvent('propertiesChanged', {
+    //       detail: {
+    //         properties: {
+    //           check1: "Hello World!"
+    //         }
+    //       }
+    //     })
+    //   )
+
+    //   console.log('Source :', source, 'Property set:', this.check, this.check1)
+    // }
+
+    onCustomWidgetAfterUpdate (changedProps) {
+      //   console.log(this.dataBindings.getDataBinding('source1'))
+      if (changedProps.myDataBinding.state == 'success' && this.flag == false) {
+        console.log(changedProps)
+        this.myDataBinding = changedProps['myDataBinding']
+        this.render(this._root)
+        this.flag = true
+      }
+
       if (changedProps.myDataBinding.state == 'success') {
         this.myDataBinding = changedProps['myDataBinding']
+        console.log(
+          'Dimensions : ',
+          this.myDataBinding.metadata.dimensions,
+          'Measures : ',
+          this.myDataBinding.metadata.mainStructureMembers
+        )
+      }
+    }
+
+    triggerChangedProperties () {
+      if (
+        Object.keys(this.myDataBinding.metadata.dimensions).length > 0 &&
+        Object.keys(this.myDataBinding.metadata.mainStructureMembers).length > 0
+      ) {
         this.render(this._root)
       }
     }
+    // .setModel('t.B.Cgfc3r19mc8hoigem2o89h5sj4v:Cgfc3r19mc8hoigem2o89h5sj4v')
+
+    // addDimensionToFeed(dimensionId) {
+    //     console.log(dimensionId);
+    // }
 
     async onCustomWidgetResize (width, height) {
       this.render(this._root)
@@ -146,7 +199,7 @@ var getScriptPromisify = src => {
 
         for (var j in object) {
           if (!(object[j].id in this.dataFromSAC) && j == 'dimensions_0') {
-            key = object[j].id
+            key = object[j].id.toString()
             this.dataFromSAC[key] = {}
             continue
           }
@@ -166,6 +219,16 @@ var getScriptPromisify = src => {
       console.log('SAC object : ', this.dataFromSAC)
     }
 
+    addDimension(dimension_id) {
+        this.dataBindings.getDataBinding('myDataBinding').addDimensionToFeed('dimensions', dimension_id);
+        console.log("Dimension changed to "+dimension_id+"...")
+    }
+
+    removeDimension(dimension_id) {
+        this.dataBindings.getDataBinding('myDataBinding').removeDimension(dimension_id);
+        console.log("Dimension "+dimension_id+" removed...")
+    }
+
     async render (root) {
       await getScriptPromisify('https://d3js.org/d3.v3.min.js')
       await getScriptPromisify(
@@ -182,7 +245,7 @@ var getScriptPromisify = src => {
             <div class="country-control">
                 <label for="countrySelect">Select : </label>
                 <span v-for="(url, name) in geoJsonSources">
-                    <input type="radio" v-model="selectedCountry" @change="loadGeoJson" name="countrySelect" :value="url" />
+                    <input type="radio" v-model="selectedCounty" @change="loadGeoJson" name="countrySelect" :value="name + '_@_' + url" />
                     <label>{{name}}</label>  &nbsp;&nbsp;
                 </span>
             </div>
@@ -205,8 +268,9 @@ var getScriptPromisify = src => {
       this.loadData()
 
       var dataFromSAC = this.dataFromSAC
+      var dimension_names = this.dimension_names
       var measure_names = this.measure_names
-      var widget_id = '#' + this._root.offsetParent.id + ' > ' + this.localName
+      var widget_id = '#' + this.offsetParent.id + ' > ' + this.localName
       // console.log(root,d3,root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div"));
 
       var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id)
@@ -216,7 +280,8 @@ var getScriptPromisify = src => {
 
       //// bining - legend range
 
-      var min = (Math.min(...total_projects) > 0) ? 0 : Math.min(...total_projects)
+      var min =
+        Math.min(...total_projects) > 0 ? 0 : Math.min(...total_projects)
       var max = Math.max(...total_projects)
       const bins = max - 5 > 0 ? max - 5 : 7
 
@@ -231,15 +296,17 @@ var getScriptPromisify = src => {
 
       console.log('----', this.myDataBinding, divisions, total_projects)
 
+      var selectedChoice = undefined
+
       const app = new Vue({
         el: root,
         data: {
           province: undefined,
           currentProvince: undefined,
           mapScale: 0.18,
-          selectedCountry: '',
+          selectedCounty: '',
           geoJsonSources: {
-            County:
+            "County Name":
               'https://raw.githubusercontent.com/Kalpesh-Gohil-18/CW/refs/heads/master/County.json',
             Division:
               'https://raw.githubusercontent.com/Kalpesh-Gohil-18/CW/refs/heads/master/division.json'
@@ -280,10 +347,20 @@ var getScriptPromisify = src => {
             )
           },
           async loadGeoJson () {
-            this.data_geojson = await (await fetch(this.selectedCountry)).json()
+            let selectedCounty = this.selectedCounty.split('_@_')[1]
+            this.data_geojson = await (await fetch(selectedCounty)).json()
             console.log(this.data_geojson)
 
-            d3.json(this.selectedCountry, (error, mapData) => {
+            // if(selectedChoice != undefined) {
+            //     this.removeDimension(selectedChoice);
+            //     this.addDimension(this.myDataBinding.metadata.dimensions["dimensions_0"].id)
+            //     this.triggerChangedProperties()
+            // }
+
+            selectedChoice = this.selectedCounty.split('_@_')[0]
+
+
+            d3.json(selectedCounty, (error, mapData) => {
               if (error) {
                 alert('Failed to load map.')
                 return
@@ -303,7 +380,8 @@ var getScriptPromisify = src => {
           }
         },
         mounted () {
-          this.selectedCountry = this.geoJsonSources['County']
+          this.selectedCounty = dimension_names[0]+'_@_' + this.geoJsonSources[dimension_names[0]]
+          selectedChoice = this.selectedCounty.split('_@_')[0]
           this.loadGeoJson()
           window.addEventListener('resize', () => {
             if (window.mapData) setupMap(window.mapData)
@@ -389,6 +467,7 @@ var getScriptPromisify = src => {
 
         applyTransform()
         defineLegend()
+
       }
 
       function clicked (d) {
@@ -506,12 +585,20 @@ var getScriptPromisify = src => {
         ])
 
       function fillFn (d) {
+        var len = 0
         const props = d.properties || {}
-        const len = dataFromSAC[props.COUNTY_NAM]
-          ? dataFromSAC[props.COUNTY_NAM][measure_names[0]]
-          : 0
+        if (selectedChoice == 'Division') {
+          len = dataFromSAC[props.DIVISION]
+            ? dataFromSAC[props.DIVISION][measure_names[0]]
+            : 0
+        } else {
+          len = dataFromSAC[props.COUNTY_NAM]
+            ? dataFromSAC[props.COUNTY_NAM][measure_names[0]]
+            : 0
+        }
+
         // const len = (props.name || props.nom || props.state || '').length || 5
-        return (len == 0) ? '#f7f7f7' : colorScale(len)
+        return len == 0 ? '#f7f7f7' : colorScale(len)
       }
 
       function defineLegend () {
