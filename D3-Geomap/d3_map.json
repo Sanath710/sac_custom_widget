@@ -9,13 +9,13 @@
     "newInstancePrefix": "geomap",
     "description": "A sample geompap custom widget project",
     "webcomponents": [
-      {
-        "kind": "main",
-        "tag": "d3-geomap",
-        "url": "http://127.0.0.1:5500/d3_map.js",
-        "integrity": "",
-        "ignoreIntegrity": true
-      }
+        {
+            "kind": "main",
+            "tag": "d3-geomap",
+            "url": "http://127.0.0.1:5500/d3_map.js",
+            "integrity": "",
+            "ignoreIntegrity": true
+        }
     ],
     "properties": {
         "dimensionFeed": {
@@ -51,6 +51,44 @@
             ]
         }
     },
-    "methods": {},
+    "methods": {
+        "addDimension": {
+            "parameters": [
+                {
+                    "name": "dimension_id",
+                    "type": "string"
+                }
+            ]
+        },
+        "removeDimension": {
+            "parameters": [
+                {
+                    "name": "dimension_id",
+                    "type": "string"
+                }
+            ]
+        },
+        "addMeasure": {
+            "parameters": [
+                {
+                    "name": "measure_id",
+                    "type": "string"
+                }
+            ],
+            "body": "this.dataBindings.getDataBinding('myDataBinding').addMemberToFeed('measures', measure_id);"
+        },
+        "removeMeasure": {
+            "parameters": [
+                {
+                    "name": "measure_id",
+                    "type": "string"
+                }
+            ],
+            "body": "this.dataBindings.getDataBinding('myDataBinding').removeMember(measure_id);"
+        },
+        "triggerChangedProperties": {
+            "parameters": []
+        }
+    },
     "events": {}
 }
