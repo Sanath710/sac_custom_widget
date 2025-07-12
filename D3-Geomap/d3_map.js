@@ -270,10 +270,10 @@ var getScriptPromisify = src => {
 
       var widget_id = '#' + this.offsetParent.id + ' > ' + this.localName
 
-      if(this._root) {
-        this._root.remove();
-        let element_root = document.createElement("div")
-        element_root.id = "root"
+      if (this._root) {
+        this._root.remove()
+        let element_root = document.createElement('div')
+        element_root.id = 'root'
         this._shadowRoot.appendChild(element_root)
         this._root = this._shadowRoot.getElementById('root')
         root = this._root
@@ -323,20 +323,18 @@ var getScriptPromisify = src => {
 
       //// bining - legend range
 
-      var min =
-        Math.min(...total_projects) > 0 ? 0 : Math.min(...total_projects)
-      var max = Math.max(...total_projects)
-      const bins = max - 5 > 0 ? max - 5 : 7
+      var actualMin = Math.min(...total_projects)
+      var min = actualMin > 0 ? 0 : actualMin 
+      var actualMax = Math.max(...total_projects) 
 
-      var step = Math.ceil((max - min) / bins)
+      var numberOfBins = 5
+      var step = Math.ceil((actualMax - min) / numberOfBins) 
 
-      var legendRange = []
-      for (let i = min; i <= max; i += step) {
-        legendRange.push(i)
+      const legendRange = []
+      for (let i = 0; i <= numberOfBins; i++) {
+        legendRange.push(min + i * step)
       }
-
-      ///// legend range ends
-
+      
       console.log('----', this.myDataBinding, divisions, total_projects)
 
       var selectedChoice = undefined
@@ -610,11 +608,12 @@ var getScriptPromisify = src => {
       }
 
       let sorted_total_projects = total_projects.slice()
+      sorted_total_projects = Array.from(new Set(sorted_total_projects))
       sorted_total_projects.sort()
 
       const colorScale = d3.scale
         .linear()
-        .domain(Array.from(new Set(sorted_total_projects)))
+        .domain(sorted_total_projects)
         .range([
           '#f4ebff',
           '#eadfff',
@@ -719,18 +718,14 @@ var getScriptPromisify = src => {
         // Create axis scale
         const legendScale = d3.scale
           .linear()
-          .domain([min - 1 >= 0 ? min - 1 : min, max])
+          .domain([legendRange[0], legendRange[legendRange.length - 1]])
           .range([0, legendWidth])
 
         const legendAxis = d3.svg
           .axis()
           .scale(legendScale)
           .orient('bottom')
-          .tickValues([
-            min - 1 >= 0 ? min - 1 : min,
-            ...legendRange.slice(1, legendRange.length - 1),
-            max
-          ])
+          .tickValues(legendRange)
           .tickFormat(d3.format('d'))
 
         // Add ticks below gradient
