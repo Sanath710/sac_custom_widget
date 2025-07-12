@@ -77,6 +77,7 @@ var getScriptPromisify = src => {
     
     <div id="root"></div>
     `
+  //   var flag = false
 
   class Main extends HTMLElement {
     constructor () {
@@ -126,12 +127,13 @@ var getScriptPromisify = src => {
       if (changedProps.myDataBinding.state == 'success' && this.flag == false) {
         console.log(changedProps)
         this.myDataBinding = changedProps['myDataBinding']
-        this.render(this._root)
+        // this.render(this._root)
         this.flag = true
       }
 
       if (changedProps.myDataBinding.state == 'success') {
         this.myDataBinding = changedProps['myDataBinding']
+        this.render(this._root)
         console.log(
           'Dimensions : ',
           this.myDataBinding.metadata.dimensions,
@@ -140,20 +142,6 @@ var getScriptPromisify = src => {
         )
       }
     }
-
-    triggerChangedProperties () {
-      if (
-        Object.keys(this.myDataBinding.metadata.dimensions).length > 0 &&
-        Object.keys(this.myDataBinding.metadata.mainStructureMembers).length > 0
-      ) {
-        this.render(this._root)
-      }
-    }
-    // .setModel('t.B.Cgfc3r19mc8hoigem2o89h5sj4v:Cgfc3r19mc8hoigem2o89h5sj4v')
-
-    // addDimensionToFeed(dimensionId) {
-    //     console.log(dimensionId);
-    // }
 
     async onCustomWidgetResize (width, height) {
       this.render(this._root)
@@ -219,14 +207,58 @@ var getScriptPromisify = src => {
       console.log('SAC object : ', this.dataFromSAC)
     }
 
-    addDimension(dimension_id) {
-        this.dataBindings.getDataBinding('myDataBinding').addDimensionToFeed('dimensions', dimension_id);
-        console.log("Dimension changed to "+dimension_id+"...")
+    async addDimension (dimension_id) {
+      await this.dataBindings
+        .getDataBinding('myDataBinding')
+        .addDimensionToFeed('dimensions', dimension_id)
+
+      // this.dispatchEvent(
+      //   new CustomEvent('propertiesChanged', {
+      //     detail: {
+      //       properties: {
+      //         dataBindings: this.dataBindings
+      //       }
+      //     }
+      //   })
+      // )
+      console.log('Dimension changed to ' + dimension_id + '...')
     }
 
-    removeDimension(dimension_id) {
-        this.dataBindings.getDataBinding('myDataBinding').removeDimension(dimension_id);
-        console.log("Dimension "+dimension_id+" removed...")
+    async removeDimension (dimension_id) {
+      await this.dataBindings
+        .getDataBinding('myDataBinding')
+        .removeDimension(dimension_id)
+      // this.dispatchEvent(
+      //   new CustomEvent('propertiesChanged', {
+      //     detail: {
+      //       properties: {
+      //         dataBindings: this.dataBindings
+      //       }
+      //     }
+      //   })
+      // )
+      console.log('Dimension ' + dimension_id + ' removed...')
+    }
+
+    async triggerChangedProperties () {
+      await this.myDataBinding.state
+      if (
+        this.myDataBinding.state == 'success' &&
+        Object.keys(this.myDataBinding.metadata.dimensions).length > 0 &&
+        Object.keys(this.myDataBinding.metadata.mainStructureMembers).length > 0
+      ) {
+        // this.dispatchEvent(
+        //   new CustomEvent('propertiesChanged', {
+        //     detail: {
+        //       properties: {
+        //         dataBindings: this.dataBindings
+        //       }
+        //     }
+        //   })
+        // )
+        console.log(this.myDataBinding)
+        // this.render(this._root)
+      }
     }
 
     async render (root) {
@@ -235,6 +267,17 @@ var getScriptPromisify = src => {
         'https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.4/vue.min.js'
       )
       // this.dispose()
+
+      var widget_id = '#' + this.offsetParent.id + ' > ' + this.localName
+
+      if(this._root) {
+        this._root.remove();
+        let element_root = document.createElement("div")
+        element_root.id = "root"
+        this._shadowRoot.appendChild(element_root)
+        this._root = this._shadowRoot.getElementById('root')
+        root = this._root
+      }
 
       // root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div")
 
@@ -267,10 +310,10 @@ var getScriptPromisify = src => {
 
       this.loadData()
 
+      var that = this
       var dataFromSAC = this.dataFromSAC
       var dimension_names = this.dimension_names
       var measure_names = this.measure_names
-      var widget_id = '#' + this.offsetParent.id + ' > ' + this.localName
       // console.log(root,d3,root.querySelector("#__widget0 > d3-geomap").shadowRoot.querySelector("#app > div"));
 
       var divisions = this.myDataBinding.data.map(dim => dim.dimensions_0.id)
@@ -297,8 +340,9 @@ var getScriptPromisify = src => {
       console.log('----', this.myDataBinding, divisions, total_projects)
 
       var selectedChoice = undefined
+      let app = undefined
 
-      const app = new Vue({
+      app = new Vue({
         el: root,
         data: {
           province: undefined,
@@ -306,7 +350,7 @@ var getScriptPromisify = src => {
           mapScale: 0.18,
           selectedCounty: '',
           geoJsonSources: {
-            "County Name":
+            County_Name:
               'https://raw.githubusercontent.com/Kalpesh-Gohil-18/CW/refs/heads/master/County.json',
             Division:
               'https://raw.githubusercontent.com/Kalpesh-Gohil-18/CW/refs/heads/master/division.json'
@@ -317,7 +361,8 @@ var getScriptPromisify = src => {
             this.province = feature
           },
           openInfo (feature) {
-            this.currentProvince = feature
+            this.currentProvince = feature ? { ...feature } : undefined
+            // this.currentProvince = feature
           },
           closeInfo () {
             this.currentProvince = undefined
@@ -337,7 +382,7 @@ var getScriptPromisify = src => {
           getId (feature) {
             const props = feature?.properties || {}
             return (
-              props.display_info ||
+              props['display_info'] ||
               props.id ||
               props.code ||
               props.CODE ||
@@ -351,14 +396,13 @@ var getScriptPromisify = src => {
             this.data_geojson = await (await fetch(selectedCounty)).json()
             console.log(this.data_geojson)
 
-            // if(selectedChoice != undefined) {
-            //     this.removeDimension(selectedChoice);
-            //     this.addDimension(this.myDataBinding.metadata.dimensions["dimensions_0"].id)
-            //     this.triggerChangedProperties()
-            // }
+            if (selectedChoice != undefined) {
+              await that.removeDimension(selectedChoice)
+              await that.addDimension(this.selectedCounty.split('_@_')[0])
+              await that.triggerChangedProperties()
+            }
 
             selectedChoice = this.selectedCounty.split('_@_')[0]
-
 
             d3.json(selectedCounty, (error, mapData) => {
               if (error) {
@@ -366,7 +410,10 @@ var getScriptPromisify = src => {
                 return
               }
               window.mapData = mapData
-              setupMap(mapData)
+              this.$nextTick(() => {
+                setupMap(mapData)
+              })
+              //   setupMap(mapData)
             })
           }
         },
@@ -380,12 +427,20 @@ var getScriptPromisify = src => {
           }
         },
         mounted () {
-          this.selectedCounty = dimension_names[0]+'_@_' + this.geoJsonSources[dimension_names[0]]
-          selectedChoice = this.selectedCounty.split('_@_')[0]
+          //   if (flag == false) {
+          this.selectedCounty =
+            that.myDataBinding.metadata.dimensions['dimensions_0'].id +
+            '_@_' +
+            this.geoJsonSources[
+              that.myDataBinding.metadata.dimensions['dimensions_0'].id
+            ]
+          selectedChoice = undefined
           this.loadGeoJson()
           window.addEventListener('resize', () => {
             if (window.mapData) setupMap(window.mapData)
           })
+          // flag = true
+          //   }
         }
       })
 
@@ -467,7 +522,6 @@ var getScriptPromisify = src => {
 
         applyTransform()
         defineLegend()
-
       }
 
       function clicked (d) {
@@ -542,7 +596,7 @@ var getScriptPromisify = src => {
           d.properties['display_info'] = measure_names[0] + ' : ' + value
           if (value != 'N/A') {
             app.selectProvince(d)
-            app.openInfo(d)
+            app.openInfo({ ...d })
           }
         }
       }
